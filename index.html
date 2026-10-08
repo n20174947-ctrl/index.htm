@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>HandWrite A4 — realistic handwriting</title>
+<title>HandWrite A4</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
@@ -33,12 +35,12 @@ body{
 
 h1{
     text-align:center;
-    margin:5px 0 15px
+    margin:5px 0 15px;
 }
 
 textarea{
     width:100%;
-    height:160px;
+    height:150px;
     padding:12px;
     border:1px solid #bbb;
     border-radius:12px;
@@ -46,21 +48,28 @@ textarea{
     resize:vertical;
 }
 
-.controls{
+.main-settings{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
     margin-top:12px;
 }
 
-label{
-    font-size:14px;
-    font-weight:bold
+.setting{
+    background:#f3f3f3;
+    padding:10px;
+    border-radius:10px;
 }
 
-select,input{
+label{
+    font-size:14px;
+    font-weight:bold;
+}
+
+select,
+input{
     width:100%;
-    margin-top:6px
+    margin-top:6px;
 }
 
 select{
@@ -70,10 +79,52 @@ select{
     background:white;
 }
 
-.option{
+/* РАСКРЫВАЮЩИЕСЯ НАСТРОЙКИ */
+
+details{
+    margin-top:10px;
     background:#f3f3f3;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+summary{
+    cursor:pointer;
+    padding:13px;
+    font-weight:bold;
+    font-size:15px;
+    user-select:none;
+}
+
+details[open] summary{
+    border-bottom:1px solid #ddd;
+}
+
+.details-content{
+    padding:10px;
+}
+
+.option{
+    background:white;
     padding:10px;
     border-radius:10px;
+    margin-bottom:8px;
+}
+
+.option:last-child{
+    margin-bottom:0;
+}
+
+.value{
+    font-weight:normal;
+    color:#555;
+}
+
+.small{
+    font-size:12px;
+    color:#666;
+    margin-top:5px;
+    line-height:1.35;
 }
 
 button{
@@ -84,15 +135,16 @@ button{
     border-radius:12px;
     font-size:17px;
     font-weight:bold;
+    cursor:pointer;
 }
 
 #create{
     background:#222;
-    color:white
+    color:white;
 }
 
 #save{
-    background:#ddd
+    background:#ddd;
 }
 
 .preview{
@@ -110,16 +162,14 @@ canvas{
     background:white;
 }
 
-.small{
-    font-size:12px;
-    color:#666;
-    margin-top:5px;
-    line-height:1.35;
-}
-
 @media(max-width:600px){
-    .controls{
-        grid-template-columns:1fr
+
+    .main-settings{
+        grid-template-columns:1fr;
+    }
+
+    textarea{
+        height:130px;
     }
 }
 </style>
@@ -134,94 +184,324 @@ canvas{
 
 <textarea id="text" placeholder="Введи или вставь сюда текст..."></textarea>
 
-<div class="controls">
 
-<label>
-Стиль почерка
+<!-- ОСНОВНЫЕ НАСТРОЙКИ -->
+
+<div class="main-settings">
+
+<div class="setting">
+<label>Стиль почерка</label>
+
 <select id="style">
-<option value="badscript">Максимально рукописный — Bad Script</option>
-<option value="caveat">Похожий на тетрадный — Caveat</option>
-<option value="marck">Связный — Marck Script</option>
-<option value="kalam">Живой — Kalam</option>
-<option value="neucha">Аккуратный — Neucha</option>
-<option value="pangolin">Неровный — Pangolin</option>
+
+<option value="badscript">
+Максимально рукописный — Bad Script
+</option>
+
+<option value="caveat">
+Похожий на тетрадный — Caveat
+</option>
+
+<option value="marck">
+Связный — Marck Script
+</option>
+
+<option value="kalam">
+Живой — Kalam
+</option>
+
+<option value="neucha">
+Аккуратный — Neucha
+</option>
+
+<option value="pangolin">
+Неровный — Pangolin
+</option>
+
 </select>
-</label>
+</div>
+
+
+<div class="setting">
+<label>Бумага</label>
+
+<select id="paper">
+
+<option value="plain">
+Чистая
+</option>
+
+<option value="tetrad1">
+Тетрадь — левая поля
+</option>
+
+<option value="tetrad2">
+Тетрадь — правая поля
+</option>
+
+</select>
+</div>
+
+</div>
+
+
+<!-- РАЗМЕР ТЕКСТА -->
+
+<details open>
+
+<summary>✏️ Размер текста</summary>
+
+<div class="details-content">
+
+<div class="option">
 
 <label>
-Бумага
-<select id="paper">
-<option value="plain">Чистая</option>
-<option value="tetrad1">Тетрадь — левая поля</option>
-<option value="tetrad2">Тетрадь — правая поля</option>
-</select>
+Размер:
+<span class="value">
+<span id="sizeValue">30</span> px
+</span>
 </label>
 
-<div class="option">
-<label>Размер: <span id="sizeValue">30</span> px</label>
-<input id="size" type="range" min="16" max="60" value="30">
+<input
+id="size"
+type="range"
+min="16"
+max="60"
+value="30">
+
 </div>
 
-<div class="option">
-<label>Интервал строк: <span id="lineValue">1.4</span></label>
-<input id="line" type="range" min="1" max="2" step="0.05" value="1.4">
-</div>
 
 <div class="option">
-<label>Наклон почерка: <span id="slantValue">0</span></label>
-<input id="slant" type="range" min="-8" max="8" step="0.5" value="0">
+
+<label>
+Интервал строк:
+<span class="value">
+<span id="lineValue">1.4</span>
+</span>
+</label>
+
+<input
+id="line"
+type="range"
+min="1"
+max="2"
+step="0.05"
+value="1.4">
+
 </div>
 
-<div class="option">
-<label>Естественная неровность: <span id="jitterValue">2</span> px</label>
-<input id="jitter" type="range" min="0" max="6" step="0.5" value="2">
 </div>
 
-<div class="option">
-<label>Расстояние между словами: <span id="wordValue">1</span></label>
-<input id="word" type="range" min="0.7" max="1.5" step="0.05" value="1">
-</div>
+</details>
+
+
+<!-- РЕАЛИСТИЧНОСТЬ -->
+
+<details>
+
+<summary>🖊️ Реалистичность почерка</summary>
+
+<div class="details-content">
 
 <div class="option">
-<label>Поля листа сверху: <span id="topValue">70</span> px</label>
-<input id="top" type="range" min="0" max="300" value="70">
+
+<label>
+Наклон:
+<span class="value">
+<span id="slantValue">0</span>°
+</span>
+</label>
+
+<input
+id="slant"
+type="range"
+min="-8"
+max="8"
+step="0.5"
+value="0">
+
 </div>
 
-<div class="option">
-<label>Отступ от реального края листа: <span id="leftValue">80</span> px</label>
-<input id="left" type="range" min="0" max="300" value="80">
-</div>
 
 <div class="option">
-<label>Смещение текста по X: <span id="xValue">0</span> px</label>
-<input id="x" type="range" min="-250" max="250" value="0">
+
+<label>
+Естественная неровность:
+<span class="value">
+<span id="jitterValue">2</span> px
+</span>
+</label>
+
+<input
+id="jitter"
+type="range"
+min="0"
+max="6"
+step="0.5"
+value="2">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Расстояние между словами:
+<span class="value">
+<span id="wordValue">1</span>
+</span>
+</label>
+
+<input
+id="word"
+type="range"
+min="0.7"
+max="1.5"
+step="0.05"
+value="1">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Прозрачность чернил:
+<span class="value">
+<span id="inkValue">92</span>%
+</span>
+</label>
+
+<input
+id="ink"
+type="range"
+min="60"
+max="100"
+value="92">
+
+</div>
+
+</div>
+
+</details>
+
+
+<!-- ПОЛОЖЕНИЕ -->
+
+<details>
+
+<summary>📐 Положение текста</summary>
+
+<div class="details-content">
+
+<div class="option">
+
+<label>
+Верхнее поле:
+<span class="value">
+<span id="topValue">70</span> px
+</span>
+</label>
+
+<input
+id="top"
+type="range"
+min="0"
+max="300"
+value="70">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Левое поле:
+<span class="value">
+<span id="leftValue">80</span> px
+</span>
+</label>
+
+<input
+id="left"
+type="range"
+min="0"
+max="300"
+value="80">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Смещение по X:
+<span class="value">
+<span id="xValue">0</span> px
+</span>
+</label>
+
+<input
+id="x"
+type="range"
+min="-250"
+max="250"
+value="0">
 
 <div class="small">
-Можно двигать весь текст вправо/влево.
+Положительное значение двигает текст вправо,
+отрицательное — влево.
 </div>
+
 </div>
+
 
 <div class="option">
-<label>Ширина области текста: <span id="widthValue">800</span> px</label>
-<input id="width" type="range" min="300" max="1100" value="800">
+
+<label>
+Ширина текста:
+<span class="value">
+<span id="widthValue">800</span> px
+</span>
+</label>
+
+<input
+id="width"
+type="range"
+min="300"
+max="1100"
+value="800">
+
 </div>
 
-<div class="option">
-<label>Прозрачность чернил: <span id="inkValue">92</span>%</label>
-<input id="ink" type="range" min="60" max="100" value="92">
 </div>
 
-</div>
+</details>
 
-<button id="create">Создать лист</button>
-<button id="save">Сохранить PNG</button>
+
+<button id="create">
+Создать лист
+</button>
+
+<button id="save">
+Сохранить PNG
+</button>
+
 
 <div class="preview">
-<canvas id="canvas" width="1240" height="1754"></canvas>
+
+<canvas
+id="canvas"
+width="1240"
+height="1754">
+</canvas>
+
 </div>
 
 </div>
 </div>
+
 
 <script>
 
@@ -252,31 +532,53 @@ function val(id){
 function updateValues(){
 
     val("sizeValue").textContent=size.value;
+
     val("lineValue").textContent=line.value;
+
     val("slantValue").textContent=slant.value;
+
     val("jitterValue").textContent=jitter.value;
+
     val("wordValue").textContent=word.value;
+
     val("topValue").textContent=top.value;
+
     val("leftValue").textContent=left.value;
+
     val("xValue").textContent=x.value;
+
     val("widthValue").textContent=width.value;
+
     val("inkValue").textContent=ink.value;
 
 }
 
 
+/*
+====================================================
+ЗАГРУЗКА ТЕТРАДИ
+====================================================
+*/
+
 function getImageSrc(){
 
-    if(paper.value==="tetrad1")
-        return "tetrad1.jpg";
+    if(paper.value==="tetrad1"){
+        return "./tetrad1.jpg";
+    }
 
-    if(paper.value==="tetrad2")
-        return "tetrad2.jpg";
+    if(paper.value==="tetrad2"){
+        return "./tetrad2.jpg";
+    }
 
-    return "";
-
+    return null;
 }
 
+
+/*
+====================================================
+СЛУЧАЙНОЕ ЧИСЛО
+====================================================
+*/
 
 function random(min,max){
 
@@ -284,6 +586,12 @@ function random(min,max){
 
 }
 
+
+/*
+====================================================
+ШРИФТ
+====================================================
+*/
 
 function getFont(){
 
@@ -312,7 +620,7 @@ function getFont(){
 
 /*
 ====================================================
-НАСТРОЙКА ШРИФТА
+ПОДГОТОВКА ШРИФТА
 ====================================================
 */
 
@@ -320,13 +628,14 @@ function prepareFont(){
 
     const s=Number(size.value);
 
-    ctx.font=`${s}px "${getFont()}"`;
+    ctx.font=
+        `${s}px "${getFont()}"`;
 
     try{
 
         ctx.fontKerning="normal";
+
         ctx.fontVariantLigatures="normal";
-        ctx.fontStretch="normal";
 
     }catch(e){}
 
@@ -341,7 +650,8 @@ function prepareFont(){
 
 function wrapText(str,maxWidth){
 
-    const words=str.trim().split(/\s+/);
+    const words=
+        str.trim().split(/\s+/);
 
     const result=[];
 
@@ -350,9 +660,12 @@ function wrapText(str,maxWidth){
 
     for(const w of words){
 
-        const test=current
-            ? current+" "+w
-            : w;
+        const test=
+            current
+            ?
+            current+" "+w
+            :
+            w;
 
 
         if(
@@ -385,7 +698,7 @@ function wrapText(str,maxWidth){
 
 /*
 ====================================================
-ОБЛАСТЬ ФОТОГРАФИИ ТЕТРАДИ
+ОБЛАСТЬ ТЕТРАДИ
 ====================================================
 */
 
@@ -424,7 +737,14 @@ function drawPaper(){
     );
 
 
-    if(paper.value==="plain"){
+    const src=getImageSrc();
+
+
+    /*
+    ЧИСТЫЙ ЛИСТ
+    */
+
+    if(!src){
 
         ctx.fillStyle="#fffdf8";
 
@@ -438,19 +758,20 @@ function drawPaper(){
         createText();
 
         return;
+
     }
 
 
-    const src=getImageSrc();
+    /*
+    ЗАГРУЖАЕМ ФОТО ТЕТРАДИ
+    */
 
     const img=new Image();
 
 
     img.onload=function(){
 
-        ctx.fillStyle="#fffdf8";
-
-        ctx.fillRect(
+        ctx.clearRect(
             0,
             0,
             canvas.width,
@@ -458,10 +779,41 @@ function drawPaper(){
         );
 
 
-        const r=paperRegion[paper.value];
+        const r=
+            paperRegion[paper.value];
+
+
+        /*
+        Масштабируем фотографию
+        */
+
+        const scale=Math.max(
+
+            canvas.width/r.w,
+
+            canvas.height/r.h
+
+        );
+
+
+        const dw=
+            img.width*scale;
+
+
+        const dh=
+            img.height*scale;
+
+
+        const dx=
+            -r.x*scale;
+
+
+        const dy=
+            -r.y*scale;
 
 
         ctx.save();
+
 
         ctx.beginPath();
 
@@ -473,25 +825,6 @@ function drawPaper(){
         );
 
         ctx.clip();
-
-
-        const scale=Math.max(
-
-            canvas.width/r.w,
-
-            canvas.height/r.h
-
-        );
-
-
-        const dw=img.width*scale;
-
-        const dh=img.height*scale;
-
-
-        const dx=-r.x*scale;
-
-        const dy=-r.y*scale;
 
 
         ctx.drawImage(
@@ -506,12 +839,28 @@ function drawPaper(){
         ctx.restore();
 
 
+        /*
+        ПОСЛЕ БУМАГИ РИСУЕМ ТЕКСТ
+        */
+
         createText();
 
     };
 
 
     img.onerror=function(){
+
+        console.error(
+            "Не удалось загрузить:",
+            src
+        );
+
+
+        /*
+        Если картинка не загрузилась,
+        показываем заметное сообщение
+        вместо полностью пустого листа.
+        */
 
         ctx.fillStyle="#fffdf8";
 
@@ -523,59 +872,53 @@ function drawPaper(){
         );
 
 
-        createText();
+        ctx.fillStyle="#777";
 
-        console.log(
-            "Не удалось загрузить:",
-            src
+        ctx.font="28px Arial";
+
+        ctx.fillText(
+            "Не найдена " + src,
+            60,
+            80
         );
+
+
+        createText();
 
     };
 
 
-    img.src=src+"?v="+Date.now();
+    /*
+    ВАЖНО:
+    без ?v=Date.now(),
+    чтобы GitHub Pages нормально
+    отдавал изображение из репозитория.
+    */
+
+    img.src=src;
 
 }
 
 
 /*
 ====================================================
-РИСОВАНИЕ ОДНОГО СЛОВА
+РИСОВАНИЕ СЛОВА
 ====================================================
-
-ВАЖНО:
-
-Слово рисуется ОДНИМ fillText.
-
-Благодаря этому браузер сохраняет
-связность букв конкретного шрифта.
 */
-
 
 function drawWord(
     wordText,
     xPos,
-    yPos,
-    baseSize
+    yPos
 ){
 
-    const j=Number(jitter.value);
+    const j=
+        Number(jitter.value);
 
 
-    /*
-    Небольшое случайное движение
-    по вертикали.
-    */
+    const yMove=
+        random(-j,j);
 
-    const yMove=random(
-        -j,
-        j
-    );
-
-
-    /*
-    Естественный небольшой наклон.
-    */
 
     const angle=
 
@@ -605,24 +948,18 @@ function drawWord(
     ctx.rotate(angle);
 
 
-    /*
-    Небольшая случайная ширина.
-    */
-
-    const sx=random(
-        0.985,
-        1.015
-    );
+    const sx=
+        random(
+            0.985,
+            1.015
+        );
 
 
-    /*
-    Небольшая случайная высота.
-    */
-
-    const sy=random(
-        0.98,
-        1.02
-    );
+    const sy=
+        random(
+            0.98,
+            1.02
+        );
 
 
     ctx.scale(
@@ -671,51 +1008,26 @@ function drawLine(
     let cursor=xPos;
 
 
-    for(
-        let i=0;
-        i<words.length;
-        i++
-    ){
-
-        const w=words[i];
-
+    for(const w of words){
 
         if(!w)
             continue;
 
 
-        /*
-        Измеряем слово ДО рисования.
-        */
-
         const wordWidth=
             ctx.measureText(w).width;
 
 
-        /*
-        Рисуем слово целиком.
-        */
-
         drawWord(
             w,
             cursor,
-            yPos,
-            Number(size.value)
+            yPos
         );
 
 
-        /*
-        Размер пробела.
-        */
-
-        const normalSpace=
+        const spaceWidth=
             ctx.measureText(" ").width;
 
-
-        /*
-        Небольшая естественная
-        вариация расстояния.
-        */
 
         const natural=
             random(
@@ -724,13 +1036,13 @@ function drawLine(
             );
 
 
-        cursor +=
+        cursor+=
 
             wordWidth
 
             +
 
-            normalSpace
+            spaceWidth
             *
             wordScale
             *
@@ -743,7 +1055,7 @@ function drawLine(
 
 /*
 ====================================================
-ОСНОВНОЙ ГЕНЕРАТОР ТЕКСТА
+СОЗДАНИЕ ТЕКСТА
 ====================================================
 */
 
@@ -764,25 +1076,17 @@ function createText(){
         Number(width.value);
 
 
-    /*
-    Начальная позиция.
-    */
-
     const startX=
 
         Number(left.value)
-
         +
-
         Number(x.value);
 
 
     let y=
 
         Number(top.value)
-
         +
-
         fontSize;
 
 
@@ -797,10 +1101,6 @@ function createText(){
         .split("\n");
 
 
-    /*
-    Цвет чернил.
-    */
-
     ctx.fillStyle=
 
         `rgba(
@@ -813,15 +1113,6 @@ function createText(){
 
     ctx.textBaseline=
         "alphabetic";
-
-
-    try{
-
-        ctx.fontKerning="normal";
-
-        ctx.fontVariantLigatures="normal";
-
-    }catch(e){}
 
 
     ctx.save();
@@ -839,18 +1130,10 @@ function createText(){
     ctx.clip();
 
 
-    /*
-    Рисуем каждый абзац.
-    */
-
     for(
         const paragraph
         of paragraphs
     ){
-
-        /*
-        Пустая строка.
-        */
 
         if(!paragraph.trim()){
 
@@ -861,21 +1144,12 @@ function createText(){
         }
 
 
-        /*
-        Разбиваем длинный текст
-        на строки.
-        */
-
         const lines=
             wrapText(
                 paragraph,
                 maxW
             );
 
-
-        /*
-        Каждая строка.
-        */
 
         for(
             const currentLine
@@ -906,18 +1180,12 @@ function createText(){
         }
 
 
-        /*
-        Небольшой промежуток
-        между абзацами.
-        */
-
         if(
             paragraphs.length>1
         ){
 
             y+=
-                fontSize*
-                0.12;
+                fontSize*0.12;
 
         }
 
@@ -931,7 +1199,7 @@ function createText(){
 
 /*
 ====================================================
-КНОПКА СОЗДАТЬ
+СОЗДАТЬ
 ====================================================
 */
 
@@ -951,7 +1219,7 @@ document
 
 /*
 ====================================================
-СОХРАНЕНИЕ PNG
+СОХРАНИТЬ
 ====================================================
 */
 
@@ -992,7 +1260,7 @@ document
 
 /*
 ====================================================
-АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
+НАСТРОЙКИ
 ====================================================
 */
 
@@ -1015,11 +1283,7 @@ document
     el.addEventListener(
         "input",
         ()=>{
-
             updateValues();
-
-            drawPaper();
-
         }
     );
 
@@ -1040,7 +1304,7 @@ document
 
 /*
 ====================================================
-ЗАПУСК
+ПЕРВЫЙ ЗАПУСК
 ====================================================
 */
 
