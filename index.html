@@ -158,9 +158,9 @@ canvas{
 
 <div class="option">
 <label>
-Поля: <span id="marginValue">70</span> px
+Поля сверху: <span id="marginValue">20</span> px
 </label>
-<input id="margin" type="range" min="30" max="160" value="70">
+<input id="margin" type="range" min="0" max="160" value="20">
 </div>
 
 <div class="option">
@@ -174,16 +174,16 @@ canvas{
 
 <div class="option" style="margin-top:10px;">
 <label>
-Отступ от поля (X): <span id="xOffsetValue">80</span> px
+Отступ от левого края листа: <span id="xOffsetValue">25</span> px
 </label>
-<input id="xOffset" type="range" min="20" max="180" value="80">
+<input id="xOffset" type="range" min="0" max="180" value="25">
 </div>
 
 <div class="option" style="margin-top:10px;">
 <label>
-Ширина текста: <span id="widthValue">800</span> px
+Ширина текста: <span id="widthValue">950</span> px
 </label>
-<input id="width" type="range" min="200" max="1000" value="800">
+<input id="width" type="range" min="200" max="1100" value="950">
 </div>
 
 <button id="create">Создать лист</button>
@@ -212,6 +212,41 @@ const xOffset = document.getElementById("xOffset");
 const width = document.getElementById("width");
 
 
+/*
+========================================================
+ГРАНИЦЫ ТЕТРАДИ
+========================================================
+
+Все координаты рассчитаны относительно canvas 1240x1754.
+
+left   = левая граница листа
+top    = верхняя граница листа
+right  = правая граница листа
+bottom = нижняя граница листа
+
+Если потом понадобится немного подвинуть текст,
+меняем только эти числа.
+*/
+
+const pageBounds = {
+
+    tetrad1: {
+        left: 125,
+        top: 305,
+        right: 1215,
+        bottom: 1710
+    },
+
+    tetrad2: {
+        left: 0,
+        top: 305,
+        right: 1215,
+        bottom: 1710
+    }
+
+};
+
+
 function updateValues(){
 
     document.getElementById("sizeValue").textContent = size.value;
@@ -238,27 +273,46 @@ function getImageSrc(){
 }
 
 
+function getPageBounds(){
+
+    if(pageBounds[paper.value]){
+        return pageBounds[paper.value];
+    }
+
+    return {
+        left:0,
+        top:0,
+        right:canvas.width,
+        bottom:canvas.height
+    };
+
+}
+
+
 function drawPaper(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    if(paper.value === "plain"){
-
-        ctx.fillStyle = "#fffdf8";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-
-        createText();
-        return;
-    }
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
     const src = getImageSrc();
 
     if(!src){
 
         ctx.fillStyle = "#fffdf8";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
 
         createText();
+
         return;
     }
 
@@ -275,19 +329,31 @@ function drawPaper(){
         );
 
         createText();
+
     };
 
     img.onerror = function(){
 
         ctx.fillStyle = "#fffdf8";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
 
         createText();
 
-        console.log("Не удалось загрузить:",src);
+        console.log(
+            "Не удалось загрузить:",
+            src
+        );
+
     };
 
     img.src = src;
+
 }
 
 
@@ -312,12 +378,15 @@ function getFont(){
         return "Marck Script";
 
     return "Bad Script";
+
 }
 
 
 function wrapText(str,maxWidth){
 
-    const words = str.split(/\s+/);
+    const words =
+        str.split(/\s+/);
+
     const result = [];
 
     let current = "";
@@ -335,6 +404,7 @@ function wrapText(str,maxWidth){
         ){
 
             result.push(current);
+
             current = word;
 
         }else{
@@ -342,6 +412,7 @@ function wrapText(str,maxWidth){
             current = test;
 
         }
+
     }
 
     if(current){
@@ -349,10 +420,9 @@ function wrapText(str,maxWidth){
     }
 
     return result;
+
 }
 
-
-/* Небольшое изменение букв делает почерк менее идеальным */
 
 function randomSmall(min,max){
 
@@ -363,11 +433,21 @@ function randomSmall(min,max){
 
 function createText(){
 
-    const fontSize = Number(size.value);
-    const m = Number(margin.value);
-    const spacing = Number(line.value);
-    const xOff = Number(xOffset.value);
-    const maxW = Number(width.value);
+    const fontSize =
+        Number(size.value);
+
+    const topMargin =
+        Number(margin.value);
+
+    const spacing =
+        Number(line.value);
+
+    const xOff =
+        Number(xOffset.value);
+
+    const requestedWidth =
+        Number(width.value);
+
 
     ctx.font =
         fontSize +
@@ -375,17 +455,64 @@ function createText(){
         getFont() +
         ", cursive";
 
-    ctx.fillStyle = "#1142a2";
 
-    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle =
+        "#1142a2";
 
-    const maxWidth = maxW;
+
+    ctx.textBaseline =
+        "alphabetic";
+
+
+    /*
+    Получаем реальные границы
+    листа для выбранной фотографии.
+    */
+
+    const page =
+        getPageBounds();
+
+
+    /*
+    Текст начинается НЕ от фотографии,
+    а от верхнего левого угла листа.
+    */
+
+    let startX =
+        page.left + xOff;
+
+
+    let startY =
+        page.top +
+        topMargin +
+        fontSize;
+
+
+    /*
+    Не позволяем ширине текста
+    выйти за правую границу листа.
+    */
+
+    const availableWidth =
+        page.right -
+        startX -
+        20;
+
+
+    const maxWidth =
+        Math.min(
+            requestedWidth,
+            availableWidth
+        );
+
 
     const lineHeight =
         fontSize * spacing;
 
+
     let y =
-        m + fontSize;
+        startY;
+
 
     const paragraphs =
         text.value
@@ -393,15 +520,22 @@ function createText(){
         .split("\n");
 
 
+    /*
+    ВАЖНО:
+
+    Текст физически ограничивается
+    прямоугольником страницы.
+    */
+
     ctx.save();
 
     ctx.beginPath();
 
     ctx.rect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
+        page.left,
+        page.top,
+        page.right - page.left,
+        page.bottom - page.top
     );
 
     ctx.clip();
@@ -412,8 +546,11 @@ function createText(){
         if(!paragraph.trim()){
 
             y += lineHeight;
+
             continue;
+
         }
+
 
         const lines =
             wrapText(
@@ -424,39 +561,80 @@ function createText(){
 
         for(const currentLine of lines){
 
+            /*
+            Если дошли до низа страницы,
+            прекращаем писать.
+            */
+
             if(
                 y >
-                canvas.height - 50
+                page.bottom - 20
             ){
-                break;
+
+                ctx.restore();
+
+                return;
+
             }
 
-            let x = xOff;
+
+            let x =
+                startX;
 
 
-            for(const character of currentLine){
-
-                /*
-                 Небольшой случайный наклон
-                 и смещение каждой буквы.
-                 Благодаря этому текст выглядит
-                 менее компьютерным.
-                */
+            for(
+                const character
+                of currentLine
+            ){
 
                 const rotation =
-                    randomSmall(-0.025,0.025);
+                    randomSmall(
+                        -0.025,
+                        0.025
+                    );
+
 
                 const yMove =
-                    randomSmall(-1.2,1.2);
+                    randomSmall(
+                        -1.2,
+                        1.2
+                    );
+
+
+                /*
+                Не даём тексту уйти
+                за правую границу.
+                */
+
+                const charWidth =
+                    ctx.measureText(
+                        character
+                    ).width;
+
+
+                if(
+                    x + charWidth >
+                    page.right - 10
+                ){
+
+                    break;
+
+                }
+
 
                 ctx.save();
+
 
                 ctx.translate(
                     x,
                     y + yMove
                 );
 
-                ctx.rotate(rotation);
+
+                ctx.rotate(
+                    rotation
+                );
+
 
                 ctx.fillText(
                     character,
@@ -464,20 +642,29 @@ function createText(){
                     0
                 );
 
+
                 ctx.restore();
 
 
                 x +=
-                    ctx.measureText(character).width
-                    +
-                    randomSmall(-0.3,0.5);
+                    charWidth +
+                    randomSmall(
+                        -0.3,
+                        0.5
+                    );
+
             }
 
+
             y += lineHeight;
+
         }
+
     }
 
+
     ctx.restore();
+
 }
 
 
@@ -503,20 +690,25 @@ document
 
         drawPaper();
 
-        setTimeout(function(){
+        setTimeout(
+            function(){
 
-            const link =
-                document.createElement("a");
+                const link =
+                    document.createElement("a");
 
-            link.download =
-                "HandWrite-A4.png";
+                link.download =
+                    "HandWrite-A4.png";
 
-            link.href =
-                canvas.toDataURL("image/png");
+                link.href =
+                    canvas.toDataURL(
+                        "image/png"
+                    );
 
-            link.click();
+                link.click();
 
-        },300);
+            },
+            300
+        );
 
     }
 );
@@ -530,41 +722,47 @@ document
     line,
     xOffset,
     width
-]
-.forEach(function(element){
 
-    element.addEventListener(
-        "input",
-        function(){
+].forEach(
+    function(element){
 
-            updateValues();
+        element.addEventListener(
+            "input",
+            function(){
 
-            drawPaper();
+                updateValues();
 
-        }
-    );
+                drawPaper();
 
-    element.addEventListener(
-        "change",
-        function(){
+            }
+        );
 
-            updateValues();
 
-            drawPaper();
+        element.addEventListener(
+            "change",
+            function(){
 
-        }
-    );
+                updateValues();
 
-});
+                drawPaper();
+
+            }
+        );
+
+    }
+);
 
 
 updateValues();
 
-document.fonts.ready.then(function(){
 
-    drawPaper();
+document.fonts.ready.then(
+    function(){
 
-});
+        drawPaper();
+
+    }
+);
 
 </script>
 
