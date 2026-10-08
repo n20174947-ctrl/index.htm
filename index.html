@@ -79,8 +79,6 @@ select{
     background:white;
 }
 
-/* РАСКРЫВАЮЩИЕСЯ НАСТРОЙКИ */
-
 details{
     margin-top:10px;
     background:#f3f3f3;
@@ -184,68 +182,33 @@ canvas{
 
 <textarea id="text" placeholder="Введи или вставь сюда текст..."></textarea>
 
-
-<!-- ОСНОВНЫЕ НАСТРОЙКИ -->
-
 <div class="main-settings">
 
 <div class="setting">
 <label>Стиль почерка</label>
 
 <select id="style">
-
-<option value="badscript">
-Максимально рукописный — Bad Script
-</option>
-
-<option value="caveat">
-Похожий на тетрадный — Caveat
-</option>
-
-<option value="marck">
-Связный — Marck Script
-</option>
-
-<option value="kalam">
-Живой — Kalam
-</option>
-
-<option value="neucha">
-Аккуратный — Neucha
-</option>
-
-<option value="pangolin">
-Неровный — Pangolin
-</option>
-
+<option value="badscript">Максимально рукописный — Bad Script</option>
+<option value="caveat">Похожий на тетрадный — Caveat</option>
+<option value="marck">Связный — Marck Script</option>
+<option value="kalam">Живой — Kalam</option>
+<option value="neucha">Аккуратный — Neucha</option>
+<option value="pangolin">Неровный — Pangolin</option>
 </select>
 </div>
-
 
 <div class="setting">
 <label>Бумага</label>
 
 <select id="paper">
-
-<option value="plain">
-Чистая
-</option>
-
-<option value="tetrad1">
-Тетрадь — левая поля
-</option>
-
-<option value="tetrad2">
-Тетрадь — правая поля
-</option>
-
+<option value="plain">Чистая</option>
+<option value="tetrad1">Тетрадь — левая поля</option>
+<option value="tetrad2">Тетрадь — правая поля</option>
 </select>
 </div>
 
 </div>
 
-
-<!-- РАЗМЕР ТЕКСТА -->
 
 <details open>
 
@@ -262,15 +225,9 @@ canvas{
 </span>
 </label>
 
-<input
-id="size"
-type="range"
-min="16"
-max="60"
-value="30">
+<input id="size" type="range" min="16" max="60" value="30">
 
 </div>
-
 
 <div class="option">
 
@@ -281,13 +238,7 @@ value="30">
 </span>
 </label>
 
-<input
-id="line"
-type="range"
-min="1"
-max="2"
-step="0.05"
-value="1.4">
+<input id="line" type="range" min="1" max="2" step="0.05" value="1.4">
 
 </div>
 
@@ -295,8 +246,6 @@ value="1.4">
 
 </details>
 
-
-<!-- РЕАЛИСТИЧНОСТЬ -->
 
 <details>
 
@@ -313,16 +262,9 @@ value="1.4">
 </span>
 </label>
 
-<input
-id="slant"
-type="range"
-min="-8"
-max="8"
-step="0.5"
-value="0">
+<input id="slant" type="range" min="-8" max="8" step="0.5" value="0">
 
 </div>
-
 
 <div class="option">
 
@@ -333,16 +275,9 @@ value="0">
 </span>
 </label>
 
-<input
-id="jitter"
-type="range"
-min="0"
-max="6"
-step="0.5"
-value="2">
+<input id="jitter" type="range" min="0" max="6" step="0.5" value="2">
 
 </div>
-
 
 <div class="option">
 
@@ -353,16 +288,9 @@ value="2">
 </span>
 </label>
 
-<input
-id="word"
-type="range"
-min="0.7"
-max="1.5"
-step="0.05"
-value="1">
+<input id="word" type="range" min="0.7" max="1.5" step="0.05" value="1">
 
 </div>
-
 
 <div class="option">
 
@@ -373,12 +301,7 @@ value="1">
 </span>
 </label>
 
-<input
-id="ink"
-type="range"
-min="60"
-max="100"
-value="92">
+<input id="ink" type="range" min="60" max="100" value="92">
 
 </div>
 
@@ -386,8 +309,6 @@ value="92">
 
 </details>
 
-
-<!-- ПОЛОЖЕНИЕ -->
 
 <details>
 
@@ -404,15 +325,9 @@ value="92">
 </span>
 </label>
 
-<input
-id="top"
-type="range"
-min="0"
-max="300"
-value="70">
+<input id="top" type="range" min="0" max="300" value="70">
 
 </div>
-
 
 <div class="option">
 
@@ -423,15 +338,9 @@ value="70">
 </span>
 </label>
 
-<input
-id="left"
-type="range"
-min="0"
-max="300"
-value="80">
+<input id="left" type="range" min="0" max="300" value="80">
 
 </div>
-
 
 <div class="option">
 
@@ -442,12 +351,7 @@ value="80">
 </span>
 </label>
 
-<input
-id="x"
-type="range"
-min="-250"
-max="250"
-value="0">
+<input id="x" type="range" min="-250" max="250" value="0">
 
 <div class="small">
 Положительное значение двигает текст вправо,
@@ -455,7 +359,6 @@ value="0">
 </div>
 
 </div>
-
 
 <div class="option">
 
@@ -466,12 +369,7 @@ value="0">
 </span>
 </label>
 
-<input
-id="width"
-type="range"
-min="300"
-max="1100"
-value="800">
+<input id="width" type="range" min="300" max="1100" value="800">
 
 </div>
 
@@ -491,11 +389,7 @@ value="800">
 
 <div class="preview">
 
-<canvas
-id="canvas"
-width="1240"
-height="1754">
-</canvas>
+<canvas id="canvas" width="1240" height="1754"></canvas>
 
 </div>
 
@@ -532,23 +426,14 @@ function val(id){
 function updateValues(){
 
     val("sizeValue").textContent=size.value;
-
     val("lineValue").textContent=line.value;
-
     val("slantValue").textContent=slant.value;
-
     val("jitterValue").textContent=jitter.value;
-
     val("wordValue").textContent=word.value;
-
     val("topValue").textContent=top.value;
-
     val("leftValue").textContent=left.value;
-
     val("xValue").textContent=x.value;
-
     val("widthValue").textContent=width.value;
-
     val("inkValue").textContent=ink.value;
 
 }
@@ -556,21 +441,22 @@ function updateValues(){
 
 /*
 ====================================================
-ЗАГРУЗКА ТЕТРАДИ
+ТЕТРАДЬ
 ====================================================
 */
 
 function getImageSrc(){
 
     if(paper.value==="tetrad1"){
-        return "./tetrad1.jpg";
+        return "tetrad1.jpg";
     }
 
     if(paper.value==="tetrad2"){
-        return "./tetrad2.jpg";
+        return "tetrad2.jpg";
     }
 
-    return null;
+    return "";
+
 }
 
 
@@ -628,15 +514,12 @@ function prepareFont(){
 
     const s=Number(size.value);
 
-    ctx.font=
-        `${s}px "${getFont()}"`;
+    ctx.font=`${s}px "${getFont()}"`;
 
     try{
-
         ctx.fontKerning="normal";
-
         ctx.fontVariantLigatures="normal";
-
+        ctx.fontStretch="normal";
     }catch(e){}
 
 }
@@ -650,8 +533,7 @@ function prepareFont(){
 
 function wrapText(str,maxWidth){
 
-    const words=
-        str.trim().split(/\s+/);
+    const words=str.trim().split(/\s+/);
 
     const result=[];
 
@@ -660,12 +542,9 @@ function wrapText(str,maxWidth){
 
     for(const w of words){
 
-        const test=
-            current
-            ?
-            current+" "+w
-            :
-            w;
+        const test=current
+            ? current+" "+w
+            : w;
 
 
         if(
@@ -698,7 +577,7 @@ function wrapText(str,maxWidth){
 
 /*
 ====================================================
-ОБЛАСТЬ ТЕТРАДИ
+ОБЛАСТЬ ФОТОГРАФИИ ТЕТРАДИ
 ====================================================
 */
 
@@ -737,14 +616,11 @@ function drawPaper(){
     );
 
 
-    const src=getImageSrc();
-
-
     /*
     ЧИСТЫЙ ЛИСТ
     */
 
-    if(!src){
+    if(paper.value==="plain"){
 
         ctx.fillStyle="#fffdf8";
 
@@ -758,20 +634,19 @@ function drawPaper(){
         createText();
 
         return;
-
     }
 
 
-    /*
-    ЗАГРУЖАЕМ ФОТО ТЕТРАДИ
-    */
+    const src=getImageSrc();
 
     const img=new Image();
 
 
     img.onload=function(){
 
-        ctx.clearRect(
+        ctx.fillStyle="#fffdf8";
+
+        ctx.fillRect(
             0,
             0,
             canvas.width,
@@ -779,41 +654,10 @@ function drawPaper(){
         );
 
 
-        const r=
-            paperRegion[paper.value];
-
-
-        /*
-        Масштабируем фотографию
-        */
-
-        const scale=Math.max(
-
-            canvas.width/r.w,
-
-            canvas.height/r.h
-
-        );
-
-
-        const dw=
-            img.width*scale;
-
-
-        const dh=
-            img.height*scale;
-
-
-        const dx=
-            -r.x*scale;
-
-
-        const dy=
-            -r.y*scale;
+        const r=paperRegion[paper.value];
 
 
         ctx.save();
-
 
         ctx.beginPath();
 
@@ -825,6 +669,25 @@ function drawPaper(){
         );
 
         ctx.clip();
+
+
+        const scale=Math.max(
+
+            canvas.width/r.w,
+
+            canvas.height/r.h
+
+        );
+
+
+        const dw=img.width*scale;
+
+        const dh=img.height*scale;
+
+
+        const dx=-r.x*scale;
+
+        const dy=-r.y*scale;
 
 
         ctx.drawImage(
@@ -839,10 +702,6 @@ function drawPaper(){
         ctx.restore();
 
 
-        /*
-        ПОСЛЕ БУМАГИ РИСУЕМ ТЕКСТ
-        */
-
         createText();
 
     };
@@ -850,17 +709,11 @@ function drawPaper(){
 
     img.onerror=function(){
 
-        console.error(
-            "Не удалось загрузить:",
+        console.log(
+            "Ошибка загрузки бумаги:",
             src
         );
 
-
-        /*
-        Если картинка не загрузилась,
-        показываем заметное сообщение
-        вместо полностью пустого листа.
-        */
 
         ctx.fillStyle="#fffdf8";
 
@@ -872,37 +725,28 @@ function drawPaper(){
         );
 
 
-        ctx.fillStyle="#777";
-
-        ctx.font="28px Arial";
-
-        ctx.fillText(
-            "Не найдена " + src,
-            60,
-            80
-        );
-
-
         createText();
 
     };
 
 
     /*
-    ВАЖНО:
-    без ?v=Date.now(),
-    чтобы GitHub Pages нормально
-    отдавал изображение из репозитория.
+    ВОТ ЗДЕСЬ ВОЗВРАЩАЕМ
+    РАБОЧИЙ ВАРИАНТ ИЗ
+    ПРЕДЫДУЩЕЙ ВЕРСИИ
     */
 
-    img.src=src;
+    img.src=
+        src+
+        "?v="+
+        Date.now();
 
 }
 
 
 /*
 ====================================================
-РИСОВАНИЕ СЛОВА
+СЛОВО
 ====================================================
 */
 
@@ -987,7 +831,7 @@ function drawWord(
 
 /*
 ====================================================
-РИСОВАНИЕ СТРОКИ
+СТРОКА
 ====================================================
 */
 
@@ -1025,7 +869,7 @@ function drawLine(
         );
 
 
-        const spaceWidth=
+        const normalSpace=
             ctx.measureText(" ").width;
 
 
@@ -1042,7 +886,7 @@ function drawLine(
 
             +
 
-            spaceWidth
+            normalSpace
             *
             wordScale
             *
@@ -1055,7 +899,7 @@ function drawLine(
 
 /*
 ====================================================
-СОЗДАНИЕ ТЕКСТА
+ТЕКСТ
 ====================================================
 */
 
@@ -1102,7 +946,6 @@ function createText(){
 
 
     ctx.fillStyle=
-
         `rgba(
             35,
             65,
@@ -1111,8 +954,15 @@ function createText(){
         )`;
 
 
-    ctx.textBaseline=
-        "alphabetic";
+    ctx.textBaseline="alphabetic";
+
+
+    try{
+
+        ctx.fontKerning="normal";
+        ctx.fontVariantLigatures="normal";
+
+    }catch(e){}
 
 
     ctx.save();
@@ -1199,7 +1049,7 @@ function createText(){
 
 /*
 ====================================================
-СОЗДАТЬ
+СОЗДАТЬ ЛИСТ
 ====================================================
 */
 
@@ -1219,7 +1069,7 @@ document
 
 /*
 ====================================================
-СОХРАНИТЬ
+СОХРАНИТЬ PNG
 ====================================================
 */
 
@@ -1260,7 +1110,7 @@ document
 
 /*
 ====================================================
-НАСТРОЙКИ
+ОБНОВЛЕНИЕ ЗНАЧЕНИЙ
 ====================================================
 */
 
@@ -1283,7 +1133,9 @@ document
     el.addEventListener(
         "input",
         ()=>{
+
             updateValues();
+
         }
     );
 
@@ -1304,7 +1156,7 @@ document
 
 /*
 ====================================================
-ПЕРВЫЙ ЗАПУСК
+ЗАПУСК
 ====================================================
 */
 
