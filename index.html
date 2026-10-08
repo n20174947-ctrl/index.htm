@@ -447,12 +447,24 @@ function updateValues(){
 
 function getImageSrc(){
 
+    /*
+    Используем корень GitHub Pages.
+    Это важно, потому что страница открывается
+    через /index.htm/
+    */
+
     if(paper.value==="tetrad1"){
-        return "tetrad1.jpg";
+        return new URL(
+            "/tetrad1.jpg",
+            window.location.origin
+        ).href;
     }
 
     if(paper.value==="tetrad2"){
-        return "tetrad2.jpg";
+        return new URL(
+            "/tetrad2.jpg",
+            window.location.origin
+        ).href;
     }
 
     return "";
@@ -709,11 +721,16 @@ function drawPaper(){
 
     img.onerror=function(){
 
-        console.log(
-            "Ошибка загрузки бумаги:",
+        console.error(
+            "ОШИБКА ЗАГРУЗКИ ТЕТРАДИ:",
             src
         );
 
+        /*
+        Если изображение не загрузилось,
+        показываем красное сообщение вместо
+        молчаливого белого листа.
+        */
 
         ctx.fillStyle="#fffdf8";
 
@@ -724,6 +741,23 @@ function drawPaper(){
             canvas.height
         );
 
+        ctx.fillStyle="#b00020";
+
+        ctx.font="28px Arial";
+
+        ctx.fillText(
+            "Не удалось загрузить изображение тетради",
+            50,
+            80
+        );
+
+        ctx.font="20px Arial";
+
+        ctx.fillText(
+            src,
+            50,
+            120
+        );
 
         createText();
 
@@ -731,15 +765,12 @@ function drawPaper(){
 
 
     /*
-    ВОТ ЗДЕСЬ ВОЗВРАЩАЕМ
-    РАБОЧИЙ ВАРИАНТ ИЗ
-    ПРЕДЫДУЩЕЙ ВЕРСИИ
+    Добавляем случайный параметр,
+    чтобы GitHub Pages не отдавал старую
+    закэшированную версию.
     */
 
-    img.src=
-        src+
-        "?v="+
-        Date.now();
+    img.src=src+"?v="+Date.now();
 
 }
 
