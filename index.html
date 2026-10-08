@@ -67,6 +67,18 @@ select{
     background:white;
 }
 
+textarea{
+    width:100%;
+    min-height:150px;
+    margin-top:12px;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    resize:vertical;
+    font-size:16px;
+    font-family:Arial,sans-serif;
+}
+
 details{
     margin-top:10px;
     border:1px solid #ddd;
@@ -134,21 +146,6 @@ button:hover{
     height:100%;
     pointer-events:none;
 }
-
-textarea{
-    width:100%;
-    min-height:150px;
-    margin-top:12px;
-    padding:10px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    resize:vertical;
-    font-size:16px;
-}
-
-.hidden{
-    display:none;
-}
 </style>
 </head>
 
@@ -164,12 +161,29 @@ textarea{
 <label>Стиль почерка</label>
 
 <select id="style">
-<option value="Bad Script">Bad Script</option>
-<option value="Caveat" selected>Caveat</option>
-<option value="Kalam">Kalam</option>
-<option value="Marck Script">Marck Script</option>
-<option value="Neucha">Neucha</option>
-<option value="Pangolin">Pangolin</option>
+
+<option value="Bad Script">Bad Script — аккуратный</option>
+
+<option value="Caveat" selected>
+Caveat — обычный
+</option>
+
+<option value="Kalam">
+Kalam — школьный
+</option>
+
+<option value="Marck Script">
+Marck Script — плавный
+</option>
+
+<option value="Neucha">
+Neucha — неровный
+</option>
+
+<option value="Pangolin">
+Pangolin — округлый
+</option>
+
 </select>
 </div>
 
@@ -177,387 +191,945 @@ textarea{
 <label>Бумага</label>
 
 <select id="paper">
-<option value="plain">Обычная</option>
-<option value="tetrad1" selected>Тетрадь 1</option>
-<option value="tetrad2">Тетрадь 2</option>
+
+<option value="tetrad1" selected>
+Тетрадь 1
+</option>
+
+<option value="tetrad2">
+Тетрадь 2
+</option>
+
 </select>
 </div>
 
 </div>
 
-<textarea id="text" placeholder="Введите текст здесь..."></textarea>
+<textarea
+id="text"
+placeholder="Введите текст здесь..."
+></textarea>
+
+
+<!-- РАЗМЕР -->
 
 <details open>
+
 <summary>✏️ Размер текста</summary>
 
 <div class="slider">
+
 <div class="slider-title">
 <span>Размер</span>
 <span id="sizeVal">30</span>
 </div>
-<input id="size" type="range" min="16" max="60" value="30">
+
+<input
+id="size"
+type="range"
+min="16"
+max="60"
+value="30"
+>
+
 </div>
 
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Межстрочный интервал</span>
 <span id="lineVal">1.4</span>
 </div>
-<input id="line" type="range" min="1" max="2" step="0.1" value="1.4">
+
+<input
+id="line"
+type="range"
+min="1"
+max="2"
+step="0.1"
+value="1.4"
+>
+
 </div>
 
 </details>
 
+
+<!-- ПОЧЕРК -->
+
 <details>
+
 <summary>🖊️ Реалистичность почерка</summary>
 
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Наклон</span>
 <span id="slantVal">0</span>
 </div>
-<input id="slant" type="range" min="-8" max="8" value="0">
+
+<input
+id="slant"
+type="range"
+min="-8"
+max="8"
+value="0"
+>
+
 </div>
 
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Неровность</span>
 <span id="jitterVal">2</span>
 </div>
-<input id="jitter" type="range" min="0" max="6" value="2">
+
+<input
+id="jitter"
+type="range"
+min="0"
+max="6"
+step="0.5"
+value="2"
+>
+
 </div>
 
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Расстояние между словами</span>
 <span id="wordVal">1</span>
 </div>
-<input id="word" type="range" min="0.7" max="1.5" step="0.1" value="1">
+
+<input
+id="word"
+type="range"
+min="0.5"
+max="2"
+step="0.1"
+value="1"
+>
+
 </div>
 
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Прозрачность чернил</span>
 <span id="inkVal">92</span>
 </div>
-<input id="ink" type="range" min="60" max="100" value="92">
+
+<input
+id="ink"
+type="range"
+min="60"
+max="100"
+value="92"
+>
+
 </div>
 
 </details>
 
+
+<!-- ПОЛОЖЕНИЕ -->
+
 <details>
+
 <summary>📐 Положение текста</summary>
 
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Отступ сверху</span>
-<span id="topVal">70</span>
-</div>
-<input id="top" type="range" min="0" max="300" value="70">
+<span id="topVal">0</span>
 </div>
 
+<input
+id="top"
+type="range"
+min="0"
+max="300"
+value="0"
+>
+
+</div>
+
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Отступ слева</span>
-<span id="leftVal">80</span>
-</div>
-<input id="left" type="range" min="0" max="300" value="80">
+<span id="leftVal">0</span>
 </div>
 
+<input
+id="left"
+type="range"
+min="0"
+max="300"
+value="0"
+>
+
+</div>
+
+
 <div class="slider">
+
 <div class="slider-title">
 <span>Смещение X</span>
 <span id="xVal">0</span>
 </div>
-<input id="x" type="range" min="-250" max="250" value="0">
+
+<input
+id="x"
+type="range"
+min="-300"
+max="300"
+value="0"
+>
+
 </div>
 
+
 <div class="slider">
+
+<div class="slider-title">
+<span>Смещение Y</span>
+<span id="yVal">0</span>
+</div>
+
+<input
+id="y"
+type="range"
+min="-300"
+max="300"
+value="0"
+>
+
+</div>
+
+
+<div class="slider">
+
 <div class="slider-title">
 <span>Ширина текста</span>
 <span id="widthVal">800</span>
 </div>
-<input id="width" type="range" min="300" max="1100" value="800">
+
+<input
+id="width"
+type="range"
+min="300"
+max="1100"
+value="800"
+>
+
 </div>
 
 </details>
 
+
 <div class="buttons">
-<button id="create">✍️ Создать</button>
-<button id="save">💾 Сохранить PNG</button>
+
+<button id="create">
+✍️ Создать
+</button>
+
+<button id="save">
+💾 Сохранить PNG
+</button>
+
 </div>
+
 
 <div class="paper-wrap">
 
-<img id="paperImage" src="./tetrad1.jpg" alt="Тетрадь">
+<img
+id="paperImage"
+src="./tetrad1.jpg"
+alt="Тетрадь"
+>
 
-<canvas id="canvas" width="1240" height="1754"></canvas>
+<canvas
+id="canvas"
+width="1240"
+height="1754"
+></canvas>
 
 </div>
 
 </div>
+
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+document.getElementById("canvas");
 
-const paper = document.getElementById("paper");
-const paperImage = document.getElementById("paperImage");
+const ctx =
+canvas.getContext("2d");
 
-const textInput = document.getElementById("text");
-const style = document.getElementById("style");
 
-const size = document.getElementById("size");
-const line = document.getElementById("line");
-const slant = document.getElementById("slant");
-const jitter = document.getElementById("jitter");
-const word = document.getElementById("word");
-const ink = document.getElementById("ink");
+const paper =
+document.getElementById("paper");
 
-const topPos = document.getElementById("top");
-const leftPos = document.getElementById("left");
-const xPos = document.getElementById("x");
-const textWidth = document.getElementById("width");
+const paperImage =
+document.getElementById("paperImage");
 
-function updateValues(){
 
-    document.getElementById("sizeVal").textContent = size.value;
-    document.getElementById("lineVal").textContent = line.value;
-    document.getElementById("slantVal").textContent = slant.value;
-    document.getElementById("jitterVal").textContent = jitter.value;
-    document.getElementById("wordVal").textContent = word.value;
-    document.getElementById("inkVal").textContent = ink.value;
+const textInput =
+document.getElementById("text");
 
-    document.getElementById("topVal").textContent = topPos.value;
-    document.getElementById("leftVal").textContent = leftPos.value;
-    document.getElementById("xVal").textContent = xPos.value;
-    document.getElementById("widthVal").textContent = textWidth.value;
-}
+const style =
+document.getElementById("style");
 
-document.querySelectorAll('input[type="range"]').forEach(el=>{
-    el.addEventListener("input",()=>{
-        updateValues();
-    });
-});
 
-function getPaper(){
+const size =
+document.getElementById("size");
+
+const line =
+document.getElementById("line");
+
+const slant =
+document.getElementById("slant");
+
+const jitter =
+document.getElementById("jitter");
+
+const word =
+document.getElementById("word");
+
+const ink =
+document.getElementById("ink");
+
+
+const topPos =
+document.getElementById("top");
+
+const leftPos =
+document.getElementById("left");
+
+const xPos =
+document.getElementById("x");
+
+const yPos =
+document.getElementById("y");
+
+const textWidth =
+document.getElementById("width");
+
+
+/*
+====================================================
+ПОЛЯ ТЕТРАДИ
+====================================================
+*/
+
+function getPaperRegion(){
 
     if(paper.value === "tetrad1"){
-        return "./tetrad1.jpg";
+
+        return {
+            x:105,
+            y:145,
+            w:1060,
+            h:1530
+        };
+
     }
 
     if(paper.value === "tetrad2"){
-        return "./tetrad2.jpg";
+
+        return {
+            x:55,
+            y:75,
+            w:1120,
+            h:1600
+        };
+
     }
 
-    return null;
 }
 
-paper.addEventListener("change",()=>{
 
-    const src = getPaper();
+/*
+====================================================
+ЗНАЧЕНИЯ
+====================================================
+*/
 
-    if(src){
-        paperImage.src = src + "?v=" + Date.now();
+function updateValues(){
+
+    document.getElementById("sizeVal").textContent =
+        size.value;
+
+    document.getElementById("lineVal").textContent =
+        line.value;
+
+    document.getElementById("slantVal").textContent =
+        slant.value;
+
+    document.getElementById("jitterVal").textContent =
+        jitter.value;
+
+    document.getElementById("wordVal").textContent =
+        word.value;
+
+    document.getElementById("inkVal").textContent =
+        ink.value;
+
+    document.getElementById("topVal").textContent =
+        topPos.value;
+
+    document.getElementById("leftVal").textContent =
+        leftPos.value;
+
+    document.getElementById("xVal").textContent =
+        xPos.value;
+
+    document.getElementById("yVal").textContent =
+        yPos.value;
+
+    document.getElementById("widthVal").textContent =
+        textWidth.value;
+
+}
+
+
+/*
+====================================================
+ЗАГРУЗКА ТЕТРАДИ
+====================================================
+*/
+
+function getPaperImage(){
+
+    if(paper.value === "tetrad1"){
+
+        return "./tetrad1.jpg";
+
     }
 
-    createText();
+    if(paper.value === "tetrad2"){
+
+        return "./tetrad2.jpg";
+
+    }
+
+}
+
+
+paper.addEventListener("change",function(){
+
+    paperImage.src =
+        getPaperImage() +
+        "?v=" +
+        Date.now();
 
 });
 
-paperImage.onerror = function(){
 
-    console.log("Ошибка загрузки:", paperImage.src);
-
-};
-
-paperImage.onload = function(){
-
-    console.log(
-        "Тетрадь загружена:",
-        paperImage.naturalWidth,
-        paperImage.naturalHeight
-    );
-
-};
+/*
+====================================================
+РИСОВАНИЕ
+====================================================
+*/
 
 function createText(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
-    const text = textInput.value.trim();
 
-    if(!text){
+    const text =
+        textInput.value;
+
+    if(!text.trim()){
+
         return;
+
     }
 
-    const fontSize = Number(size.value);
-    const lineHeight = fontSize * Number(line.value);
 
-    const startX =
+    const region =
+        getPaperRegion();
+
+
+    /*
+    Размер шрифта
+    */
+
+    const fontSize =
+        Number(size.value);
+
+
+    /*
+    Начало текста именно внутри листа
+    */
+
+    let startX =
+        region.x +
         Number(leftPos.value) +
         Number(xPos.value);
 
-    let y = Number(topPos.value) + fontSize;
 
-    const maxWidth = Number(textWidth.value);
+    let y =
+        region.y +
+        fontSize +
+        Number(topPos.value) +
+        Number(yPos.value);
 
-    const selectedFont = style.value;
+
+    /*
+    Не даём тексту выйти за поле
+    */
+
+    if(startX < region.x){
+        startX = region.x;
+    }
+
+
+    /*
+    Реальная ширина текста
+    */
+
+    const maxWidth =
+        Math.min(
+            Number(textWidth.value),
+            region.w
+        );
+
+
+    /*
+    Межстрочный интервал
+    */
+
+    const lineHeight =
+        fontSize *
+        Number(line.value);
+
+
+    /*
+    Шрифт
+    */
 
     ctx.font =
         fontSize +
-        "px '" +
-        selectedFont +
+        "px " +
+        "'" +
+        style.value +
         "'";
 
+
     ctx.fillStyle =
-        "rgba(20,20,20," +
+        "rgba(25,25,25," +
         Number(ink.value) / 100 +
         ")";
 
-    ctx.textBaseline = "alphabetic";
 
-    const paragraphs = text.split("\n");
+    ctx.textBaseline =
+        "alphabetic";
 
-    for(const paragraph of paragraphs){
 
-        if(paragraph.trim() === ""){
+    /*
+    Абзацы
+    */
+
+    const paragraphs =
+        text.split("\n");
+
+
+    for(
+        const paragraph of paragraphs
+    ){
+
+        if(!paragraph.trim()){
+
             y += lineHeight;
+
             continue;
+
         }
 
-        const words = paragraph.split(/\s+/);
 
-        let currentLine = "";
+        /*
+        Делим текст на слова
+        */
+
+        const words =
+            paragraph.trim().split(/\s+/);
+
+
+        let currentWords = [];
+
         let currentWidth = 0;
 
-        for(let i=0;i<words.length;i++){
 
-            const w = words[i];
+        for(
+            let i=0;
+            i<words.length;
+            i++
+        ){
 
-            const spaceWidth =
-                ctx.measureText(" ").width *
-                Number(word.value);
+            const currentWord =
+                words[i];
+
 
             const wordWidth =
-                ctx.measureText(w).width;
+                ctx.measureText(
+                    currentWord
+                ).width;
 
-            const testWidth =
-                currentWidth === 0
-                ? wordWidth
-                : currentWidth + spaceWidth + wordWidth;
 
-            if(
-                currentWidth > 0 &&
-                testWidth > maxWidth
-            ){
+            /*
+            Расстояние между словами
+            */
 
-                drawLine(
-                    currentLine,
-                    startX,
-                    y
-                );
+            const normalSpace =
+                ctx.measureText(" ").width;
 
-                y += lineHeight;
 
-                currentLine = w;
-                currentWidth = wordWidth;
+            const spaceWidth =
+                normalSpace *
+                Number(word.value);
+
+
+            let newWidth;
+
+
+            if(currentWords.length === 0){
+
+                newWidth =
+                    wordWidth;
 
             }else{
 
-                if(currentLine === ""){
-                    currentLine = w;
-                    currentWidth = wordWidth;
-                }else{
+                newWidth =
+                    currentWidth +
+                    spaceWidth +
+                    wordWidth;
 
-                    currentLine += " " + w;
+            }
 
-                    currentWidth =
-                        testWidth;
-                }
+
+            /*
+            Если слово не помещается
+            */
+
+            if(
+                currentWords.length > 0 &&
+                newWidth > maxWidth
+            ){
+
+                drawLine(
+                    currentWords,
+                    startX,
+                    y,
+                    spaceWidth
+                );
+
+
+                y += lineHeight;
+
+
+                currentWords = [
+                    currentWord
+                ];
+
+
+                currentWidth =
+                    wordWidth;
+
+            }else{
+
+                currentWords.push(
+                    currentWord
+                );
+
+                currentWidth =
+                    newWidth;
 
             }
 
         }
 
-        if(currentLine !== ""){
+
+        if(currentWords.length){
 
             drawLine(
-                currentLine,
+                currentWords,
                 startX,
-                y
+                y,
+                ctx.measureText(" ").width *
+                Number(word.value)
             );
 
+
             y += lineHeight;
+
         }
 
     }
 
 }
 
-function drawLine(text,x,y){
 
-    const j = Number(jitter.value);
-    const s = Number(slant.value);
+/*
+====================================================
+РИСОВАНИЕ СТРОКИ
+====================================================
+*/
 
-    ctx.save();
+function drawLine(
+    words,
+    x,
+    y,
+    spaceWidth
+){
 
-    const randomX =
-        (Math.random() - 0.5) * j;
+    const j =
+        Number(jitter.value);
 
-    const randomY =
-        (Math.random() - 0.5) * j;
+    const sl =
+        Number(slant.value);
 
-    ctx.translate(
-        x + randomX,
-        y + randomY
-    );
 
-    if(s !== 0){
+    let currentX = x;
 
-        ctx.transform(
-            1,
-            0,
-            Math.tan(s * Math.PI / 180),
-            1,
+
+    for(
+        let i=0;
+        i<words.length;
+        i++
+    ){
+
+        const currentWord =
+            words[i];
+
+
+        /*
+        Небольшая естественная
+        неровность каждого слова
+        */
+
+        const randomX =
+            (Math.random() - 0.5) *
+            j;
+
+
+        const randomY =
+            (Math.random() - 0.5) *
+            j;
+
+
+        ctx.save();
+
+
+        ctx.translate(
+            currentX + randomX,
+            y + randomY
+        );
+
+
+        /*
+        Наклон
+        */
+
+        if(sl !== 0){
+
+            ctx.transform(
+                1,
+                0,
+                Math.tan(
+                    sl *
+                    Math.PI /
+                    180
+                ),
+                1,
+                0,
+                0
+            );
+
+        }
+
+
+        ctx.fillText(
+            currentWord,
             0,
             0
         );
 
+
+        ctx.restore();
+
+
+        /*
+        Переходим к следующему слову
+        */
+
+        currentX +=
+            ctx.measureText(
+                currentWord
+            ).width;
+
+
+        if(i < words.length - 1){
+
+            currentX +=
+                spaceWidth;
+
+        }
+
     }
-
-    ctx.fillText(
-        text,
-        0,
-        0
-    );
-
-    ctx.restore();
 
 }
 
-document.getElementById("create").addEventListener(
-    "click",
+
+/*
+====================================================
+АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
+====================================================
+*/
+
+
+/*
+Текст обновляется сразу
+*/
+
+textInput.addEventListener(
+    "input",
     createText
 );
 
-document.getElementById("save").addEventListener(
+
+/*
+Все настройки обновляют
+результат сразу
+*/
+
+[
+    size,
+    line,
+    slant,
+    jitter,
+    word,
+    ink,
+    topPos,
+    leftPos,
+    xPos,
+    yPos,
+    textWidth
+].forEach(function(element){
+
+    element.addEventListener(
+        "input",
+        function(){
+
+            updateValues();
+
+            createText();
+
+        }
+    );
+
+});
+
+
+/*
+Смена шрифта
+*/
+
+style.addEventListener(
+    "change",
+    function(){
+
+        createText();
+
+    }
+);
+
+
+/*
+Кнопка Создать
+*/
+
+document.getElementById(
+    "create"
+).addEventListener(
+    "click",
+    function(){
+
+        createText();
+
+    }
+);
+
+
+/*
+====================================================
+ЖДЁМ ЗАГРУЗКУ ШРИФТОВ
+====================================================
+*/
+
+document.fonts.ready.then(
+    function(){
+
+        updateValues();
+
+        createText();
+
+    }
+);
+
+
+/*
+====================================================
+СОХРАНЕНИЕ
+====================================================
+*/
+
+document.getElementById(
+    "save"
+).addEventListener(
     "click",
     function(){
 
         const result =
-            document.createElement("canvas");
+            document.createElement(
+                "canvas"
+            );
 
-        result.width = canvas.width;
-        result.height = canvas.height;
+
+        result.width =
+            canvas.width;
+
+        result.height =
+            canvas.height;
+
 
         const rctx =
-            result.getContext("2d");
+            result.getContext(
+                "2d"
+            );
+
 
         /*
-         * Сначала рисуем настоящую фотографию тетради.
-         */
+        Фото тетради
+        */
+
         rctx.drawImage(
             paperImage,
             0,
@@ -566,23 +1138,33 @@ document.getElementById("save").addEventListener(
             result.height
         );
 
+
         /*
-         * Затем накладываем написанный текст.
-         */
+        Текст
+        */
+
         rctx.drawImage(
             canvas,
             0,
             0
         );
 
+
         const link =
-            document.createElement("a");
+            document.createElement(
+                "a"
+            );
+
 
         link.download =
             "handwrite-a4.png";
 
+
         link.href =
-            result.toDataURL("image/png");
+            result.toDataURL(
+                "image/png"
+            );
+
 
         link.click();
 
@@ -591,14 +1173,16 @@ document.getElementById("save").addEventListener(
 
 
 /*
- * Начальная загрузка.
- */
-
-updateValues();
+====================================================
+СТАРТ
+====================================================
+*/
 
 paperImage.src =
     "./tetrad1.jpg?v=" +
     Date.now();
+
+updateValues();
 
 </script>
 
