@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>✍️ HandWrite A4</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&display=swap" rel="stylesheet">
@@ -127,6 +128,7 @@ button:hover{
 canvas{
     width:100%;
     height:auto;
+    display:block;
     background:white;
     box-shadow:0 2px 10px #aaa;
 }
@@ -153,695 +155,1053 @@ canvas{
 
 <div class="main-settings">
 
-    <div class="setting">
-        <label>Стиль почерка</label>
-        <select id="style">
-            <option value="badscript">Bad Script</option>
-            <option value="caveat">Caveat</option>
-            <option value="marck">Marck Script</option>
-            <option value="kalam">Kalam</option>
-            <option value="neucha">Neucha</option>
-            <option value="pangolin">Pangolin</option>
-        </select>
-    </div>
+<div class="setting">
+<label>Стиль почерка</label>
 
-    <div class="setting">
-        <label>Бумага</label>
-        <select id="paper">
-            <option value="plain">Белый лист</option>
-            <option value="tetrad1">Тетрадь 1</option>
-            <option value="tetrad2">Тетрадь 2</option>
-        </select>
-    </div>
+<select id="style">
+<option value="badscript">Bad Script</option>
+<option value="caveat">Caveat</option>
+<option value="marck">Marck Script</option>
+<option value="kalam">Kalam</option>
+<option value="neucha">Neucha</option>
+<option value="pangolin">Pangolin</option>
+</select>
 
 </div>
+
+<div class="setting">
+<label>Бумага</label>
+
+<select id="paper">
+<option value="plain">Белый лист</option>
+<option value="tetrad1">Тетрадь 1</option>
+<option value="tetrad2">Тетрадь 2</option>
+</select>
+
+</div>
+
+</div>
+
 
 <details open>
-    <summary>✏️ Размер текста</summary>
 
-    <div class="details-content">
+<summary>✏️ Размер текста</summary>
 
-        <div class="option">
-            <label>
-                Размер
-                <span class="value" id="sizeVal">30</span>
-            </label>
-            <input id="size" type="range" min="16" max="60" value="30">
-        </div>
+<div class="details-content">
 
-        <div class="option">
-            <label>
-                Межстрочный интервал
-                <span class="value" id="lineVal">1.4</span>
-            </label>
-            <input id="line" type="range" min="1" max="2" step="0.1" value="1.4">
-        </div>
+<div class="option">
 
-    </div>
+<label>
+Размер
+<span class="value" id="sizeVal">30</span>
+</label>
+
+<input id="size"
+type="range"
+min="16"
+max="60"
+value="30">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Межстрочный интервал
+<span class="value" id="lineVal">1.4</span>
+</label>
+
+<input id="line"
+type="range"
+min="1"
+max="2"
+step="0.1"
+value="1.4">
+
+</div>
+
+</div>
+
 </details>
+
 
 <details>
-    <summary>🖊️ Реалистичность почерка</summary>
 
-    <div class="details-content">
+<summary>🖊️ Реалистичность почерка</summary>
 
-        <div class="option">
-            <label>
-                Наклон
-                <span class="value" id="slantVal">0</span>
-            </label>
-            <input id="slant" type="range" min="-8" max="8" value="0">
-        </div>
+<div class="details-content">
 
-        <div class="option">
-            <label>
-                Неровность
-                <span class="value" id="jitterVal">2</span>
-            </label>
-            <input id="jitter" type="range" min="0" max="6" step="1" value="2">
-        </div>
+<div class="option">
 
-        <div class="option">
-            <label>
-                Расстояние между словами
-                <span class="value" id="wordVal">1</span>
-            </label>
-            <input id="word" type="range" min="0.7" max="1.5" step="0.1" value="1">
-        </div>
+<label>
+Наклон
+<span class="value" id="slantVal">0</span>
+</label>
 
-        <div class="option">
-            <label>
-                Прозрачность чернил
-                <span class="value" id="inkVal">92</span>
-            </label>
-            <input id="ink" type="range" min="60" max="100" value="92">
-        </div>
+<input id="slant"
+type="range"
+min="-8"
+max="8"
+value="0">
 
-    </div>
+</div>
+
+
+<div class="option">
+
+<label>
+Неровность
+<span class="value" id="jitterVal">2</span>
+</label>
+
+<input id="jitter"
+type="range"
+min="0"
+max="6"
+value="2">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Расстояние между словами
+<span class="value" id="wordVal">1</span>
+</label>
+
+<input id="word"
+type="range"
+min="0.7"
+max="1.5"
+step="0.1"
+value="1">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Прозрачность чернил
+<span class="value" id="inkVal">92</span>
+</label>
+
+<input id="ink"
+type="range"
+min="60"
+max="100"
+value="92">
+
+</div>
+
+</div>
+
 </details>
+
 
 <details>
-    <summary>📐 Положение текста</summary>
 
-    <div class="details-content">
+<summary>📐 Положение текста</summary>
 
-        <div class="option">
-            <label>
-                Отступ сверху
-                <span class="value" id="topVal">70</span>
-            </label>
-            <input id="top" type="range" min="0" max="300" value="70">
-        </div>
+<div class="details-content">
 
-        <div class="option">
-            <label>
-                Отступ слева
-                <span class="value" id="leftVal">80</span>
-            </label>
-            <input id="left" type="range" min="0" max="300" value="80">
-        </div>
+<div class="option">
 
-        <div class="option">
-            <label>
-                Смещение X
-                <span class="value" id="xVal">0</span>
-            </label>
-            <input id="x" type="range" min="-250" max="250" value="0">
-        </div>
+<label>
+Отступ сверху
+<span class="value" id="topVal">70</span>
+</label>
 
-        <div class="option">
-            <label>
-                Ширина текста
-                <span class="value" id="widthVal">800</span>
-            </label>
-            <input id="width" type="range" min="300" max="1100" value="800">
-        </div>
+<input id="top"
+type="range"
+min="0"
+max="300"
+value="70">
 
-    </div>
+</div>
+
+
+<div class="option">
+
+<label>
+Отступ слева
+<span class="value" id="leftVal">80</span>
+</label>
+
+<input id="left"
+type="range"
+min="0"
+max="300"
+value="80">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Смещение X
+<span class="value" id="xVal">0</span>
+</label>
+
+<input id="x"
+type="range"
+min="-250"
+max="250"
+value="0">
+
+</div>
+
+
+<div class="option">
+
+<label>
+Ширина текста
+<span class="value" id="widthVal">800</span>
+</label>
+
+<input id="width"
+type="range"
+min="300"
+max="1100"
+value="800">
+
+</div>
+
+</div>
+
 </details>
+
 
 <div class="buttons">
-    <button id="create">✍️ Создать</button>
-    <button id="save">💾 Сохранить PNG</button>
+
+<button id="create">
+✍️ Создать
+</button>
+
+<button id="save">
+💾 Сохранить PNG
+</button>
+
 </div>
 
 </div>
+
 
 <div class="canvas-wrap">
-    <canvas id="canvas" width="1240" height="1754"></canvas>
+
+<canvas
+id="canvas"
+width="1240"
+height="1754">
+</canvas>
+
 </div>
 
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+document.getElementById("canvas");
 
-const text = document.getElementById("text");
-const style = document.getElementById("style");
-const paper = document.getElementById("paper");
-
-const size = document.getElementById("size");
-const line = document.getElementById("line");
-const slant = document.getElementById("slant");
-const jitter = document.getElementById("jitter");
-const word = document.getElementById("word");
-const ink = document.getElementById("ink");
-
-const top = document.getElementById("top");
-const left = document.getElementById("left");
-const x = document.getElementById("x");
-const width = document.getElementById("width");
+const ctx =
+canvas.getContext("2d");
 
 
-function val(el){
-    return parseFloat(el.value);
+const text =
+document.getElementById("text");
+
+const style =
+document.getElementById("style");
+
+const paper =
+document.getElementById("paper");
+
+
+const size =
+document.getElementById("size");
+
+const line =
+document.getElementById("line");
+
+const slant =
+document.getElementById("slant");
+
+const jitter =
+document.getElementById("jitter");
+
+const word =
+document.getElementById("word");
+
+const ink =
+document.getElementById("ink");
+
+
+const top =
+document.getElementById("top");
+
+const left =
+document.getElementById("left");
+
+const x =
+document.getElementById("x");
+
+const width =
+document.getElementById("width");
+
+
+function val(element){
+return parseFloat(element.value);
 }
 
 
 function updateValues(){
 
-    document.getElementById("sizeVal").textContent = size.value;
-    document.getElementById("lineVal").textContent = line.value;
-    document.getElementById("slantVal").textContent = slant.value;
-    document.getElementById("jitterVal").textContent = jitter.value;
-    document.getElementById("wordVal").textContent = word.value;
-    document.getElementById("inkVal").textContent = ink.value;
+document.getElementById("sizeVal").textContent =
+size.value;
 
-    document.getElementById("topVal").textContent = top.value;
-    document.getElementById("leftVal").textContent = left.value;
-    document.getElementById("xVal").textContent = x.value;
-    document.getElementById("widthVal").textContent = width.value;
+document.getElementById("lineVal").textContent =
+line.value;
+
+document.getElementById("slantVal").textContent =
+slant.value;
+
+document.getElementById("jitterVal").textContent =
+jitter.value;
+
+document.getElementById("wordVal").textContent =
+word.value;
+
+document.getElementById("inkVal").textContent =
+ink.value;
+
+document.getElementById("topVal").textContent =
+top.value;
+
+document.getElementById("leftVal").textContent =
+left.value;
+
+document.getElementById("xVal").textContent =
+x.value;
+
+document.getElementById("widthVal").textContent =
+width.value;
+
 }
 
 
-/* =========================================================
-   ГЛАВНОЕ ИСПРАВЛЕНИЕ:
-   картинки находятся внутри /index.htm/
-   ========================================================= */
+/*
+====================================================
+ПУТЬ К КАРТИНКАМ
+====================================================
+*/
 
 function getImageSrc(){
 
-    if(paper.value === "tetrad1"){
-        return "./tetrad1.jpg";
-    }
+if(paper.value === "tetrad1"){
+return "./tetrad1.jpg";
+}
 
-    if(paper.value === "tetrad2"){
-        return "./tetrad2.jpg";
-    }
+if(paper.value === "tetrad2"){
+return "./tetrad2.jpg";
+}
 
-    return "";
+return null;
+
 }
 
 
-function random(min,max){
-    return Math.random()*(max-min)+min;
-}
-
+/*
+====================================================
+ШРИФТ
+====================================================
+*/
 
 function getFont(){
 
-    switch(style.value){
+switch(style.value){
 
-        case "caveat":
-            return "Caveat";
+case "caveat":
+return "Caveat";
 
-        case "marck":
-            return "Marck Script";
+case "marck":
+return "Marck Script";
 
-        case "kalam":
-            return "Kalam";
+case "kalam":
+return "Kalam";
 
-        case "neucha":
-            return "Neucha";
+case "neucha":
+return "Neucha";
 
-        case "pangolin":
-            return "Pangolin";
+case "pangolin":
+return "Pangolin";
 
-        default:
-            return "Bad Script";
-    }
+default:
+return "Bad Script";
+
+}
+
 }
 
 
 function prepareFont(){
 
-    ctx.font = `${val(size)}px "${getFont()}"`;
+ctx.font =
+val(size) + "px " +
+getFont();
+
 }
 
 
-function wrapText(str,maxWidth){
-
-    prepareFont();
-
-    const words = str.split(/\s+/);
-    const lines = [];
-
-    let current = "";
-
-    for(let i=0;i<words.length;i++){
-
-        const test = current
-            ? current + " " + words[i]
-            : words[i];
-
-        if(ctx.measureText(test).width <= maxWidth){
-            current = test;
-        }
-        else{
-
-            if(current){
-                lines.push(current);
-            }
-
-            current = words[i];
-        }
-    }
-
-    if(current){
-        lines.push(current);
-    }
-
-    return lines;
-}
-
-
-/* Области тетрадных листов */
+/*
+====================================================
+ОБЛАСТИ ТЕТРАДИ
+====================================================
+*/
 
 function paperRegion(){
 
-    if(paper.value === "tetrad1"){
+if(paper.value === "tetrad1"){
 
-        return {
-            x:105,
-            y:145,
-            w:1060,
-            h:1530
-        };
+return {
+x:105,
+y:145,
+w:1060,
+h:1530
+};
 
-    }
-
-    if(paper.value === "tetrad2"){
-
-        return {
-            x:55,
-            y:75,
-            w:1120,
-            h:1600
-        };
-
-    }
-
-    return {
-        x:0,
-        y:0,
-        w:1240,
-        h:1754
-    };
 }
 
 
-/* Рисуем бумагу */
+if(paper.value === "tetrad2"){
+
+return {
+x:55,
+y:75,
+w:1120,
+h:1600
+};
+
+}
+
+
+return {
+x:0,
+y:0,
+w:1240,
+h:1754
+};
+
+}
+
+
+/*
+====================================================
+РИСУЕМ БУМАГУ
+====================================================
+*/
 
 function drawPaper(){
 
-    const src = getImageSrc();
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-    /* Обычный белый лист */
-
-    if(!src){
-
-        ctx.fillStyle = "#fffdf8";
-
-        ctx.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        createText();
-
-        return;
-    }
+const src =
+getImageSrc();
 
 
-    const img = new Image();
+/*
+Белый лист
+*/
 
-    img.onload = function(){
+if(!src){
 
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-        const r = paperRegion();
+ctx.fillStyle =
+"#fffdf8";
 
-        /*
-         * Масштабируем фотографию так,
-         * чтобы она полностью закрывала область.
-         */
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-        const scale = Math.max(
-            canvas.width / r.w,
-            canvas.height / r.h
-        );
+createText();
 
-        const dw = img.width * scale;
-        const dh = img.height * scale;
+return;
 
-        const dx = -r.x * scale;
-        const dy = -r.y * scale;
-
-        ctx.drawImage(
-            img,
-            dx,
-            dy,
-            dw,
-            dh
-        );
-
-        createText();
-    };
-
-
-    img.onerror = function(){
-
-        console.error(
-            "Не удалось загрузить:",
-            src
-        );
-
-        ctx.fillStyle = "#fffdf8";
-
-        ctx.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        ctx.fillStyle = "#b00020";
-
-        ctx.font = "28px Arial";
-
-        ctx.fillText(
-            "Не удалось загрузить изображение тетради",
-            40,
-            70
-        );
-
-        ctx.font = "18px Arial";
-
-        ctx.fillText(
-            src,
-            40,
-            110
-        );
-
-    };
-
-
-    /*
-     * ВАЖНО:
-     * добавляем параметр для предотвращения кэша.
-     */
-
-    img.src = src + "?v=" + Date.now();
 }
 
 
-/* Рисование отдельного слова */
+/*
+Загружаем фотографию
+*/
 
-function drawWord(wordText,xPos,yPos){
-
-    prepareFont();
-
-    const j = val(jitter);
-
-    const offsetX = random(-j,j);
-    const offsetY = random(-j,j);
-
-    const angle =
-        random(
-            -val(slant),
-            val(slant)
-        ) * Math.PI / 180;
+const img =
+new Image();
 
 
-    ctx.save();
+img.onload = function(){
 
-    ctx.translate(
-        xPos + offsetX,
-        yPos + offsetY
-    );
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-    ctx.rotate(angle);
 
-    ctx.globalAlpha =
-        val(ink) / 100;
+/*
+ВАЖНО:
 
-    ctx.fillStyle = "#222";
+Теперь фотография сначала
+рисуется на весь Canvas.
 
-    ctx.fillText(
-        wordText,
-        0,
-        0
-    );
+Так мы точно исключаем
+ситуацию, когда она уходит
+за пределы изображения.
+*/
 
-    ctx.restore();
+ctx.drawImage(
+img,
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-    ctx.globalAlpha = 1;
+
+/*
+После бумаги рисуем текст.
+*/
+
+createText();
+
+};
+
+
+/*
+Если изображение не загрузилось
+*/
+
+img.onerror = function(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+ctx.fillStyle =
+"#fffdf8";
+
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+ctx.fillStyle =
+"#c00000";
+
+ctx.font =
+"28px Arial";
+
+ctx.fillText(
+"Ошибка загрузки тетради",
+40,
+70
+);
+
+ctx.font =
+"18px Arial";
+
+ctx.fillText(
+src,
+40,
+110
+);
+
+};
+
+
+/*
+Используем абсолютный URL
+относительно страницы.
+
+Это важно для:
+
+/index.htm/
+
+*/
+
+const imageURL =
+new URL(
+src,
+document.baseURI
+).href;
+
+
+img.src =
+imageURL +
+"?v=" +
+Date.now();
+
 }
 
 
-/* Рисование строки */
+/*
+====================================================
+ПЕРЕНОС СТРОК
+====================================================
+*/
 
-function drawLine(lineText,xPos,yPos){
+function wrapText(
+str,
+maxWidth
+){
 
-    prepareFont();
+prepareFont();
 
-    const words = lineText.split(/\s+/);
+const words =
+str.split(/\s+/);
 
-    let currentX = xPos;
+const lines = [];
 
-    const extraWordSpace =
-        val(size) * (val(word)-1);
+let current = "";
 
 
-    for(let i=0;i<words.length;i++){
+for(
+let i=0;
+i<words.length;
+i++
+){
 
-        const wordText = words[i];
+const test =
+current
+?
+current + " " + words[i]
+:
+words[i];
 
-        drawWord(
-            wordText,
-            currentX,
-            yPos
-        );
 
-        const wordWidth =
-            ctx.measureText(wordText).width;
+if(
+ctx.measureText(test).width
+<= maxWidth
+){
 
-        currentX +=
-            wordWidth +
-            ctx.measureText(" ").width +
-            extraWordSpace;
-    }
+current = test;
+
+}else{
+
+if(current){
+lines.push(current);
+}
+
+current =
+words[i];
+
+}
+
 }
 
 
-/* Основное создание текста */
+if(current){
+lines.push(current);
+}
+
+
+return lines;
+
+}
+
+
+/*
+====================================================
+СЛОВО
+====================================================
+*/
+
+function drawWord(
+wordText,
+xPos,
+yPos
+){
+
+prepareFont();
+
+
+const j =
+val(jitter);
+
+
+const offsetX =
+Math.random() * j * 2 - j;
+
+const offsetY =
+Math.random() * j * 2 - j;
+
+
+const angle =
+(
+Math.random() *
+(val(slant) * 2)
+-
+val(slant)
+)
+*
+Math.PI / 180;
+
+
+ctx.save();
+
+
+ctx.translate(
+xPos + offsetX,
+yPos + offsetY
+);
+
+
+ctx.rotate(angle);
+
+
+ctx.globalAlpha =
+val(ink) / 100;
+
+
+ctx.fillStyle =
+"#222";
+
+
+ctx.fillText(
+wordText,
+0,
+0
+);
+
+
+ctx.restore();
+
+
+ctx.globalAlpha = 1;
+
+}
+
+
+/*
+====================================================
+СТРОКА
+====================================================
+*/
+
+function drawLine(
+lineText,
+xPos,
+yPos
+){
+
+prepareFont();
+
+
+const words =
+lineText.split(/\s+/);
+
+
+let currentX =
+xPos;
+
+
+const extra =
+val(size) *
+(val(word)-1);
+
+
+for(
+let i=0;
+i<words.length;
+i++
+){
+
+const wordText =
+words[i];
+
+
+drawWord(
+wordText,
+currentX,
+yPos
+);
+
+
+const wordWidth =
+ctx.measureText(
+wordText
+).width;
+
+
+currentX +=
+wordWidth +
+ctx.measureText(" ").width +
+extra;
+
+}
+
+}
+
+
+/*
+====================================================
+ТЕКСТ
+====================================================
+*/
 
 function createText(){
 
-    const value = text.value.trim();
-
-    if(!value){
-        return;
-    }
+const value =
+text.value.trim();
 
 
-    const r = paperRegion();
-
-    const startX =
-        r.x +
-        val(left) +
-        val(x);
-
-    const maxWidth =
-        Math.min(
-            val(width),
-            r.w - val(left) - 20
-        );
-
-    let lines = [];
-
-
-    /*
-     * Сохраняем абзацы.
-     */
-
-    const paragraphs =
-        value.split(/\n/);
-
-
-    for(let p=0;p<paragraphs.length;p++){
-
-        const paragraph =
-            paragraphs[p].trim();
-
-        if(paragraph === ""){
-
-            lines.push("");
-
-            continue;
-        }
-
-        const wrapped =
-            wrapText(
-                paragraph,
-                maxWidth
-            );
-
-        lines.push(...wrapped);
-    }
-
-
-    let y =
-        r.y +
-        val(top) +
-        val(size);
-
-
-    const lineHeight =
-        val(size) *
-        val(line);
-
-
-    for(let i=0;i<lines.length;i++){
-
-        if(lines[i] !== ""){
-
-            drawLine(
-                lines[i],
-                startX,
-                y
-            );
-
-        }
-
-        y += lineHeight;
-    }
+if(!value){
+return;
 }
 
 
-/* Кнопка создания */
+const r =
+paperRegion();
+
+
+const startX =
+r.x +
+val(left) +
+val(x);
+
+
+const maxWidth =
+Math.min(
+val(width),
+r.w - val(left) - 20
+);
+
+
+const paragraphs =
+value.split(/\n/);
+
+
+const lines = [];
+
+
+for(
+let i=0;
+i<paragraphs.length;
+i++
+){
+
+const paragraph =
+paragraphs[i].trim();
+
+
+if(
+paragraph === ""
+){
+
+lines.push("");
+
+continue;
+
+}
+
+
+const wrapped =
+wrapText(
+paragraph,
+maxWidth
+);
+
+
+lines.push(
+...wrapped
+);
+
+}
+
+
+let y =
+r.y +
+val(top) +
+val(size);
+
+
+const lineHeight =
+val(size) *
+val(line);
+
+
+for(
+let i=0;
+i<lines.length;
+i++
+){
+
+if(lines[i] !== ""){
+
+drawLine(
+lines[i],
+startX,
+y
+);
+
+}
+
+
+y +=
+lineHeight;
+
+}
+
+}
+
+
+/*
+====================================================
+КНОПКА СОЗДАТЬ
+====================================================
+*/
 
 document
-    .getElementById("create")
-    .addEventListener(
-        "click",
-        function(){
+.getElementById("create")
+.addEventListener(
+"click",
+function(){
 
-            updateValues();
+updateValues();
 
-            drawPaper();
+drawPaper();
 
-        }
-    );
+}
+);
 
 
-/* Сохранение PNG */
+/*
+====================================================
+СОХРАНЕНИЕ
+====================================================
+*/
 
 document
-    .getElementById("save")
-    .addEventListener(
-        "click",
-        function(){
+.getElementById("save")
+.addEventListener(
+"click",
+function(){
 
-            const link =
-                document.createElement("a");
-
-            link.download =
-                "handwrite-a4.png";
-
-            link.href =
-                canvas.toDataURL("image/png");
-
-            link.click();
-
-        }
-    );
+const link =
+document.createElement("a");
 
 
-/* Изменение настроек */
+link.download =
+"handwrite-a4.png";
+
+
+link.href =
+canvas.toDataURL(
+"image/png"
+);
+
+
+link.click();
+
+}
+);
+
+
+/*
+====================================================
+ПОЛЗУНКИ
+====================================================
+*/
 
 [
-    size,
-    line,
-    slant,
-    jitter,
-    word,
-    ink,
-    top,
-    left,
-    x,
-    width
-].forEach(function(el){
+size,
+line,
+slant,
+jitter,
+word,
+ink,
+top,
+left,
+x,
+width
 
-    el.addEventListener(
-        "input",
-        updateValues
-    );
+].forEach(
+function(element){
 
-});
+element.addEventListener(
+"input",
+updateValues
+);
+
+}
+);
 
 
-/* Если меняется бумага или почерк */
+/*
+====================================================
+СМЕНА БУМАГИ
+====================================================
+*/
 
 paper.addEventListener(
-    "change",
-    drawPaper
+"change",
+function(){
+
+drawPaper();
+
+}
 );
+
+
+/*
+====================================================
+СМЕНА ШРИФТА
+====================================================
+*/
 
 style.addEventListener(
-    "change",
-    function(){
+"change",
+function(){
 
-        if(text.value.trim()){
-            drawPaper();
-        }
+if(text.value.trim()){
 
-    }
+drawPaper();
+
+}
+
+}
 );
 
 
-/* Начальные значения */
+/*
+====================================================
+ЗАПУСК
+====================================================
+*/
 
 updateValues();
 
 
-/*
- * Ждём загрузки Google Fonts,
- * затем рисуем.
- */
-
 document.fonts.ready.then(
-    function(){
+function(){
 
-        drawPaper();
+drawPaper();
 
-    }
-);
+});
 
 </script>
 
