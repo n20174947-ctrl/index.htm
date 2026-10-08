@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>HandWrite A4</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&display=swap" rel="stylesheet">
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -113,34 +115,42 @@ canvas{
 }
 
 @media(max-width:600px){
+
     .controls{
         grid-template-columns:1fr;
     }
+
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
 <div class="panel">
 
 <h1>✍️ HandWrite A4</h1>
 
-<textarea id="text" placeholder="Введи или вставь сюда текст..."></textarea>
+
+<textarea
+id="text"
+placeholder="Введи или вставь сюда текст..."
+></textarea>
+
 
 <div class="controls">
 
+
 <label>
+
 Стиль почерка
+
 <select id="style">
 
-<option value="marck">
-Реалистичный — Marck Script
-</option>
-
 <option value="badscript">
-Небрежный — Bad Script
+Реалистичный — Bad Script
 </option>
 
 <option value="kalam">
@@ -149,6 +159,10 @@ canvas{
 
 <option value="caveat">
 Небрежный — Caveat
+</option>
+
+<option value="marck">
+Связный — Marck Script
 </option>
 
 <option value="neucha">
@@ -160,10 +174,12 @@ canvas{
 </option>
 
 </select>
+
 </label>
 
 
 <label>
+
 Бумага
 
 <select id="paper">
@@ -188,8 +204,10 @@ canvas{
 <div class="option">
 
 <label>
+
 Размер:
-<span id="sizeValue">32</span> px
+<span id="sizeValue">34</span> px
+
 </label>
 
 <input
@@ -197,7 +215,8 @@ id="size"
 type="range"
 min="18"
 max="60"
-value="32">
+value="34"
+>
 
 </div>
 
@@ -205,16 +224,19 @@ value="32">
 <div class="option">
 
 <label>
-Поля:
-<span id="marginValue">70</span> px
+
+Поля сверху:
+<span id="marginValue">55</span> px
+
 </label>
 
 <input
 id="margin"
 type="range"
-min="30"
+min="20"
 max="160"
-value="70">
+value="55"
+>
 
 </div>
 
@@ -222,8 +244,10 @@ value="70">
 <div class="option">
 
 <label>
+
 Интервал:
 <span id="lineValue">1.45</span>
+
 </label>
 
 <input
@@ -232,43 +256,56 @@ type="range"
 min="1"
 max="2"
 step="0.05"
-value="1.45">
+value="1.45"
+>
 
 </div>
 
 </div>
 
 
-<div class="option" style="margin-top:10px;">
+<div
+class="option"
+style="margin-top:10px;"
+>
 
 <label>
-Отступ текста X:
-<span id="xOffsetValue">80</span> px
+
+Начало текста X:
+<span id="xOffsetValue">45</span> px
+
 </label>
 
 <input
 id="xOffset"
 type="range"
 min="0"
-max="180"
-value="80">
+max="250"
+value="45"
+>
 
 </div>
 
 
-<div class="option" style="margin-top:10px;">
+<div
+class="option"
+style="margin-top:10px;"
+>
 
 <label>
+
 Ширина текста:
-<span id="widthValue">800</span> px
+<span id="widthValue">1100</span> px
+
 </label>
 
 <input
 id="width"
 type="range"
 min="200"
-max="1100"
-value="800">
+max="1150"
+value="1100"
+>
 
 </div>
 
@@ -276,6 +313,7 @@ value="800">
 <button id="create">
 Создать лист
 </button>
+
 
 <button id="save">
 Сохранить PNG
@@ -287,23 +325,28 @@ value="800">
 <canvas
 id="canvas"
 width="1240"
-height="1754">
-</canvas>
+height="1754"
+></canvas>
 
 </div>
 
 </div>
+
 </div>
 
 
 <script>
+
+
+/* =========================================
+   ОСНОВНЫЕ ЭЛЕМЕНТЫ
+========================================= */
 
 const canvas =
 document.getElementById("canvas");
 
 const ctx =
 canvas.getContext("2d");
-
 
 const text =
 document.getElementById("text");
@@ -330,9 +373,9 @@ const width =
 document.getElementById("width");
 
 
-/* =========================
-   ПОЛЗУНКИ
-========================= */
+/* =========================================
+   ЗНАЧЕНИЯ ПОЛЗУНКОВ
+========================================= */
 
 function updateValues(){
 
@@ -358,23 +401,308 @@ function updateValues(){
 }
 
 
-/* =========================
-   ФОН ТЕТРАДИ
-========================= */
+/* =========================================
+   ФОТО ТЕТРАДИ
+========================================= */
 
 function getImageSrc(){
 
     if(paper.value === "tetrad1"){
+
         return "tetrad1.jpg";
+
     }
 
     if(paper.value === "tetrad2"){
+
         return "tetrad2.jpg";
+
     }
 
     return "";
 }
 
+
+/* =========================================
+   ШРИФТ
+========================================= */
+
+function getFont(){
+
+    if(style.value === "badscript"){
+
+        return "Bad Script";
+
+    }
+
+    if(style.value === "kalam"){
+
+        return "Kalam";
+
+    }
+
+    if(style.value === "caveat"){
+
+        return "Caveat";
+
+    }
+
+    if(style.value === "marck"){
+
+        return "Marck Script";
+
+    }
+
+    if(style.value === "neucha"){
+
+        return "Neucha";
+
+    }
+
+    if(style.value === "pangolin"){
+
+        return "Pangolin";
+
+    }
+
+    return "Bad Script";
+}
+
+
+/* =========================================
+   СЛУЧАЙНОЕ ЧИСЛО
+========================================= */
+
+function random(min,max){
+
+    return Math.random() *
+    (max-min) + min;
+}
+
+
+/* =========================================
+   ПЕРЕНОС СТРОК
+
+   ВАЖНО:
+   здесь сохраняются пробелы в начале.
+========================================= */
+
+function wrapText(str,maxWidth){
+
+    const result = [];
+
+    let current = "";
+
+    /*
+      Разбиваем только по пробелу,
+      а не по /\s+/.
+
+      Поэтому несколько пробелов
+      сохраняются.
+    */
+
+    const words =
+        str.split(" ");
+
+
+    for(let i = 0; i < words.length; i++){
+
+        const word =
+            words[i];
+
+
+        const test =
+            current === ""
+            ? word
+            : current + " " + word;
+
+
+        if(
+            ctx.measureText(test).width
+            > maxWidth
+            &&
+            current.trim() !== ""
+        ){
+
+            result.push(current);
+
+            current = word;
+
+        }else{
+
+            current = test;
+
+        }
+
+    }
+
+
+    if(current !== ""){
+
+        result.push(current);
+
+    }
+
+
+    return result;
+}
+
+
+/* =========================================
+   РИСОВАНИЕ ОДНОЙ СТРОКИ
+
+   Теперь не рисуем каждую букву
+   отдельным сильным наклоном.
+
+   Это делает почерк естественнее.
+========================================= */
+
+function drawHandwrittenLine(
+    str,
+    x,
+    y
+){
+
+    /*
+      Небольшая индивидуальность
+      всей строки.
+    */
+
+    const lineRotation =
+        random(-0.006,0.006);
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        x,
+        y
+    );
+
+
+    ctx.rotate(
+        lineRotation
+    );
+
+
+    let currentX = 0;
+
+
+    for(
+        let i = 0;
+        i < str.length;
+        i++
+    ){
+
+        const character =
+            str[i];
+
+
+        /*
+          Пробелы НЕ удаляем.
+
+          Благодаря этому можно писать:
+
+          "             06.11"
+
+          и дата будет справа.
+        */
+
+        if(character === " "){
+
+            currentX +=
+                ctx.measureText(" ").width
+                *
+                random(0.95,1.15);
+
+            continue;
+
+        }
+
+
+        /*
+          Очень маленькое
+          изменение высоты.
+        */
+
+        const yMove =
+            random(-0.7,0.7);
+
+
+        /*
+          Очень маленький наклон.
+
+          Не слишком сильно,
+          чтобы буквы не выглядели
+          случайно разбросанными.
+        */
+
+        const rotation =
+            random(-0.012,0.012);
+
+
+        /*
+          Почти одинаковый размер.
+        */
+
+        const scale =
+            random(0.985,1.015);
+
+
+        const charWidth =
+            ctx.measureText(character).width;
+
+
+        ctx.save();
+
+
+        ctx.translate(
+            currentX,
+            yMove
+        );
+
+
+        ctx.rotate(
+            rotation
+        );
+
+
+        ctx.scale(
+            scale,
+            scale
+        );
+
+
+        ctx.fillText(
+            character,
+            0,
+            0
+        );
+
+
+        ctx.restore();
+
+
+        /*
+          Едва заметная разница
+          между буквами.
+        */
+
+        currentX +=
+            charWidth +
+            random(-0.15,0.25);
+
+    }
+
+
+    ctx.restore();
+}
+
+
+/* =========================================
+   ФОН
+========================================= */
 
 function drawPaper(){
 
@@ -412,7 +740,8 @@ function drawPaper(){
         new Image();
 
 
-    img.onload = function(){
+    img.onload =
+    function(){
 
         ctx.drawImage(
             img,
@@ -423,10 +752,12 @@ function drawPaper(){
         );
 
         createText();
+
     };
 
 
-    img.onerror = function(){
+    img.onerror =
+    function(){
 
         ctx.fillStyle =
             "#fffdf8";
@@ -439,6 +770,12 @@ function drawPaper(){
         );
 
         createText();
+
+        console.log(
+            "Не удалось загрузить:",
+            src
+        );
+
     };
 
 
@@ -446,249 +783,33 @@ function drawPaper(){
 }
 
 
-/* =========================
-   ШРИФТЫ
-========================= */
-
-function getFont(){
-
-    if(style.value === "marck")
-        return "Marck Script";
-
-    if(style.value === "badscript")
-        return "Bad Script";
-
-    if(style.value === "kalam")
-        return "Kalam";
-
-    if(style.value === "caveat")
-        return "Caveat";
-
-    if(style.value === "neucha")
-        return "Neucha";
-
-    if(style.value === "pangolin")
-        return "Pangolin";
-
-    return "Marck Script";
-}
-
-
-/* =========================
-   СЛУЧАЙНОЕ ЧИСЛО
-========================= */
-
-function random(min,max){
-
-    return Math.random() *
-        (max-min) + min;
-}
-
-
-/* =========================
-   ПЕРЕНОС СТРОК
-========================= */
-
-function wrapText(
-    str,
-    maxWidth
-){
-
-    const words =
-        str.split(/\s+/);
-
-    const result = [];
-
-    let current = "";
-
-
-    for(
-        const word of words
-    ){
-
-        const test =
-            current
-            ? current + " " + word
-            : word;
-
-
-        if(
-            ctx.measureText(test).width
-            > maxWidth
-            &&
-            current
-        ){
-
-            result.push(
-                current
-            );
-
-            current = word;
-
-        }else{
-
-            current = test;
-        }
-    }
-
-
-    if(current){
-
-        result.push(
-            current
-        );
-    }
-
-
-    return result;
-}
-
-
-/* =========================
-   НАТУРАЛЬНЫЙ ПОЧЕРК
-========================= */
-
-function drawHandwrittenLine(
-    str,
-    x,
-    y
-){
-
-    let currentX = x;
-
-
-    /*
-      Каждая буква получает
-      небольшое отличие.
-
-      Важно:
-      отличие маленькое,
-      поэтому слово остается
-      цельным.
-    */
-
-
-    for(
-        let i = 0;
-        i < str.length;
-        i++
-    ){
-
-        const character =
-            str[i];
-
-
-        if(character === " "){
-
-            currentX +=
-                ctx.measureText(" ").width
-                *
-                random(0.85,1.25);
-
-            continue;
-        }
-
-
-        const charWidth =
-            ctx.measureText(
-                character
-            ).width;
-
-
-        /*
-          Небольшое смещение
-          вверх / вниз
-        */
-
-        const yMove =
-            random(-1.5,1.5);
-
-
-        /*
-          Небольшой наклон.
-        */
-
-        const rotation =
-            random(-0.035,0.035);
-
-
-        /*
-          Иногда буква немного
-          меньше или больше.
-        */
-
-        const scale =
-            random(0.96,1.04);
-
-
-        ctx.save();
-
-
-        ctx.translate(
-            currentX,
-            y + yMove
-        );
-
-
-        ctx.rotate(
-            rotation
-        );
-
-
-        ctx.scale(
-            scale,
-            scale
-        );
-
-
-        ctx.fillText(
-            character,
-            0,
-            0
-        );
-
-
-        ctx.restore();
-
-
-        /*
-          Небольшая неровность
-          расстояния между буквами.
-        */
-
-        currentX +=
-            charWidth +
-            random(-0.35,0.45);
-    }
-}
-
-
-/* =========================
-   ОСНОВНАЯ ГЕНЕРАЦИЯ
-========================= */
+/* =========================================
+   СОЗДАНИЕ ТЕКСТА
+========================================= */
 
 function createText(){
 
     const fontSize =
         Number(size.value);
 
-    const m =
+    const topMargin =
         Number(margin.value);
 
     const spacing =
         Number(line.value);
 
-    const xOff =
+    const startX =
         Number(xOffset.value);
 
-    const maxW =
+    const maxWidth =
         Number(width.value);
 
 
     /*
-      Для выбранного тобой
-      почерка автоматически
-      делаем его немного крупнее.
+      Шрифт.
+
+      Bad Script лучше всего
+      подходит под пример.
     */
 
     ctx.font =
@@ -699,20 +820,20 @@ function createText(){
 
 
     /*
-      Цвет синей ручки.
+      Синяя ручка.
     */
 
     ctx.fillStyle =
-        "#16449b";
+        "#17449b";
 
 
     /*
-      Лёгкая прозрачность,
-      как настоящая шариковая ручка.
+      Небольшая прозрачность
+      имитирует чернила.
     */
 
     ctx.globalAlpha =
-        0.90;
+        0.92;
 
 
     ctx.textBaseline =
@@ -720,12 +841,23 @@ function createText(){
 
 
     const lineHeight =
-        fontSize * spacing;
+        fontSize *
+        spacing;
 
 
     let y =
-        m + fontSize;
+        topMargin +
+        fontSize;
 
+
+    /*
+      ВАЖНО:
+
+      Не используем trim()
+      при получении строк.
+
+      Поэтому пробелы сохраняются.
+    */
 
     const paragraphs =
         text.value
@@ -752,9 +884,14 @@ function createText(){
         const paragraph of paragraphs
     ){
 
-        if(
-            !paragraph.trim()
-        ){
+        /*
+          Только полностью пустая строка
+          считается пустой.
+
+          Строка из пробелов НЕ пустая.
+        */
+
+        if(paragraph === ""){
 
             y +=
                 lineHeight;
@@ -766,7 +903,7 @@ function createText(){
         const lines =
             wrapText(
                 paragraph,
-                maxW
+                maxWidth
             );
 
 
@@ -776,65 +913,32 @@ function createText(){
 
             if(
                 y >
-                canvas.height - 40
+                canvas.height - 30
             ){
 
                 break;
+
             }
 
 
-            /*
-              Каждая строка имеет
-              чуть-чуть свой наклон.
-            */
-
-            const lineTilt =
-                random(
-                    -0.0015,
-                    0.0015
-                );
-
-
-            ctx.save();
-
-
-            ctx.translate(
-                xOff,
+            drawHandwrittenLine(
+                currentLine,
+                startX,
                 y
             );
 
 
-            ctx.rotate(
-                lineTilt
-            );
-
-
             /*
-              Сам текст рисуем
-              начиная с 0,
-              потому что уже сделали
-              translate.
-            */
-
-            drawHandwrittenLine(
-                currentLine,
-                0,
-                0
-            );
-
-
-            ctx.restore();
-
-
-            /*
-              Небольшая разница
-              между строками.
+              Небольшая естественная
+              разница между строками.
             */
 
             y +=
                 lineHeight +
-                random(-0.5,0.8);
+                random(-0.4,0.6);
+
         }
+
     }
 
 
@@ -845,9 +949,9 @@ function createText(){
 }
 
 
-/* =========================
-   СОЗДАТЬ
-========================= */
+/* =========================================
+   КНОПКА СОЗДАТЬ
+========================================= */
 
 document
 .getElementById("create")
@@ -858,13 +962,14 @@ document
         await document.fonts.ready;
 
         drawPaper();
+
     }
 );
 
 
-/* =========================
-   СОХРАНИТЬ
-========================= */
+/* =========================================
+   СОХРАНЕНИЕ PNG
+========================================= */
 
 document
 .getElementById("save")
@@ -897,15 +1002,16 @@ document
                 link.click();
 
             },
-            300
+            400
         );
+
     }
 );
 
 
-/* =========================
+/* =========================================
    ИЗМЕНЕНИЕ НАСТРОЕК
-========================= */
+========================================= */
 
 [
     paper,
@@ -926,6 +1032,7 @@ document
                 updateValues();
 
                 drawPaper();
+
             }
         );
 
@@ -937,15 +1044,17 @@ document
                 updateValues();
 
                 drawPaper();
+
             }
         );
+
     }
 );
 
 
-/* =========================
+/* =========================================
    ЗАПУСК
-========================= */
+========================================= */
 
 updateValues();
 
@@ -954,6 +1063,7 @@ document.fonts.ready.then(
     function(){
 
         drawPaper();
+
     }
 );
 
