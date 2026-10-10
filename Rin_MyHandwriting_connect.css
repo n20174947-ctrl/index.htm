@@ -1,8 +1,0 @@
-@font-face {
-  font-family: 'RinMyHandwriting';
-  src: url('./Rin_MyHandwriting_Prototype.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-/* Canvas: ctx.font = '30px RinMyHandwriting'; */
