@@ -5,283 +5,557 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>✍️ HandWrite A4</title>
+
 <style>
 @font-face {
-  font-family: 'RinMyHandwriting';
-  src: url('./Rin_MyHandwriting_Prototype.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
+  font-family: "Victor";
+  src: url("./victor-handwriting.ttf") format("truetype");
   font-display: swap;
 }
-*{box-sizing:border-box}
-body{margin:0;padding:12px;background:#eee;font-family:Arial,sans-serif;color:#222}
-h1{text-align:center;margin:5px 0 18px;font-size:24px}
-.panel{max-width:900px;margin:auto;background:white;padding:14px;border-radius:12px;box-shadow:0 3px 15px #0002}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.control{flex:1;min-width:170px}
-label{display:block;font-size:14px;margin-bottom:5px;font-weight:bold}
-select,input[type=range]{width:100%}
-select{height:37px;border:1px solid #ccc;border-radius:7px;padding:4px 8px;background:white}
-textarea{width:100%;min-height:140px;margin-top:12px;padding:10px;border:1px solid #ccc;border-radius:8px;resize:vertical;font-size:16px;font-family:Arial,sans-serif}
-details{margin-top:10px;border:1px solid #ddd;border-radius:8px;padding:8px 10px}
-summary{cursor:pointer;font-weight:bold;padding:4px}
-.slider{margin:11px 0}
-.slider-title{display:flex;justify-content:space-between;gap:8px;font-size:14px}
-.buttons{display:flex;gap:10px;margin-top:15px}
-button{flex:1;border:0;border-radius:8px;padding:12px;font-size:16px;cursor:pointer;background:#222;color:white}
-button:hover{opacity:.85}
-.paper-wrap{position:relative;width:min(100%,620px);margin:25px auto 0;line-height:0;box-shadow:0 4px 18px #0003;background:white}
-#paperImage{display:block;width:100%;height:auto}
-#canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-.note{color:#666;font-size:12px;line-height:1.4;margin-top:10px}
-@media(max-width:500px){body{padding:7px}.panel{padding:10px}.control{min-width:135px}.buttons button{font-size:14px;padding:11px 5px}}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 12px;
+  background: #eee;
+  font-family: Arial, sans-serif;
+  color: #222;
+}
+
+h1 {
+  text-align: center;
+  margin: 5px 0 18px;
+  font-size: 24px;
+}
+
+.panel {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 3px 15px #0002;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.control {
+  flex: 1;
+  min-width: 170px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+select, input[type="range"] { width: 100%; }
+
+select {
+  height: 37px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  padding: 4px 8px;
+  background: white;
+}
+
+textarea {
+  width: 100%;
+  min-height: 140px;
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+}
+
+details {
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 4px;
+}
+
+.slider { margin: 11px 0; }
+
+.slider-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+button {
+  flex: 1;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  background: #222;
+  color: white;
+}
+
+button:hover { opacity: .85; }
+
+.paper-wrap {
+  position: relative;
+  width: min(100%, 620px);
+  margin: 25px auto 0;
+  line-height: 0;
+  box-shadow: 0 4px 18px #0003;
+  background: white;
+}
+
+#paperImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+#canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.note {
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 10px;
+}
+
+@media (max-width: 500px) {
+  body { padding: 7px; }
+  .panel { padding: 10px; }
+  .control { min-width: 135px; }
+  .buttons button { font-size: 14px; padding: 11px 5px; }
+}
 </style>
 </head>
+
 <body>
 <div class="panel">
-<h1>✍️ HandWrite A4</h1>
+  <h1>✍️ HandWrite A4</h1>
 
-<div class="row">
-<div class="control"><label for="style">Стиль почерка</label>
-<select id="style">
-<option value="RinMyHandwriting" selected>Мой почерк — тестовая версия</option>
-<option value="Shantell Sans">Shantell Sans — живой</option>
-<option value="Bad Script">Bad Script — рукописный</option>
-<option value="Caveat">Caveat — обычный</option>
-<option value="Kalam">Kalam — школьный</option>
-<option value="Marck Script">Marck Script — плавный</option>
-<option value="Neucha">Neucha — неровный</option>
-<option value="Pangolin">Pangolin — округлый</option>
-</select></div>
+  <div class="row">
+    <div class="control">
+      <label for="style">Стиль почерка</label>
+      <select id="style">
+        <option value="Victor" selected>Виктор</option>
+        <option value="Bad Script">Bad Script — рукописный</option>
+        <option value="Caveat">Caveat — обычный</option>
+        <option value="Kalam">Kalam — школьный</option>
+        <option value="Marck Script">Marck Script — плавный</option>
+        <option value="Neucha">Neucha — неровный</option>
+        <option value="Pangolin">Pangolin — округлый</option>
+        <option value="Shantell Sans">Shantell Sans — живой</option>
+      </select>
+    </div>
 
-<div class="control"><label for="paper">Бумага</label>
-<select id="paper"><option value="tetrad1" selected>Тетрадь 1</option><option value="tetrad2">Тетрадь 2</option></select></div>
+    <div class="control">
+      <label for="paper">Бумага</label>
+      <select id="paper">
+        <option value="tetrad1">Тетрадь 1</option>
+        <option value="tetrad2">Тетрадь 2</option>
+        <option value="tetrad3">Тетрадь 3</option>
+        <option value="tetrad4">Тетрадь 4</option>
+        <option value="tetrad5">Тетрадь 5</option>
+        <option value="tetrad6" selected>Тетрадь 6</option>
+      </select>
+    </div>
 
-<div class="control"><label for="inkColor">Цвет ручки</label>
-<select id="inkColor"><option value="blue" selected>Синий</option><option value="darkblue">Тёмно-синий</option><option value="black">Чёрный</option></select></div>
+    <div class="control">
+      <label for="inkColor">Цвет ручки</label>
+      <select id="inkColor">
+        <option value="blue" selected>Синий</option>
+        <option value="darkblue">Тёмно-синий</option>
+        <option value="black">Чёрный</option>
+      </select>
+    </div>
 
-<div class="control"><label for="alignment">Выравнивание</label>
-<select id="alignment"><option value="left" selected>Слева</option><option value="center">По центру</option><option value="right">Справа</option></select></div>
-</div>
+    <div class="control">
+      <label for="alignment">Выравнивание</label>
+      <select id="alignment">
+        <option value="left" selected>Слева</option>
+        <option value="center">По центру</option>
+        <option value="right">Справа</option>
+      </select>
+    </div>
+  </div>
 
-<textarea id="text" placeholder="Введите текст здесь..."></textarea>
+  <textarea id="text" placeholder="Введите текст здесь..."></textarea>
 
-<details open><summary>✏️ Размер текста</summary>
-<div class="slider"><div class="slider-title"><span>Размер</span><span id="sizeVal">30</span></div><input id="size" type="range" min="16" max="60" value="30"></div>
-<div class="slider"><div class="slider-title"><span>Межстрочный интервал</span><span id="lineVal">1.4</span></div><input id="line" type="range" min="1" max="2" step="0.1" value="1.4"></div>
-</details>
+  <details open>
+    <summary>✏️ Размер текста</summary>
 
-<details><summary>🖊️ Реалистичность почерка</summary>
-<div class="slider"><div class="slider-title"><span>Наклон</span><span id="slantVal">0</span></div><input id="slant" type="range" min="-8" max="8" value="0"></div>
-<div class="slider"><div class="slider-title"><span>Неровность</span><span id="jitterVal">2</span></div><input id="jitter" type="range" min="0" max="6" step="0.5" value="2"></div>
-<div class="slider"><div class="slider-title"><span>Расстояние между словами</span><span id="wordVal">1</span></div><input id="word" type="range" min="0.5" max="2" step="0.1" value="1"></div>
-<div class="slider"><div class="slider-title"><span>Прозрачность чернил</span><span id="inkVal">92</span></div><input id="ink" type="range" min="60" max="100" value="92"></div>
-</details>
+    <div class="slider">
+      <div class="slider-title"><span>Размер</span><span id="sizeVal">30</span></div>
+      <input id="size" type="range" min="16" max="60" value="30">
+    </div>
 
-<details><summary>📐 Положение текста</summary>
-<div class="slider"><div class="slider-title"><span>Отступ сверху</span><span id="topVal">0</span></div><input id="top" type="range" min="0" max="300" value="0"></div>
-<div class="slider"><div class="slider-title"><span>Отступ слева</span><span id="leftVal">0</span></div><input id="left" type="range" min="0" max="300" value="0"></div>
-<div class="slider"><div class="slider-title"><span>Смещение X</span><span id="xVal">0</span></div><input id="x" type="range" min="-300" max="300" value="0"></div>
-<div class="slider"><div class="slider-title"><span>Смещение Y</span><span id="yVal">0</span></div><input id="y" type="range" min="-300" max="300" value="0"></div>
-<div class="slider"><div class="slider-title"><span>Ширина текста</span><span id="widthVal">800</span></div><input id="width" type="range" min="300" max="1100" value="800"></div>
-</details>
+    <div class="slider">
+      <div class="slider-title"><span>Межстрочный интервал</span><span id="lineVal">1.4</span></div>
+      <input id="line" type="range" min="1" max="2" step="0.1" value="1.4">
+    </div>
+  </details>
 
-<div class="buttons"><button id="create">✍️ Создать</button><button id="save">💾 Сохранить PNG</button></div>
-<p class="note">Предпросмотр обновляется автоматически. Файл Rin_MyHandwriting_Prototype.ttf должен находиться рядом с index.html.</p>
+  <details>
+    <summary>🖊️ Реалистичность почерка</summary>
 
-<div class="paper-wrap"><img id="paperImage" src="./tetrad1.jpg" alt="Тетрадь"><canvas id="canvas" width="1240" height="1754"></canvas></div>
+    <div class="slider">
+      <div class="slider-title"><span>Наклон</span><span id="slantVal">0</span></div>
+      <input id="slant" type="range" min="-8" max="8" value="0">
+    </div>
+
+    <div class="slider">
+      <div class="slider-title"><span>Неровность</span><span id="jitterVal">2</span></div>
+      <input id="jitter" type="range" min="0" max="6" step="0.5" value="2">
+    </div>
+
+    <div class="slider">
+      <div class="slider-title"><span>Расстояние между словами</span><span id="wordVal">1</span></div>
+      <input id="word" type="range" min="0.5" max="2" step="0.1" value="1">
+    </div>
+
+    <div class="slider">
+      <div class="slider-title"><span>Прозрачность чернил</span><span id="inkVal">92</span></div>
+      <input id="ink" type="range" min="60" max="100" value="92">
+    </div>
+  </details>
+
+  <details>
+    <summary>📐 Положение текста</summary>
+
+    <div class="slider">
+      <div class="slider-title"><span>Отступ сверху</span><span id="topVal">0</span></div>
+      <input id="top" type="range" min="0" max="300" value="0">
+    </div>
+
+    <div class="slider">
+      <div class="slider-title"><span>Отступ слева</span><span id="leftVal">0</span></div>
+      <input id="left" type="range" min="0" max="300" value="0">
+    </div>
+
+    <div class="slider">
+      <div class="slider-title"><span>Смещение X</span><span id="xVal">0</span></div>
+      <input id="x" type="range" min="-300" max="300" value="0">
+    </div>
+
+    <div class="slider">
+      <div class="slider-title"><span>Смещение Y</span><span id="yVal">0</span></div>
+      <input id="y" type="range" min="-300" max="300" value="0">
+    </div>
+
+    <div class="slider">
+      <div class="slider-title"><span>Ширина текста</span><span id="widthVal">800</span></div>
+      <input id="width" type="range" min="300" max="1100" value="800">
+    </div>
+  </details>
+
+  <div class="buttons">
+    <button id="create">✍️ Создать</button>
+    <button id="save">💾 Сохранить PNG</button>
+  </div>
+
+  <p class="note">
+    Шрифт Виктор должен называться victor-handwriting.ttf.
+    Фоны должны называться tetrad1.jpg–tetrad6.jpg.
+    Все файлы должны находиться рядом с index.html.
+  </p>
+
+  <div class="paper-wrap">
+    <img id="paperImage" src="./tetrad6.jpg" alt="Тетрадь">
+    <canvas id="canvas" width="1240" height="1754"></canvas>
+  </div>
 </div>
 
 <script>
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
-const paper=document.getElementById("paper");
-const paperImage=document.getElementById("paperImage");
-const textInput=document.getElementById("text");
-const style=document.getElementById("style");
-const inkColor=document.getElementById("inkColor");
-const alignment=document.getElementById("alignment");
-const size=document.getElementById("size");
-const line=document.getElementById("line");
-const slant=document.getElementById("slant");
-const jitter=document.getElementById("jitter");
-const word=document.getElementById("word");
-const ink=document.getElementById("ink");
-const topPos=document.getElementById("top");
-const leftPos=document.getElementById("left");
-const xPos=document.getElementById("x");
-const yPos=document.getElementById("y");
-const textWidth=document.getElementById("width");
-const controls=[size,line,slant,jitter,word,ink,topPos,leftPos,xPos,yPos,textWidth];
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-function getPaperRegion(){
-  return paper.value==="tetrad1"
-    ? {x:105,y:145,w:1060,h:1530}
-    : {x:55,y:75,w:1120,h:1600};
+const paper = document.getElementById("paper");
+const paperImage = document.getElementById("paperImage");
+const textInput = document.getElementById("text");
+const style = document.getElementById("style");
+const inkColor = document.getElementById("inkColor");
+const alignment = document.getElementById("alignment");
+
+const size = document.getElementById("size");
+const line = document.getElementById("line");
+const slant = document.getElementById("slant");
+const jitter = document.getElementById("jitter");
+const word = document.getElementById("word");
+const ink = document.getElementById("ink");
+
+const topPos = document.getElementById("top");
+const leftPos = document.getElementById("left");
+const xPos = document.getElementById("x");
+const yPos = document.getElementById("y");
+const textWidth = document.getElementById("width");
+
+const controls = [
+  size, line, slant, jitter, word, ink,
+  topPos, leftPos, xPos, yPos, textWidth
+];
+
+function getPaperRegion() {
+  const regions = {
+    tetrad1: { x: 105, y: 145, w: 1060, h: 1530 },
+    tetrad2: { x: 55, y: 75, w: 1120, h: 1600 },
+    tetrad3: { x: 100, y: 110, w: 1040, h: 1510 },
+    tetrad4: { x: 100, y: 110, w: 1040, h: 1510 },
+    tetrad5: { x: 100, y: 110, w: 1040, h: 1510 },
+    tetrad6: { x: 100, y: 110, w: 1040, h: 1510 }
+  };
+
+  return regions[paper.value] || regions.tetrad1;
 }
 
-function updateValues(){
-  const ids={sizeVal:size,lineVal:line,slantVal:slant,jitterVal:jitter,wordVal:word,inkVal:ink,topVal:topPos,leftVal:leftPos,xVal:xPos,yVal:yPos,widthVal:textWidth};
-  for(const [id,el] of Object.entries(ids)){
-    document.getElementById(id).textContent=el.value;
+function updateValues() {
+  const ids = {
+    sizeVal: size,
+    lineVal: line,
+    slantVal: slant,
+    jitterVal: jitter,
+    wordVal: word,
+    inkVal: ink,
+    topVal: topPos,
+    leftVal: leftPos,
+    xVal: xPos,
+    yVal: yPos,
+    widthVal: textWidth
+  };
+
+  for (const [id, element] of Object.entries(ids)) {
+    document.getElementById(id).textContent = element.value;
   }
 }
 
-function getInkRGB(){
-  if(inkColor.value==="darkblue")return "14,42,105";
-  if(inkColor.value==="black")return "25,25,25";
+function getInkRGB() {
+  if (inkColor.value === "darkblue") return "14,42,105";
+  if (inkColor.value === "black") return "25,25,25";
   return "25,65,145";
 }
 
-function getPaperImage(){
-  return paper.value==="tetrad1"?"./tetrad1.jpg":"./tetrad2.jpg";
+function getPaperImage() {
+  return `./${paper.value}.jpg`;
 }
 
-paper.addEventListener("change",()=>{
-  paperImage.src=getPaperImage();
+paper.addEventListener("change", () => {
+  paperImage.src = getPaperImage();
   createText();
 });
 
-async function waitForSelectedFont(){
-  const name=style.value;
-  const px=Number(size.value);
-  try{
+async function waitForSelectedFont() {
+  const name = style.value;
+  const px = Number(size.value);
+
+  try {
     await document.fonts.load(`${px}px "${name}"`);
-  }catch(e){
-    console.warn("Не удалось загрузить шрифт:",name,e);
+  } catch (error) {
+    console.warn("Не удалось загрузить шрифт:", name, error);
   }
 }
 
-function createText(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  const content=textInput.value;
-  if(!content.trim())return;
+function createText() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const region=getPaperRegion();
-  const fontSize=Number(size.value);
-  const startX=Math.max(region.x,Math.min(region.x+region.w,region.x+Number(leftPos.value)+Number(xPos.value)));
-  let y=region.y+fontSize+Number(topPos.value)+Number(yPos.value);
-  const maxWidth=Math.max(1,Math.min(Number(textWidth.value),region.x+region.w-startX,region.w));
-  const lineHeight=fontSize*Number(line.value);
+  const content = textInput.value;
+  if (!content.trim()) return;
 
-  ctx.font=`${fontSize}px "${style.value}"`;
-  ctx.textBaseline="alphabetic";
-  ctx.fillStyle=`rgba(${getInkRGB()},${Number(ink.value)/100})`;
+  const region = getPaperRegion();
+  const fontSize = Number(size.value);
 
-  const paragraphs=content.split("\n");
-  const spaceWidth=ctx.measureText(" ").width*Number(word.value);
+  const startX = Math.max(
+    region.x,
+    Math.min(
+      region.x + region.w,
+      region.x + Number(leftPos.value) + Number(xPos.value)
+    )
+  );
 
-  for(const paragraph of paragraphs){
-    if(!paragraph.trim()){
-      y+=lineHeight;
+  let y = region.y + fontSize +
+    Number(topPos.value) + Number(yPos.value);
+
+  const maxWidth = Math.max(
+    1,
+    Math.min(
+      Number(textWidth.value),
+      region.x + region.w - startX,
+      region.w
+    )
+  );
+
+  const lineHeight = fontSize * Number(line.value);
+
+  ctx.font = `${fontSize}px "${style.value}"`;
+  ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = `rgba(${getInkRGB()},${Number(ink.value) / 100})`;
+
+  const paragraphs = content.split("\n");
+  const spaceWidth = ctx.measureText(" ").width * Number(word.value);
+
+  for (const paragraph of paragraphs) {
+    if (!paragraph.trim()) {
+      y += lineHeight;
       continue;
     }
 
-    const words=paragraph.trim().split(/\s+/);
-    let currentWords=[];
-    let currentWidth=0;
+    const words = paragraph.trim().split(/\s+/);
+    let currentWords = [];
+    let currentWidth = 0;
 
-    for(const currentWord of words){
-      const currentWordWidth=ctx.measureText(currentWord).width;
-      const proposedWidth=currentWords.length===0
+    for (const currentWord of words) {
+      const currentWordWidth = ctx.measureText(currentWord).width;
+
+      const proposedWidth = currentWords.length === 0
         ? currentWordWidth
-        : currentWidth+spaceWidth+currentWordWidth;
+        : currentWidth + spaceWidth + currentWordWidth;
 
-      if(currentWords.length>0&&proposedWidth>maxWidth){
-        drawLine(currentWords,startX,y,spaceWidth,maxWidth);
-        y+=lineHeight;
-        currentWords=[currentWord];
-        currentWidth=currentWordWidth;
-      }else{
+      if (currentWords.length > 0 && proposedWidth > maxWidth) {
+        drawLine(currentWords, startX, y, spaceWidth, maxWidth);
+        y += lineHeight;
+        currentWords = [currentWord];
+        currentWidth = currentWordWidth;
+      } else {
         currentWords.push(currentWord);
-        currentWidth=proposedWidth;
+        currentWidth = proposedWidth;
       }
     }
 
-    if(currentWords.length){
-      drawLine(currentWords,startX,y,spaceWidth,maxWidth);
-      y+=lineHeight;
+    if (currentWords.length) {
+      drawLine(currentWords, startX, y, spaceWidth, maxWidth);
+      y += lineHeight;
     }
   }
 }
 
-function drawLine(words,x,y,spaceWidth,maxWidth){
-  const amount=Number(jitter.value);
-  const sl=Number(slant.value);
-  ctx.font=`${Number(size.value)}px "${style.value}"`;
+function drawLine(words, x, y, spaceWidth, maxWidth) {
+  const amount = Number(jitter.value);
+  const sl = Number(slant.value);
 
-  const widths=words.map(w=>ctx.measureText(w).width);
-  const totalWidth=widths.reduce((a,b)=>a+b,0)+spaceWidth*Math.max(0,words.length-1);
-  let currentX=x;
+  ctx.font = `${Number(size.value)}px "${style.value}"`;
 
-  if(alignment.value==="center"){
-    currentX=x+Math.max(0,(maxWidth-totalWidth)/2);
-  }else if(alignment.value==="right"){
-    currentX=x+Math.max(0,maxWidth-totalWidth);
+  const widths = words.map(w => ctx.measureText(w).width);
+  const totalWidth = widths.reduce((a, b) => a + b, 0) +
+    spaceWidth * Math.max(0, words.length - 1);
+
+  let currentX = x;
+
+  if (alignment.value === "center") {
+    currentX = x + Math.max(0, (maxWidth - totalWidth) / 2);
+  } else if (alignment.value === "right") {
+    currentX = x + Math.max(0, maxWidth - totalWidth);
   }
 
-  for(let i=0;i<words.length;i++){
-    const randomX=(Math.random()-.5)*amount;
-    const randomY=(Math.random()-.5)*amount;
+  for (let i = 0; i < words.length; i++) {
+    const randomX = (Math.random() - 0.5) * amount;
+    const randomY = (Math.random() - 0.5) * amount;
+
     ctx.save();
-    ctx.translate(currentX+randomX,y+randomY);
-    if(sl!==0){
-      ctx.transform(1,0,Math.tan(sl*Math.PI/180),1,0,0);
+    ctx.translate(currentX + randomX, y + randomY);
+
+    if (sl !== 0) {
+      ctx.transform(1, 0, Math.tan(sl * Math.PI / 180), 1, 0, 0);
     }
-    ctx.fillText(words[i],0,0);
+
+    ctx.fillText(words[i], 0, 0);
     ctx.restore();
-    currentX+=widths[i];
-    if(i<words.length-1)currentX+=spaceWidth;
+
+    currentX += widths[i];
+    if (i < words.length - 1) currentX += spaceWidth;
   }
 }
 
-textInput.addEventListener("input",createText);
-style.addEventListener("change",async()=>{
-  await waitForSelectedFont();
-  createText();
-});
-inkColor.addEventListener("change",createText);
-alignment.addEventListener("change",createText);
+textInput.addEventListener("input", createText);
 
-controls.forEach(el=>el.addEventListener("input",()=>{
-  updateValues();
-  createText();
-}));
-
-document.getElementById("create").addEventListener("click",async()=>{
+style.addEventListener("change", async () => {
   await waitForSelectedFont();
   createText();
 });
 
-document.getElementById("save").addEventListener("click",async()=>{
+inkColor.addEventListener("change", createText);
+alignment.addEventListener("change", createText);
+
+controls.forEach(element => {
+  element.addEventListener("input", () => {
+    updateValues();
+    createText();
+  });
+});
+
+document.getElementById("create").addEventListener("click", async () => {
+  await waitForSelectedFont();
+  createText();
+});
+
+document.getElementById("save").addEventListener("click", async () => {
   await waitForSelectedFont();
   createText();
 
-  if(!paperImage.complete||!paperImage.naturalWidth){
+  if (!paperImage.complete || !paperImage.naturalWidth) {
     alert("Подожди, пока загрузится изображение тетради.");
     return;
   }
 
-  const result=document.createElement("canvas");
-  result.width=canvas.width;
-  result.height=canvas.height;
-  const rctx=result.getContext("2d");
-  rctx.drawImage(paperImage,0,0,result.width,result.height);
-  rctx.drawImage(canvas,0,0);
+  const result = document.createElement("canvas");
+  result.width = canvas.width;
+  result.height = canvas.height;
 
-  const link=document.createElement("a");
-  link.download="handwrite-a4.png";
-  link.href=result.toDataURL("image/png");
+  const resultCtx = result.getContext("2d");
+
+  resultCtx.drawImage(
+    paperImage,
+    0, 0,
+    result.width,
+    result.height
+  );
+
+  resultCtx.drawImage(canvas, 0, 0);
+
+  const link = document.createElement("a");
+  link.download = "handwrite-a4.png";
+  link.href = result.toDataURL("image/png");
   link.click();
 });
 
-paperImage.addEventListener("load",createText);
-paperImage.addEventListener("error",()=>{
-  console.error("Не удалось загрузить фон. Проверь tetrad1.jpg и tetrad2.jpg.");
+paperImage.addEventListener("load", createText);
+
+paperImage.addEventListener("error", () => {
+  console.error(
+    "Не удалось загрузить фон. Проверь файл " +
+    getPaperImage() + " рядом с index.html."
+  );
 });
 
 updateValues();
-paperImage.src=getPaperImage();
+paperImage.src = getPaperImage();
 document.fonts.ready.then(createText);
 </script>
 </body>
