@@ -11,7 +11,7 @@
 
 <style>
 @font-face {
-  font-family: "Victor";
+  font-family: "Victor Handwriting";
   src: url("./victor-handwriting.ttf") format("truetype");
   font-style: normal;
   font-weight: 400;
@@ -126,6 +126,11 @@ button {
 
 button:hover { opacity: .85; }
 
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
 .paper-wrap {
   position: relative;
   width: min(100%, 620px);
@@ -158,8 +163,10 @@ button:hover { opacity: .85; }
 
 #fontStatus {
   font-size: 12px;
+  line-height: 1.5;
   margin-top: 7px;
   color: #555;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 500px) {
@@ -183,7 +190,7 @@ button:hover { opacity: .85; }
     <div class="control">
       <label for="style">Стиль почерка</label>
       <select id="style">
-        <option value="Victor">Виктор</option>
+        <option value="Victor Handwriting">Виктор</option>
         <option value="Bad Script">Bad Script</option>
         <option value="Caveat">Caveat</option>
         <option value="Kalam">Kalam</option>
@@ -323,7 +330,7 @@ button:hover { opacity: .85; }
   </div>
 
   <p class="note">
-    Для Виктора нужен файл victor-handwriting.ttf рядом с index.html.
+    Для шрифта Виктор нужен файл victor-handwriting.ttf рядом с index.html.
     Фоны должны называться tetrad1.jpg, tetrad2.jpg, … tetrad6.jpg.
     Остальные шрифты загружаются из интернета.
   </p>
@@ -359,6 +366,12 @@ const leftPos = document.getElementById("left");
 const xPos = document.getElementById("x");
 const yPos = document.getElementById("y");
 const textWidth = document.getElementById("width");
+
+const createButton = document.getElementById("create");
+const saveButton = document.getElementById("save");
+
+let fontCheckId = 0;
+let renderId = 0;
 
 const controls = [
   size, line, slant, jitter, word, ink,
@@ -405,47 +418,76 @@ function getInkRGB() {
 }
 
 function updatePaper() {
-  paperImage.src = `./${paper.value}.jpg`;
+  const filename = `./${paper.value}.jpg`;
+
+  if (paperImage.getAttribute("src") !== filename) {
+    paperImage.src = filename;
+  } else if (paperImage.complete && paperImage.naturalWidth > 0) {
+    createText();
+  }
 }
 
 async function waitForSelectedFont() {
+  const checkId = ++fontCheckId;
   const name = style.value;
   const px = Number(size.value);
   const sample = "Проверка шрифта АБВ abc 123";
 
+  fontStatus.textContent = `Загрузка шрифта: ${name}…`;
+  fontStatus.style.color = "#555";
+
   try {
-    if (name === "Victor") {
-      await document.fonts.load(`${px}px "Victor"`, sample);
-    } else {
-      await document.fonts.load(`${px}px "${name}"`, sample);
-    }
-
-    await document.fonts.ready;
-
-    if (name === "Victor") {
-      const victorLoaded = [...document.fonts].some(
-        font => font.family === "Victor" && font.status === "loaded"
+    if (name === "Victor Handwriting") {
+      const fontFace = new FontFace(
+        "Victor Handwriting",
+        'url("./victor-handwriting.ttf")',
+        { style: "normal", weight: "400" }
       );
 
-      if (!victorLoaded) {
-        fontStatus.textContent =
-          "Виктор не найден: проверь имя и расположение файла victor-handwriting.ttf.";
-        fontStatus.style.color = "#b45309";
-        return;
-      }
+      const loadedFace = await fontFace.load();
+
+      if (checkId !== fontCheckId) return false;
+
+      document.fonts.add(loadedFace);
     }
 
-    fontStatus.textContent = `Выбран шрифт: ${name}`;
+    await document.fonts.load(`${px}px "${name}"`, sample);
+    await document.fonts.ready;
+
+    if (checkId !== fontCheckId) return false;
+
+    const loaded = document.fonts.check(
+      `${px}px "${name}"`,
+      sample
+    );
+
+    if (!loaded) {
+      throw new Error("Шрифт не подтвердил загрузку");
+    }
+
+    fontStatus.textContent = `Шрифт готов: ${name}`;
     fontStatus.style.color = "#237a3b";
+    return true;
+
   } catch (error) {
-    fontStatus.textContent =
-      `Не удалось проверить шрифт ${name}. Проверь интернет или файл шрифта.`;
+    if (checkId !== fontCheckId) return false;
+
+    if (name === "Victor Handwriting") {
+      fontStatus.textContent =
+        "Не удалось загрузить Victor Handwriting. Проверь, что victor-handwriting.ttf лежит рядом с index.html и загружен в GitHub.";
+    } else {
+      fontStatus.textContent =
+        `Не удалось проверить ${name}. Проверь подключение к интернету.`;
+    }
+
     fontStatus.style.color = "#b45309";
-    console.error(error);
+    console.error("Ошибка загрузки шрифта:", error);
+    return false;
   }
 }
 
 function createText() {
+  const currentRender = ++renderId;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const content = textInput.value;
@@ -453,6 +495,7 @@ function createText() {
 
   const region = getPaperRegion();
   const fontSize = Number(size.value);
+  const selectedFont = style.value;
 
   const startX = Math.max(
     region.x,
@@ -476,7 +519,7 @@ function createText() {
 
   const lineHeight = fontSize * Number(line.value);
 
-  ctx.font = `${fontSize}px "${style.value}"`;
+  ctx.font = `${fontSize}px "${selectedFont}"`;
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = `rgba(${getInkRGB()},${Number(ink.value) / 100})`;
 
@@ -484,6 +527,8 @@ function createText() {
   const spaceWidth = ctx.measureText(" ").width * Number(word.value);
 
   for (const paragraph of paragraphs) {
+    if (currentRender !== renderId) return;
+
     if (!paragraph.trim()) {
       y += lineHeight;
       continue;
@@ -521,8 +566,9 @@ function createText() {
 function drawLine(words, x, y, spaceWidth, maxWidth) {
   const amount = Number(jitter.value);
   const sl = Number(slant.value);
+  const fontSize = Number(size.value);
 
-  ctx.font = `${Number(size.value)}px "${style.value}"`;
+  ctx.font = `${fontSize}px "${style.value}"`;
 
   const widths = words.map(w => ctx.measureText(w).width);
   const totalWidth = widths.reduce((a, b) => a + b, 0) +
@@ -544,7 +590,11 @@ function drawLine(words, x, y, spaceWidth, maxWidth) {
     ctx.translate(currentX + randomX, y + randomY);
 
     if (sl !== 0) {
-      ctx.transform(1, 0, Math.tan(sl * Math.PI / 180), 1, 0, 0);
+      ctx.transform(
+        1, 0,
+        Math.tan(sl * Math.PI / 180),
+        1, 0, 0
+      );
     }
 
     ctx.fillText(words[i], 0, 0);
@@ -558,8 +608,8 @@ function drawLine(words, x, y, spaceWidth, maxWidth) {
 textInput.addEventListener("input", createText);
 
 style.addEventListener("change", async () => {
-  await waitForSelectedFont();
-  createText();
+  const loaded = await waitForSelectedFont();
+  if (loaded) createText();
 });
 
 inkColor.addEventListener("change", createText);
@@ -573,7 +623,10 @@ controls.forEach(element => {
 });
 
 paper.addEventListener("change", updatePaper);
-paperImage.addEventListener("load", createText);
+
+paperImage.addEventListener("load", () => {
+  createText();
+});
 
 paperImage.addEventListener("error", () => {
   fontStatus.textContent =
@@ -581,45 +634,66 @@ paperImage.addEventListener("error", () => {
   fontStatus.style.color = "#b45309";
 });
 
-document.getElementById("create").addEventListener("click", async () => {
-  await waitForSelectedFont();
-  createText();
+createButton.addEventListener("click", async () => {
+  createButton.disabled = true;
+
+  try {
+    const loaded = await waitForSelectedFont();
+    if (loaded) createText();
+  } finally {
+    createButton.disabled = false;
+  }
 });
 
-document.getElementById("save").addEventListener("click", async () => {
-  await waitForSelectedFont();
-  createText();
+saveButton.addEventListener("click", async () => {
+  saveButton.disabled = true;
 
-  if (!paperImage.complete || !paperImage.naturalWidth) {
-    alert(`Не удалось загрузить ${paper.value}.jpg. Проверь файл на GitHub.`);
-    return;
+  try {
+    const loaded = await waitForSelectedFont();
+    if (!loaded) {
+      alert("Шрифт не загрузился. Исправь ошибку перед сохранением.");
+      return;
+    }
+
+    if (!paperImage.complete || !paperImage.naturalWidth) {
+      alert(`Не удалось загрузить ${paper.value}.jpg. Проверь файл на GitHub.`);
+      return;
+    }
+
+    createText();
+
+    const result = document.createElement("canvas");
+    result.width = canvas.width;
+    result.height = canvas.height;
+
+    const resultCtx = result.getContext("2d");
+
+    resultCtx.drawImage(
+      paperImage, 0, 0, result.width, result.height
+    );
+
+    resultCtx.drawImage(canvas, 0, 0);
+
+    const link = document.createElement("a");
+    link.download = "handwrite-a4.png";
+    link.href = result.toDataURL("image/png");
+    link.click();
+
+  } catch (error) {
+    console.error(error);
+    alert("Не удалось создать PNG. Проверь загрузку шрифта и фона.");
+  } finally {
+    saveButton.disabled = false;
   }
-
-  const result = document.createElement("canvas");
-  result.width = canvas.width;
-  result.height = canvas.height;
-
-  const resultCtx = result.getContext("2d");
-
-  resultCtx.drawImage(
-    paperImage, 0, 0, result.width, result.height
-  );
-
-  resultCtx.drawImage(canvas, 0, 0);
-
-  const link = document.createElement("a");
-  link.download = "handwrite-a4.png";
-  link.href = result.toDataURL("image/png");
-  link.click();
 });
 
 updateValues();
 updatePaper();
 
-document.fonts.ready.then(async () => {
-  await waitForSelectedFont();
-  createText();
-});
+(async () => {
+  const loaded = await waitForSelectedFont();
+  if (loaded) createText();
+})();
 </script>
 </body>
 </html>
