@@ -1,15 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✍️ HandWrite A4</title>
+<title>HandWrite A4 — realistic handwriting</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&family=Shantell+Sans&display=swap" rel="stylesheet">
 
 <style>
 @font-face {
   font-family: "Victor";
   src: url("./victor-handwriting.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
   font-display: swap;
 }
 
@@ -19,8 +24,8 @@ body {
   margin: 0;
   padding: 12px;
   background: #eee;
-  font-family: Arial, sans-serif;
   color: #222;
+  font-family: Arial, sans-serif;
 }
 
 h1 {
@@ -32,7 +37,7 @@ h1 {
 .panel {
   max-width: 900px;
   margin: auto;
-  background: white;
+  background: #fff;
   padding: 14px;
   border-radius: 12px;
   box-shadow: 0 3px 15px #0002;
@@ -56,7 +61,9 @@ label {
   font-weight: bold;
 }
 
-select, input[type="range"] { width: 100%; }
+select, input[type="range"] {
+  width: 100%;
+}
 
 select {
   height: 37px;
@@ -123,7 +130,6 @@ button:hover { opacity: .85; }
   position: relative;
   width: min(100%, 620px);
   margin: 25px auto 0;
-  line-height: 0;
   box-shadow: 0 4px 18px #0003;
   background: white;
 }
@@ -150,31 +156,41 @@ button:hover { opacity: .85; }
   margin-top: 10px;
 }
 
+#fontStatus {
+  font-size: 12px;
+  margin-top: 7px;
+  color: #555;
+}
+
 @media (max-width: 500px) {
   body { padding: 7px; }
   .panel { padding: 10px; }
   .control { min-width: 135px; }
-  .buttons button { font-size: 14px; padding: 11px 5px; }
+  .buttons button {
+    font-size: 14px;
+    padding: 11px 5px;
+  }
 }
 </style>
 </head>
 
 <body>
 <div class="panel">
+
   <h1>✍️ HandWrite A4</h1>
 
   <div class="row">
     <div class="control">
       <label for="style">Стиль почерка</label>
       <select id="style">
-        <option value="Victor" selected>Виктор</option>
-        <option value="Bad Script">Bad Script — рукописный</option>
-        <option value="Caveat">Caveat — обычный</option>
-        <option value="Kalam">Kalam — школьный</option>
-        <option value="Marck Script">Marck Script — плавный</option>
-        <option value="Neucha">Neucha — неровный</option>
-        <option value="Pangolin">Pangolin — округлый</option>
-        <option value="Shantell Sans">Shantell Sans — живой</option>
+        <option value="Victor">Виктор</option>
+        <option value="Bad Script">Bad Script</option>
+        <option value="Caveat">Caveat</option>
+        <option value="Kalam">Kalam</option>
+        <option value="Marck Script">Marck Script</option>
+        <option value="Neucha">Neucha</option>
+        <option value="Pangolin">Pangolin</option>
+        <option value="Shantell Sans">Shantell Sans</option>
       </select>
     </div>
 
@@ -210,17 +226,22 @@ button:hover { opacity: .85; }
   </div>
 
   <textarea id="text" placeholder="Введите текст здесь..."></textarea>
+  <div id="fontStatus">Проверка шрифтов…</div>
 
   <details open>
     <summary>✏️ Размер текста</summary>
 
     <div class="slider">
-      <div class="slider-title"><span>Размер</span><span id="sizeVal">30</span></div>
+      <div class="slider-title">
+        <span>Размер</span><span id="sizeVal">30</span>
+      </div>
       <input id="size" type="range" min="16" max="60" value="30">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Межстрочный интервал</span><span id="lineVal">1.4</span></div>
+      <div class="slider-title">
+        <span>Межстрочный интервал</span><span id="lineVal">1.4</span>
+      </div>
       <input id="line" type="range" min="1" max="2" step="0.1" value="1.4">
     </div>
   </details>
@@ -229,22 +250,30 @@ button:hover { opacity: .85; }
     <summary>🖊️ Реалистичность почерка</summary>
 
     <div class="slider">
-      <div class="slider-title"><span>Наклон</span><span id="slantVal">0</span></div>
+      <div class="slider-title">
+        <span>Наклон</span><span id="slantVal">0</span>
+      </div>
       <input id="slant" type="range" min="-8" max="8" value="0">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Неровность</span><span id="jitterVal">2</span></div>
+      <div class="slider-title">
+        <span>Неровность</span><span id="jitterVal">2</span>
+      </div>
       <input id="jitter" type="range" min="0" max="6" step="0.5" value="2">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Расстояние между словами</span><span id="wordVal">1</span></div>
+      <div class="slider-title">
+        <span>Расстояние между словами</span><span id="wordVal">1</span>
+      </div>
       <input id="word" type="range" min="0.5" max="2" step="0.1" value="1">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Прозрачность чернил</span><span id="inkVal">92</span></div>
+      <div class="slider-title">
+        <span>Прозрачность чернил</span><span id="inkVal">92</span>
+      </div>
       <input id="ink" type="range" min="60" max="100" value="92">
     </div>
   </details>
@@ -253,27 +282,37 @@ button:hover { opacity: .85; }
     <summary>📐 Положение текста</summary>
 
     <div class="slider">
-      <div class="slider-title"><span>Отступ сверху</span><span id="topVal">0</span></div>
+      <div class="slider-title">
+        <span>Отступ сверху</span><span id="topVal">0</span>
+      </div>
       <input id="top" type="range" min="0" max="300" value="0">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Отступ слева</span><span id="leftVal">0</span></div>
+      <div class="slider-title">
+        <span>Отступ слева</span><span id="leftVal">0</span>
+      </div>
       <input id="left" type="range" min="0" max="300" value="0">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Смещение X</span><span id="xVal">0</span></div>
+      <div class="slider-title">
+        <span>Смещение X</span><span id="xVal">0</span>
+      </div>
       <input id="x" type="range" min="-300" max="300" value="0">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Смещение Y</span><span id="yVal">0</span></div>
+      <div class="slider-title">
+        <span>Смещение Y</span><span id="yVal">0</span>
+      </div>
       <input id="y" type="range" min="-300" max="300" value="0">
     </div>
 
     <div class="slider">
-      <div class="slider-title"><span>Ширина текста</span><span id="widthVal">800</span></div>
+      <div class="slider-title">
+        <span>Ширина текста</span><span id="widthVal">800</span>
+      </div>
       <input id="width" type="range" min="300" max="1100" value="800">
     </div>
   </details>
@@ -284,15 +323,16 @@ button:hover { opacity: .85; }
   </div>
 
   <p class="note">
-    Шрифт Виктор должен называться victor-handwriting.ttf.
-    Фоны должны называться tetrad1.jpg–tetrad6.jpg.
-    Все файлы должны находиться рядом с index.html.
+    Для Виктора нужен файл victor-handwriting.ttf рядом с index.html.
+    Фоны должны называться tetrad1.jpg, tetrad2.jpg, … tetrad6.jpg.
+    Остальные шрифты загружаются из интернета.
   </p>
 
   <div class="paper-wrap">
     <img id="paperImage" src="./tetrad6.jpg" alt="Тетрадь">
     <canvas id="canvas" width="1240" height="1754"></canvas>
   </div>
+
 </div>
 
 <script>
@@ -305,6 +345,7 @@ const textInput = document.getElementById("text");
 const style = document.getElementById("style");
 const inkColor = document.getElementById("inkColor");
 const alignment = document.getElementById("alignment");
+const fontStatus = document.getElementById("fontStatus");
 
 const size = document.getElementById("size");
 const line = document.getElementById("line");
@@ -363,23 +404,44 @@ function getInkRGB() {
   return "25,65,145";
 }
 
-function getPaperImage() {
-  return `./${paper.value}.jpg`;
+function updatePaper() {
+  paperImage.src = `./${paper.value}.jpg`;
 }
-
-paper.addEventListener("change", () => {
-  paperImage.src = getPaperImage();
-  createText();
-});
 
 async function waitForSelectedFont() {
   const name = style.value;
   const px = Number(size.value);
+  const sample = "Проверка шрифта АБВ abc 123";
 
   try {
-    await document.fonts.load(`${px}px "${name}"`);
+    if (name === "Victor") {
+      await document.fonts.load(`${px}px "Victor"`, sample);
+    } else {
+      await document.fonts.load(`${px}px "${name}"`, sample);
+    }
+
+    await document.fonts.ready;
+
+    if (name === "Victor") {
+      const victorLoaded = [...document.fonts].some(
+        font => font.family === "Victor" && font.status === "loaded"
+      );
+
+      if (!victorLoaded) {
+        fontStatus.textContent =
+          "Виктор не найден: проверь имя и расположение файла victor-handwriting.ttf.";
+        fontStatus.style.color = "#b45309";
+        return;
+      }
+    }
+
+    fontStatus.textContent = `Выбран шрифт: ${name}`;
+    fontStatus.style.color = "#237a3b";
   } catch (error) {
-    console.warn("Не удалось загрузить шрифт:", name, error);
+    fontStatus.textContent =
+      `Не удалось проверить шрифт ${name}. Проверь интернет или файл шрифта.`;
+    fontStatus.style.color = "#b45309";
+    console.error(error);
   }
 }
 
@@ -510,6 +572,15 @@ controls.forEach(element => {
   });
 });
 
+paper.addEventListener("change", updatePaper);
+paperImage.addEventListener("load", createText);
+
+paperImage.addEventListener("error", () => {
+  fontStatus.textContent =
+    `Не найден фон ${paper.value}.jpg — проверь имя файла на GitHub.`;
+  fontStatus.style.color = "#b45309";
+});
+
 document.getElementById("create").addEventListener("click", async () => {
   await waitForSelectedFont();
   createText();
@@ -520,7 +591,7 @@ document.getElementById("save").addEventListener("click", async () => {
   createText();
 
   if (!paperImage.complete || !paperImage.naturalWidth) {
-    alert("Подожди, пока загрузится изображение тетради.");
+    alert(`Не удалось загрузить ${paper.value}.jpg. Проверь файл на GitHub.`);
     return;
   }
 
@@ -531,10 +602,7 @@ document.getElementById("save").addEventListener("click", async () => {
   const resultCtx = result.getContext("2d");
 
   resultCtx.drawImage(
-    paperImage,
-    0, 0,
-    result.width,
-    result.height
+    paperImage, 0, 0, result.width, result.height
   );
 
   resultCtx.drawImage(canvas, 0, 0);
@@ -545,18 +613,13 @@ document.getElementById("save").addEventListener("click", async () => {
   link.click();
 });
 
-paperImage.addEventListener("load", createText);
-
-paperImage.addEventListener("error", () => {
-  console.error(
-    "Не удалось загрузить фон. Проверь файл " +
-    getPaperImage() + " рядом с index.html."
-  );
-});
-
 updateValues();
-paperImage.src = getPaperImage();
-document.fonts.ready.then(createText);
+updatePaper();
+
+document.fonts.ready.then(async () => {
+  await waitForSelectedFont();
+  createText();
+});
 </script>
 </body>
 </html>
