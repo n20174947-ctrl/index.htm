@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HandWrite A4 — реалистичный почерк</title>
+<title>✍️ HandWrite A4</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,19 +13,19 @@
 <style>
 @font-face {
   font-family: "Victor Handwriting";
-  src: url("victor-handwriting.ttf") format("truetype");
+  src: url("./victor-handwriting.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
   font-display: swap;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  padding: 12px;
-  background: #e9e6e0;
-  color: #282722;
+  padding: 10px;
+  background: #e9e6df;
+  color: #292929;
   font-family: Arial, sans-serif;
 }
 
@@ -35,24 +35,24 @@ body {
 }
 
 h1 {
-  margin: 4px 0 12px;
   text-align: center;
   font-size: 23px;
+  margin: 4px 0 12px;
 }
 
 .panel {
-  background: #fff;
-  border-radius: 12px;
+  background: white;
   padding: 12px;
-  box-shadow: 0 2px 10px #00000012;
   margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #00000010;
 }
 
 textarea {
   width: 100%;
-  min-height: 150px;
+  min-height: 125px;
   resize: vertical;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font: 16px/1.5 Arial, sans-serif;
@@ -61,115 +61,105 @@ textarea {
 .controls {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px 12px;
 }
 
-.control {
-  min-width: 0;
-}
+.control { min-width: 0; }
 
 .control label {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  margin-bottom: 5px;
+  gap: 5px;
+  margin-bottom: 3px;
+  font-size: 12px;
+}
+
+.control label span {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+select {
+  width: 100%;
+  height: 34px;
+  padding: 4px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   font-size: 13px;
 }
 
-select,
-input[type="number"] {
-  width: 100%;
-  min-height: 36px;
-  padding: 6px;
-  border: 1px solid #c9c9c9;
-  border-radius: 7px;
-  background: #fff;
-  color: #222;
-}
-
 input[type="range"] {
+  display: block;
   width: 100%;
-  margin: 7px 0;
-  accent-color: #525d72;
+  height: 23px;
+  margin: 2px 0;
+  accent-color: #394354;
 }
 
 .buttons {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 button {
   flex: 1;
-  min-width: 130px;
+  min-width: 0;
+  padding: 12px 6px;
   border: 0;
   border-radius: 8px;
-  padding: 12px;
   background: #343d4d;
   color: white;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
 }
 
 button.secondary {
-  background: #e7e8eb;
-  color: #242424;
+  background: #e6e7e9;
+  color: #252525;
 }
 
-button:active {
-  transform: scale(.99);
-}
-
-.note {
-  color: #666;
-  font-size: 12px;
-  line-height: 1.45;
-  margin-top: 10px;
-}
-
-.preview {
+.preview-title {
   text-align: center;
-  overflow: hidden;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 8px;
 }
 
 canvas {
   display: block;
   width: 100%;
   height: auto;
+  border: 1px solid #ddd;
   background: white;
-  border: 1px solid #d0ccc5;
-  border-radius: 3px;
+}
+
+.status {
+  font-size: 11px;
+  color: #777;
+  margin-top: 6px;
+  min-height: 14px;
 }
 
 @media (max-width: 480px) {
-  body {
-    padding: 7px;
-  }
-
-  .controls {
-    gap: 8px;
-  }
-
-  .panel {
-    padding: 9px;
-  }
-
-  h1 {
-    font-size: 20px;
-  }
+  body { padding: 7px; }
+  .panel { padding: 9px; }
+  h1 { font-size: 21px; }
+  .controls { gap: 7px 9px; }
+  button { font-size: 13px; }
 }
 </style>
 </head>
 
 <body>
 <div class="app">
-  <h1>HandWrite A4</h1>
+  <h1>✍️ HandWrite A4</h1>
 
   <section class="panel">
-    <label for="text"><b>Текст для записи</b></label>
-    <textarea id="text" placeholder="Вставь сюда текст..."></textarea>
+    <textarea id="text" placeholder="Введи или вставь текст сюда..."></textarea>
   </section>
 
   <section class="panel">
@@ -178,15 +168,14 @@ canvas {
       <div class="control">
         <label for="font">Шрифт</label>
         <select id="font">
-          <option value="PecitaBook">Pecita — курсив</option>
+          <option value="PecitaBook">Pecita</option>
           <option value="Victor Handwriting">Victor Handwriting</option>
           <option value="Bad Script">Bad Script</option>
-          <option value="Marck Script">Marck Script</option>
           <option value="Caveat">Caveat</option>
           <option value="Kalam">Kalam</option>
-          <option value="Pangolin">Pangolin</option>
+          <option value="Marck Script">Marck Script</option>
           <option value="Neucha">Neucha</option>
-          <option value="Arial">Arial</option>
+          <option value="Pangolin">Pangolin</option>
         </select>
       </div>
 
@@ -194,8 +183,8 @@ canvas {
         <label for="paper">Бумага</label>
         <select id="paper">
           <option value="plain">Белый лист</option>
-          <option value="tetrad1">Тетрадь 1 — поле слева</option>
-          <option value="tetrad2">Тетрадь 2 — поле справа</option>
+          <option value="tetrad1">Тетрадь 1</option>
+          <option value="tetrad2">Тетрадь 2</option>
           <option value="tetrad3">Тетрадь 3</option>
           <option value="tetrad4">Тетрадь 4</option>
           <option value="tetrad5">Тетрадь 5</option>
@@ -204,18 +193,18 @@ canvas {
       </div>
 
       <div class="control">
-        <label for="size">Размер букв <span id="sizeVal">30</span></label>
+        <label for="size">Размер <span id="sizeVal">30</span></label>
         <input id="size" type="range" min="16" max="60" value="30">
       </div>
 
       <div class="control">
-        <label for="line">Межстрочный интервал <span id="lineVal">1.4</span></label>
+        <label for="line">Интервал <span id="lineVal">1.4</span></label>
         <input id="line" type="range" min="1" max="2.2" step="0.05" value="1.4">
       </div>
 
       <div class="control">
         <label for="slant">Наклон <span id="slantVal">0</span></label>
-        <input id="slant" type="range" min="-8" max="8" step="1" value="0">
+        <input id="slant" type="range" min="-8" max="8" value="0">
       </div>
 
       <div class="control">
@@ -224,52 +213,46 @@ canvas {
       </div>
 
       <div class="control">
-        <label for="wordSpace">Промежуток между словами <span id="wordSpaceVal">1</span></label>
+        <label for="wordSpace">Расстояние слов <span id="wordSpaceVal">1</span></label>
         <input id="wordSpace" type="range" min="0.7" max="1.5" step="0.05" value="1">
       </div>
 
       <div class="control">
-        <label for="opacity">Насыщенность чернил <span id="opacityVal">92%</span></label>
+        <label for="opacity">Чернила <span id="opacityVal">92%</span></label>
         <input id="opacity" type="range" min="60" max="100" value="92">
       </div>
 
       <div class="control">
-        <label for="top">Отступ сверху <span id="topVal">70</span></label>
+        <label for="top">Сверху <span id="topVal">70</span></label>
         <input id="top" type="range" min="20" max="250" value="70">
       </div>
 
       <div class="control">
-        <label for="left">Отступ слева <span id="leftVal">80</span></label>
+        <label for="left">Слева <span id="leftVal">80</span></label>
         <input id="left" type="range" min="20" max="250" value="80">
       </div>
 
       <div class="control">
-        <label for="shift">Сдвиг по горизонтали <span id="shiftVal">0</span></label>
+        <label for="shift">Сдвиг X <span id="shiftVal">0</span></label>
         <input id="shift" type="range" min="-250" max="250" value="0">
       </div>
 
       <div class="control">
-        <label for="width">Ширина текста <span id="widthVal">1060</span></label>
+        <label for="width">Ширина <span id="widthVal">1060</span></label>
         <input id="width" type="range" min="300" max="1120" step="10" value="1060">
       </div>
 
     </div>
 
     <div class="buttons">
-      <button id="create">Создать рукописный лист</button>
+      <button id="create">Создать лист</button>
       <button id="save" class="secondary">Сохранить PNG</button>
     </div>
-
-    <div class="note">
-      Pecita загружается из внешнего источника, остальные веб-шрифты —
-      из Google Fonts. Для их загрузки нужен интернет. Victor Handwriting
-      использует локальный файл victor-handwriting.ttf. Если у выбранного
-      шрифта нет кириллицы, некоторые буквы могут отображаться другим шрифтом.
-    </div>
+    <div class="status" id="status"></div>
   </section>
 
-  <section class="panel preview">
-    <b>Предпросмотр A4</b>
+  <section class="panel">
+    <div class="preview-title">Предпросмотр A4</div>
     <canvas id="canvas" width="1240" height="1754"></canvas>
   </section>
 </div>
@@ -277,255 +260,254 @@ canvas {
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const textInput = document.getElementById("text");
+const fontInput = document.getElementById("font");
+const paperInput = document.getElementById("paper");
+const statusEl = document.getElementById("status");
 
-const controls = [
-  ["size", "sizeVal", v => v],
-  ["line", "lineVal", v => Number(v).toFixed(2).replace(/0$/, "")],
-  ["slant", "slantVal", v => v],
-  ["jitter", "jitterVal", v => v],
-  ["wordSpace", "wordSpaceVal", v => v],
-  ["opacity", "opacityVal", v => v + "%"],
-  ["top", "topVal", v => v],
-  ["left", "leftVal", v => v],
-  ["shift", "shiftVal", v => v],
-  ["width", "widthVal", v => v]
+const images = {};
+
+for (let i = 1; i <= 6; i++) {
+  const img = new Image();
+  img.onload = scheduleRender;
+  img.src = `./tetrad${i}.jpg`;
+  images[`tetrad${i}`] = img;
+}
+
+const fields = [
+  ["size", "sizeVal"],
+  ["line", "lineVal"],
+  ["slant", "slantVal"],
+  ["jitter", "jitterVal"],
+  ["wordSpace", "wordSpaceVal"],
+  ["opacity", "opacityVal"],
+  ["top", "topVal"],
+  ["left", "leftVal"],
+  ["shift", "shiftVal"],
+  ["width", "widthVal"]
 ];
 
-controls.forEach(([inputId, outputId, format]) => {
-  const input = document.getElementById(inputId);
+fields.forEach(([id, outputId]) => {
+  const input = document.getElementById(id);
   const output = document.getElementById(outputId);
+
   input.addEventListener("input", () => {
-    output.textContent = format(input.value);
+    let value = input.value;
+    if (id === "opacity") value += "%";
+    output.textContent = value;
+    scheduleRender();
   });
 });
 
-const paperImages = {};
-for (let i = 1; i <= 6; i++) {
-  const img = new Image();
-  img.src = `tetrad${i}.jpg`;
-  paperImages["tetrad" + i] = img;
-}
+function settings() {
+  const get = id => Number(document.getElementById(id).value);
 
-function loadFonts() {
-  if (!document.fonts) return Promise.resolve();
-
-  const families = [
-    "PecitaBook",
-    "Victor Handwriting",
-    "Bad Script",
-    "Marck Script",
-    "Caveat",
-    "Kalam",
-    "Pangolin",
-    "Neucha"
-  ];
-
-  return Promise.all(
-    families.map(f => document.fonts.load(`30px "${f}"`).catch(() => []))
-  );
-}
-
-function getSettings() {
   return {
-    font: document.getElementById("font").value,
-    paper: document.getElementById("paper").value,
-    size: Number(document.getElementById("size").value),
-    line: Number(document.getElementById("line").value),
-    slant: Number(document.getElementById("slant").value),
-    jitter: Number(document.getElementById("jitter").value),
-    wordSpace: Number(document.getElementById("wordSpace").value),
-    opacity: Number(document.getElementById("opacity").value) / 100,
-    top: Number(document.getElementById("top").value),
-    left: Number(document.getElementById("left").value),
-    shift: Number(document.getElementById("shift").value),
-    width: Number(document.getElementById("width").value)
+    font: fontInput.value,
+    paper: paperInput.value,
+    size: get("size"),
+    line: get("line"),
+    slant: get("slant"),
+    jitter: get("jitter"),
+    wordSpace: get("wordSpace"),
+    opacity: get("opacity") / 100,
+    top: get("top"),
+    left: get("left"),
+    shift: get("shift"),
+    width: get("width")
   };
 }
 
-function drawPaper(settings) {
+function setFont(s) {
+  ctx.font = `${s.size}px "${s.font}"`;
+  ctx.textBaseline = "alphabetic";
+  ctx.textAlign = "left";
+
+  // Поддерживается не каждым браузером, но безопасно при отсутствии.
+  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
+}
+
+function drawBackground(s) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (settings.paper === "plain") return;
+  if (s.paper === "plain") return;
 
-  const img = paperImages[settings.paper];
+  const img = images[s.paper];
   if (img && img.complete && img.naturalWidth > 0) {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   }
 }
 
-function getTextBounds(settings) {
-  let x = settings.left;
-  let y = settings.top;
-  let width = settings.width;
+function bounds(s) {
+  let x = s.left;
+  let y = s.top;
+  let width = s.width;
 
-  if (settings.paper === "tetrad1") {
+  if (s.paper === "tetrad1") {
     x = Math.max(x, 105);
     y = Math.max(y, 145);
     width = Math.min(width, 1060);
-  } else if (settings.paper === "tetrad2") {
+  }
+
+  if (s.paper === "tetrad2") {
     x = Math.max(x, 55);
     y = Math.max(y, 75);
     width = Math.min(width, 1120);
   }
 
-  x += settings.shift;
+  x += s.shift;
   x = Math.max(0, Math.min(x, canvas.width - 100));
   width = Math.max(100, Math.min(width, canvas.width - x - 20));
 
   return { x, y, width };
 }
 
-function measureWord(word, settings) {
-  return ctx.measureText(word).width * settings.wordSpace;
-}
-
-function splitLongWord(word, maxWidth, settings) {
-  const pieces = [];
-  let current = "";
-
-  for (const char of word) {
-    const test = current + char;
-    if (current && ctx.measureText(test).width > maxWidth) {
-      pieces.push(current);
-      current = char;
-    } else {
-      current = test;
-    }
-  }
-
-  if (current) pieces.push(current);
-  return pieces;
-}
-
-function wrapParagraph(paragraph, maxWidth, settings) {
+function wrapText(paragraph, maxWidth) {
   if (!paragraph.trim()) return [""];
 
   const words = paragraph.trim().split(/\s+/);
   const lines = [];
-  let line = "";
+  let current = "";
 
-  for (const word of words) {
+  for (let word of words) {
     if (ctx.measureText(word).width > maxWidth) {
-      if (line) {
-        lines.push(line);
-        line = "";
+      if (current) {
+        lines.push(current);
+        current = "";
       }
 
-      const pieces = splitLongWord(word, maxWidth, settings);
-      pieces.forEach((piece, index) => {
-        if (index < pieces.length - 1) {
-          lines.push(piece);
+      let part = "";
+      for (const char of word) {
+        const test = part + char;
+        if (part && ctx.measureText(test).width > maxWidth) {
+          lines.push(part);
+          part = char;
         } else {
-          line = piece;
+          part = test;
         }
-      });
+      }
+      current = part;
       continue;
     }
 
-    const test = line ? line + " " + word : word;
+    const test = current ? current + " " + word : word;
 
     if (ctx.measureText(test).width <= maxWidth) {
-      line = test;
+      current = test;
     } else {
-      if (line) lines.push(line);
-      line = word;
+      if (current) lines.push(current);
+      current = word;
     }
   }
 
-  if (line) lines.push(line);
+  if (current) lines.push(current);
   return lines;
 }
 
-function drawHandwrittenLine(text, x, y, settings) {
-  if (!text) return;
+function drawLine(line, x, y, s) {
+  if (!line) return;
+
+  const words = line.split(" ");
+  let cursor = x;
 
   ctx.save();
-  ctx.globalAlpha = settings.opacity;
-  ctx.fillStyle = "#25231f";
-  ctx.textBaseline = "alphabetic";
-  ctx.textAlign = "left";
+  ctx.globalAlpha = s.opacity;
+  ctx.fillStyle = "#243a83";
 
-  const slantRadians = settings.slant * Math.PI / 180;
-  let cursorX = x;
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
 
-  const words = text.split(" ");
-
-  words.forEach((word, wordIndex) => {
     if (!word) {
-      cursorX += settings.size * 0.3;
-      return;
+      cursor += s.size * 0.3;
+      continue;
     }
 
-    const offsetY = (Math.random() - 0.5) * settings.jitter;
-    const offsetX = (Math.random() - 0.5) * settings.jitter * 0.5;
+    const randomX = (Math.random() - 0.5) * s.jitter * 0.5;
+    const randomY = (Math.random() - 0.5) * s.jitter;
 
     ctx.save();
-    ctx.translate(cursorX + offsetX, y + offsetY);
-    ctx.transform(1, 0, slantRadians, 1, 0, 0);
+    ctx.translate(cursor + randomX, y + randomY);
+    ctx.transform(1, 0, Math.tan(s.slant * Math.PI / 180), 1, 0, 0);
 
-    // Рисуем слово целиком, чтобы браузер мог применять соединения букв шрифта.
+    // Целые слова позволяют шрифту сохранять внутренние соединения букв.
     ctx.fillText(word, 0, 0);
-
     ctx.restore();
 
-    cursorX += measureWord(word, settings);
+    cursor += ctx.measureText(word).width * s.wordSpace;
 
-    if (wordIndex < words.length - 1) {
-      cursorX += settings.size * 0.32 * settings.wordSpace;
+    if (i < words.length - 1) {
+      cursor += s.size * 0.32 * s.wordSpace;
     }
-  });
+  }
 
   ctx.restore();
 }
 
-async function createText() {
-  const text = document.getElementById("text").value;
-  const settings = getSettings();
+let renderTimer = null;
+let renderVersion = 0;
 
-  await loadFonts();
+function scheduleRender() {
+  clearTimeout(renderTimer);
+  renderTimer = setTimeout(render, 100);
+}
 
-  drawPaper(settings);
+async function render() {
+  const myVersion = ++renderVersion;
+  const s = settings();
 
+  // Ждём загрузки выбранного шрифта, чтобы не рисовать системным шрифтом.
+  try {
+    if (document.fonts) {
+      await document.fonts.load(`${s.size}px "${s.font}"`);
+    }
+  } catch (e) {
+    // Если внешний шрифт недоступен, браузер может использовать замену.
+  }
+
+  if (myVersion !== renderVersion) return;
+
+  drawBackground(s);
+
+  const text = textInput.value;
   if (!text.trim()) {
-    ctx.fillStyle = "#777";
-    ctx.font = '24px Arial';
-    ctx.fillText("Введи текст в поле выше", 60, 90);
+    statusEl.textContent = "";
     return;
   }
 
-  const bounds = getTextBounds(settings);
-  const fontSize = settings.size;
+  const area = bounds(s);
+  setFont(s);
 
-  ctx.font = `${fontSize}px "${settings.font}"`;
-  ctx.fontKerning = "normal";
-
-  const lineHeight = fontSize * settings.line;
+  const lineHeight = s.size * s.line;
   const paragraphs = text.replace(/\r/g, "").split("\n");
-  let y = bounds.y + fontSize;
+  let y = area.y + s.size;
 
   for (const paragraph of paragraphs) {
-    const lines = wrapParagraph(paragraph, bounds.width, settings);
+    const lines = wrapText(paragraph, area.width);
 
     for (const line of lines) {
-      if (y > canvas.height - 25) {
-        ctx.fillStyle = "#b00020";
-        ctx.font = "18px Arial";
-        ctx.fillText("Текст не поместился на лист — уменьши шрифт или сократи текст.", 25, canvas.height - 15);
+      if (y > canvas.height - 20) {
+        statusEl.textContent = "Текст не поместился: уменьши размер или сократи текст.";
         return;
       }
 
-      drawHandwrittenLine(line, bounds.x, y, settings);
+      drawLine(line, area.x, y, s);
       y += lineHeight;
     }
 
-    // Небольшой промежуток между абзацами.
     y += lineHeight * 0.25;
   }
+
+  statusEl.textContent = "Предпросмотр обновлён";
 }
 
-document.getElementById("create").addEventListener("click", createText);
+// Обновление при наборе текста, вставке, выборе шрифта и смене фона.
+textInput.addEventListener("input", scheduleRender);
+fontInput.addEventListener("change", scheduleRender);
+paperInput.addEventListener("change", scheduleRender);
+
+document.getElementById("create").addEventListener("click", render);
 
 document.getElementById("save").addEventListener("click", () => {
   const link = document.createElement("a");
@@ -534,11 +516,11 @@ document.getElementById("save").addEventListener("click", () => {
   link.click();
 });
 
-document.getElementById("paper").addEventListener("change", createText);
-
 window.addEventListener("load", async () => {
-  await loadFonts();
-  createText();
+  if (document.fonts) {
+    await document.fonts.ready;
+  }
+  render();
 });
 </script>
 </body>
