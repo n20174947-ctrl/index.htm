@@ -21,6 +21,16 @@
   src: url("./Segoe_Script.ttf") format("truetype");
   font-display: swap;
 }
+@font-face {
+  font-family: "Discipuli Britannica";
+  src: url("./Discipuli_Britannica.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "DOMOSED";
+  src: url("./Domosed_vc.ttf") format("truetype");
+  font-display: swap;
+}
 
 * { box-sizing: border-box; }
 
@@ -167,7 +177,9 @@ button:hover { opacity: .85; }
   <div class="control">
     <label for="style">Стиль почерка</label>
     <select id="style">
-      <option value="Segoe Script Local" selected>Segoe Script — русский и украинский</option>
+      <option value="Segoe Script Local">Segoe Script — русский и украинский</option>
+      <option value="DOMOSED" selected>DOMOSED — украинский почерк</option>
+      <option value="Discipuli Britannica">Discipuli Britannica</option>
       <option value="Pecita">Pecita — курсив</option>
       <option value="Shantell Sans">Shantell Sans</option>
       <option value="Bad Script">Bad Script</option>
@@ -327,18 +339,10 @@ function getPaperRegion() {
 
 function updateValues() {
   const ids = {
-    sizeVal:size,
-    lineVal:line,
-    curveVal:curve,
-    slantVal:slant,
-    jitterVal:jitter,
-    wordVal:word,
-    inkVal:ink,
-    topVal:topPos,
-    leftVal:leftPos,
-    xVal:xPos,
-    yVal:yPos,
-    widthVal:textWidth
+    sizeVal:size, lineVal:line, curveVal:curve,
+    slantVal:slant, jitterVal:jitter, wordVal:word,
+    inkVal:ink, topVal:topPos, leftVal:leftPos,
+    xVal:xPos, yVal:yPos, widthVal:textWidth
   };
 
   for (const [id, el] of Object.entries(ids)) {
@@ -352,6 +356,25 @@ function getInkRGB() {
   return "25,65,145";
 }
 
+function randomBetween(amount) {
+  return (Math.random() - 0.5) * 2 * amount;
+}
+
+function prepareFont() {
+  ctx.font = `${Number(size.value)}px "${style.value}"`;
+  ctx.textBaseline = "alphabetic";
+  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
+}
+
+async function waitForSelectedFont() {
+  try {
+    await document.fonts.load(`${Number(size.value)}px "${style.value}"`);
+    await document.fonts.ready;
+  } catch (error) {
+    console.warn("Не удалось загрузить шрифт:", style.value, error);
+  }
+}
+
 function getPaperImage() {
   return `./${paper.value}.jpg`;
 }
@@ -361,26 +384,6 @@ paper.addEventListener("change", () => {
   createText();
 });
 
-async function waitForSelectedFont() {
-  const name = style.value;
-  try {
-    await document.fonts.load(`${Number(size.value)}px "${name}"`);
-    await document.fonts.ready;
-  } catch (e) {
-    console.warn("Не удалось загрузить шрифт:", name, e);
-  }
-}
-
-function prepareFont() {
-  ctx.font = `${Number(size.value)}px "${style.value}"`;
-  ctx.textBaseline = "alphabetic";
-  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
-}
-
-function randomBetween(amount) {
-  return (Math.random() - 0.5) * 2 * amount;
-}
-
 function createText() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (!textInput.value.trim()) return;
@@ -389,6 +392,7 @@ function createText() {
 
   const region = getPaperRegion();
   const fontSize = Number(size.value);
+
   const startX = Math.max(
     region.x,
     Math.min(
@@ -422,6 +426,7 @@ function createText() {
 
     const words = paragraph.trim().split(/\s+/);
     const spaceWidth = ctx.measureText(" ").width * Number(word.value);
+
     let lineWords = [];
     let usedWidth = 0;
 
@@ -459,10 +464,11 @@ function drawLine(words, x, y, spaceWidth, maxWidth) {
     spaceWidth * Math.max(0, words.length - 1);
 
   let currentX = x;
+
   if (alignment.value === "center") {
-    currentX += Math.max(0, (maxWidth-totalWidth)/2);
+    currentX += Math.max(0, (maxWidth - totalWidth) / 2);
   } else if (alignment.value === "right") {
-    currentX += Math.max(0, maxWidth-totalWidth);
+    currentX += Math.max(0, maxWidth - totalWidth);
   }
 
   const curveAmount = Number(curve.value);
@@ -472,34 +478,26 @@ function drawLine(words, x, y, spaceWidth, maxWidth) {
   for (let i = 0; i < words.length; i++) {
     const wordText = words[i];
 
-    /*
-      При нулевой кривизне слово рисуется целиком,
-      сохраняя соединения букв шрифта.
-      При увеличении кривизны буквы слегка меняют
-      наклон, высоту и положение.
-    */
     if (curveAmount === 0) {
       ctx.save();
       ctx.translate(
         currentX + randomBetween(lineJitter * 0.25),
         y + randomBetween(lineJitter * 0.35)
       );
+
       if (generalSlant) {
         ctx.transform(1, 0, Math.tan(generalSlant), 1, 0, 0);
       }
+
       ctx.fillText(wordText, 0, 0);
       ctx.restore();
     } else {
       let letterX = currentX;
-
-      // Array.from корректно обрабатывает большинство
-      // букв Unicode, включая украинские символы.
       const letters = Array.from(wordText);
+      const strength = curveAmount / 10;
 
       for (const letter of letters) {
         const letterWidth = ctx.measureText(letter).width;
-        const strength = curveAmount / 10;
-
         const dx = randomBetween(strength * 1.1);
         const dy = randomBetween(strength * 2.4);
         const rotation = randomBetween(strength * 0.075);
@@ -516,8 +514,6 @@ function drawLine(words, x, y, spaceWidth, maxWidth) {
         ctx.fillText(letter, 0, 0);
         ctx.restore();
 
-        // Небольшой дополнительный шаг между буквами
-        // помогает регулировать естественность письма.
         letterX += letterWidth + randomBetween(strength * 0.65);
       }
     }
@@ -579,7 +575,6 @@ paperImage.addEventListener("error", () => {
 
 updateValues();
 paperImage.src = getPaperImage();
-
 document.fonts.ready.then(createText);
 waitForSelectedFont().then(createText);
 </script>
