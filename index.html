@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HandWrite A4 — реалистичный почерк</title>
 
 <style>
@@ -39,12 +39,9 @@ button:disabled{opacity:.55;cursor:wait}
 #paperImage{display:block;width:100%;height:auto}
 #canvas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:multiply}
 @media(max-width:500px){
-  body{padding:7px}
-  .panel{padding:10px}
-  .control{min-width:135px}
-  h1{font-size:21px}
-  .buttons{gap:7px}
-  .buttons button{font-size:14px;padding:11px 5px}
+ body{padding:7px}.panel{padding:10px}.control{min-width:135px}
+ h1{font-size:21px}.buttons{gap:7px}
+ .buttons button{font-size:14px;padding:11px 5px}
 }
 </style>
 </head>
@@ -113,8 +110,8 @@ button:disabled{opacity:.55;cursor:wait}
     <input id="size" type="range" min="16" max="60" value="30">
   </div>
   <div class="slider">
-    <div class="slider-title"><span>Межстрочный интервал</span><span id="lineVal">1.4</span></div>
-    <input id="line" type="range" min="1" max="2" step="0.1" value="1.4">
+    <div class="slider-title"><span>Межстрочный интервал</span><span id="lineVal">1</span></div>
+    <input id="line" type="range" min="0.7" max="1.5" step="0.05" value="1">
   </div>
 </details>
 
@@ -142,11 +139,11 @@ button:disabled{opacity:.55;cursor:wait}
   <summary>📐 Положение текста</summary>
   <div class="slider">
     <div class="slider-title"><span>Отступ сверху</span><span id="topVal">0</span></div>
-    <input id="top" type="range" min="0" max="300" value="0">
+    <input id="top" type="range" min="-100" max="300" value="0">
   </div>
   <div class="slider">
     <div class="slider-title"><span>Отступ слева</span><span id="leftVal">0</span></div>
-    <input id="left" type="range" min="0" max="300" value="0">
+    <input id="left" type="range" min="-100" max="300" value="0">
   </div>
   <div class="slider">
     <div class="slider-title"><span>Смещение X</span><span id="xVal">0</span></div>
@@ -202,65 +199,97 @@ const createButton = document.getElementById("create");
 const saveButton = document.getElementById("save");
 
 const controls = [
-  size, line, slant, jitter, word, ink,
-  topPos, leftPos, xPos, yPos, textWidth
+  size,line,slant,jitter,word,ink,
+  topPos,leftPos,xPos,yPos,textWidth
 ];
 
-function getPaperRegion() {
-  const regions = {
-    tetrad1: {x:105,y:145,w:1060,h:1530},
-    tetrad2: {x:55,y:75,w:1120,h:1600},
-    tetrad3: {x:100,y:110,w:1040,h:1510},
-    tetrad4: {x:100,y:110,w:1040,h:1510},
-    tetrad5: {x:100,y:110,w:1040,h:1510},
-    tetrad6: {x:100,y:110,w:1040,h:1510}
-  };
-  return regions[paper.value] || regions.tetrad6;
+/*
+  Настройки для каждой тетради.
+  region — область письма на изображении 1240x1754.
+  cell — предполагаемый вертикальный шаг клеток в пикселях.
+  Эти значения для тетрадей 1–5 предварительные.
+*/
+const paperSettings = {
+  tetrad1: {
+    region:{x:105,y:145,w:1060,h:1530},
+    cell:31
+  },
+  tetrad2: {
+    region:{x:55,y:75,w:1120,h:1600},
+    cell:30
+  },
+  tetrad3: {
+    region:{x:100,y:110,w:1040,h:1510},
+    cell:32
+  },
+  tetrad4: {
+    region:{x:100,y:110,w:1040,h:1510},
+    cell:31
+  },
+  tetrad5: {
+    region:{x:100,y:110,w:1040,h:1510},
+    cell:30
+  },
+  tetrad6: {
+    region:{x:100,y:110,w:1040,h:1510},
+    cell:32
+  }
+};
+
+function getSettings(){
+  return paperSettings[paper.value] || paperSettings.tetrad6;
 }
 
-function updateValues() {
+function updateValues(){
   const ids = {
-    sizeVal:size, lineVal:line, slantVal:slant,
-    jitterVal:jitter, wordVal:word, inkVal:ink,
-    topVal:topPos, leftVal:leftPos, xVal:xPos,
-    yVal:yPos, widthVal:textWidth
+    sizeVal:size,
+    lineVal:line,
+    slantVal:slant,
+    jitterVal:jitter,
+    wordVal:word,
+    inkVal:ink,
+    topVal:topPos,
+    leftVal:leftPos,
+    xVal:xPos,
+    yVal:yPos,
+    widthVal:textWidth
   };
-  for (const [id, el] of Object.entries(ids)) {
+
+  for(const [id,el] of Object.entries(ids)){
     document.getElementById(id).textContent = el.value;
   }
 }
 
-function getInkRGB() {
-  if (inkColor.value === "darkblue") return "20,39,91";
-  if (inkColor.value === "black") return "30,29,32";
+function getInkRGB(){
+  if(inkColor.value === "darkblue") return "20,39,91";
+  if(inkColor.value === "black") return "30,29,32";
   return "24,48,112";
 }
 
-function getPaperImage() {
+function getPaperImage(){
   return `./${paper.value}.jpg`;
 }
 
-async function waitForSelectedFont() {
-  try {
-    await document.fonts.load(
-      `${Number(size.value)}px "${style.value}"`
-    );
-  } catch (error) {
-    console.warn("Не удалось загрузить шрифт:", error);
+async function waitForSelectedFont(){
+  try{
+    await document.fonts.load(`${Number(size.value)}px "${style.value}"`);
+  }catch(error){
+    console.warn("Не удалось загрузить шрифт:",error);
   }
 }
 
-function measure(text) {
+function measure(text){
   return ctx.measureText(text).width;
 }
 
-function createText() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function createText(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
   const content = textInput.value;
-  if (!content.trim()) return;
+  if(!content.trim()) return;
 
-  const region = getPaperRegion();
+  const settings = getSettings();
+  const region = settings.region;
   const fontSize = Number(size.value);
 
   const startX = Math.max(
@@ -283,17 +312,19 @@ function createText() {
     )
   );
 
-  const lineHeight = fontSize * Number(line.value);
+  // Шаг строк основан на клетках выбранной тетради,
+  // а не на высоте шрифта.
+  const lineHeight = settings.cell * Number(line.value);
 
   ctx.font = `${fontSize}px "${style.value}"`;
-  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
+  if("fontKerning" in ctx) ctx.fontKerning = "normal";
   ctx.textBaseline = "alphabetic";
 
-  const paragraphs = content.replace(/\r\n/g, "\n").split("\n");
+  const paragraphs = content.replace(/\r\n/g,"\n").split("\n");
   const spaceWidth = measure(" ") * Number(word.value);
 
-  for (const paragraph of paragraphs) {
-    if (!paragraph.trim()) {
+  for(const paragraph of paragraphs){
+    if(!paragraph.trim()){
       y += lineHeight;
       continue;
     }
@@ -302,182 +333,174 @@ function createText() {
     let currentWords = [];
     let currentWidth = 0;
 
-    for (const currentWord of words) {
+    for(const currentWord of words){
       const wordWidth = measure(currentWord);
       const proposed = currentWords.length === 0
         ? wordWidth
         : currentWidth + spaceWidth + wordWidth;
 
-      if (currentWords.length && proposed > maxWidth) {
-        drawLine(currentWords, startX, y, spaceWidth, maxWidth);
+      if(currentWords.length && proposed > maxWidth){
+        drawLine(currentWords,startX,y,spaceWidth,maxWidth);
         y += lineHeight;
         currentWords = [currentWord];
         currentWidth = wordWidth;
-      } else {
+      }else{
         currentWords.push(currentWord);
         currentWidth = proposed;
       }
     }
 
-    if (currentWords.length) {
-      drawLine(currentWords, startX, y, spaceWidth, maxWidth);
+    if(currentWords.length){
+      drawLine(currentWords,startX,y,spaceWidth,maxWidth);
       y += lineHeight;
     }
   }
 }
 
-/*
- * Новая отрисовка:
- * каждое слово разбивается на отдельные символы.
- * Для каждой буквы задаются собственные наклон,
- * вертикальное положение и масштаб.
- */
-function drawLine(words, x, y, spaceWidth, maxWidth) {
+/* Отдельные буквы с индивидуальными небольшими отклонениями. */
+function drawLine(words,x,y,spaceWidth,maxWidth){
   const fontSize = Number(size.value);
   const amount = Number(jitter.value);
   const baseSlant = Number(slant.value);
 
   ctx.font = `${fontSize}px "${style.value}"`;
-  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
+  if("fontKerning" in ctx) ctx.fontKerning = "normal";
   ctx.textBaseline = "alphabetic";
 
-  const prepared = words.map(wordText => {
+  const prepared = words.map(wordText=>{
     const chars = Array.from(wordText);
-    const widths = chars.map(ch => measure(ch));
+    const widths = chars.map(ch=>measure(ch));
 
-    // Учитываем примерную ширину строки для выравнивания.
     return {
       chars,
       widths,
-      width: widths.reduce((sum, w) => sum + w, 0)
+      width:widths.reduce((sum,w)=>sum+w,0)
     };
   });
 
   const totalWidth =
-    prepared.reduce((sum, item) => sum + item.width, 0) +
-    spaceWidth * Math.max(0, prepared.length - 1);
+    prepared.reduce((sum,item)=>sum+item.width,0) +
+    spaceWidth*Math.max(0,prepared.length-1);
 
-  let startX = x;
+  let cursorX = x;
 
-  if (alignment.value === "center") {
-    startX += Math.max(0, (maxWidth - totalWidth) / 2);
-  } else if (alignment.value === "right") {
-    startX += Math.max(0, maxWidth - totalWidth);
+  if(alignment.value === "center"){
+    cursorX += Math.max(0,(maxWidth-totalWidth)/2);
+  }else if(alignment.value === "right"){
+    cursorX += Math.max(0,maxWidth-totalWidth);
   }
 
-  let cursorX = startX;
   const rgb = getInkRGB();
-  const baseOpacity = Number(ink.value) / 100;
+  const baseOpacity = Number(ink.value)/100;
 
-  for (let w = 0; w < prepared.length; w++) {
+  for(let w=0;w<prepared.length;w++){
     const item = prepared[w];
 
-    for (let i = 0; i < item.chars.length; i++) {
+    for(let i=0;i<item.chars.length;i++){
       const ch = item.chars[i];
       const originalWidth = item.widths[i];
 
-      // Случайные значения меняются для каждой буквы.
       const verticalShift =
-        (Math.random() - 0.5) * amount * 1.15;
+        (Math.random()-0.5)*amount*0.7;
 
       const angle =
-        (Math.random() - 0.5) * amount * 0.012;
+        (Math.random()-0.5)*amount*0.006;
 
       const scaleX =
-        1 + (Math.random() - 0.5) * amount * 0.012;
+        1+(Math.random()-0.5)*amount*0.008;
 
       const scaleY =
-        1 + (Math.random() - 0.5) * amount * 0.018;
+        1+(Math.random()-0.5)*amount*0.012;
 
       const individualSlant =
-        baseSlant + (Math.random() - 0.5) * amount * 1.2;
+        baseSlant+(Math.random()-0.5)*amount*0.8;
 
       const opacity = Math.min(
         1,
         Math.max(
           0.55,
-          baseOpacity + (Math.random() - 0.5) * amount * 0.006
+          baseOpacity+(Math.random()-0.5)*amount*0.004
         )
       );
 
-      // Небольшое перекрытие уменьшает разрывы между буквами.
-      const overlap = Math.min(fontSize * 0.12, originalWidth * 0.18);
-      const drawX = cursorX - (i > 0 ? overlap : 0);
-
       ctx.save();
-      ctx.translate(drawX, y + verticalShift);
+      ctx.translate(cursorX,y+verticalShift);
       ctx.rotate(angle);
       ctx.transform(
-        1, 0,
-        Math.tan(individualSlant * Math.PI / 180),
-        1, 0, 0
+        1,0,
+        Math.tan(individualSlant*Math.PI/180),
+        1,0,0
       );
-      ctx.scale(scaleX, scaleY);
+      ctx.scale(scaleX,scaleY);
 
       ctx.fillStyle = `rgba(${rgb},${opacity})`;
       ctx.shadowColor = `rgba(${rgb},0.18)`;
       ctx.shadowBlur = 0.25;
-      ctx.fillText(ch, 0, 0);
+      ctx.fillText(ch,0,0);
 
       ctx.restore();
 
-      // Переходим к следующему символу.
       cursorX += originalWidth;
     }
 
-    if (w < prepared.length - 1) {
+    if(w<prepared.length-1){
       cursorX += spaceWidth;
     }
   }
 }
 
-paper.addEventListener("change", () => {
-  paperImage.onload = () => {
+paper.addEventListener("change",()=>{
+  const src = getPaperImage();
+
+  paperImage.onload = ()=>{
     createText();
     paperImage.onload = null;
   };
-  paperImage.src = getPaperImage();
+
+  paperImage.onerror = ()=>{
+    console.error("Не удалось загрузить фон:",src);
+    paperImage.onload = null;
+  };
+
+  paperImage.src = src;
 });
 
-paperImage.addEventListener("load", createText);
+paperImage.addEventListener("load",createText);
+textInput.addEventListener("input",createText);
 
-paperImage.addEventListener("error", () => {
-  console.error("Не удалось загрузить фон:", paperImage.src);
-});
-
-textInput.addEventListener("input", createText);
-style.addEventListener("change", async () => {
+style.addEventListener("change",async()=>{
   await waitForSelectedFont();
   createText();
 });
-inkColor.addEventListener("change", createText);
-alignment.addEventListener("change", createText);
 
-controls.forEach(el => {
-  el.addEventListener("input", () => {
+inkColor.addEventListener("change",createText);
+alignment.addEventListener("change",createText);
+
+controls.forEach(el=>{
+  el.addEventListener("input",()=>{
     updateValues();
     createText();
   });
 });
 
-createButton.addEventListener("click", async () => {
+createButton.addEventListener("click",async()=>{
   createButton.disabled = true;
-  try {
+  try{
     await waitForSelectedFont();
     createText();
-  } finally {
+  }finally{
     createButton.disabled = false;
   }
 });
 
-saveButton.addEventListener("click", async () => {
+saveButton.addEventListener("click",async()=>{
   saveButton.disabled = true;
 
-  try {
+  try{
     await waitForSelectedFont();
     createText();
 
-    if (!paperImage.complete || !paperImage.naturalWidth) {
+    if(!paperImage.complete || !paperImage.naturalWidth){
       alert("Подожди, пока загрузится изображение тетради.");
       return;
     }
@@ -487,26 +510,25 @@ saveButton.addEventListener("click", async () => {
     result.height = canvas.height;
 
     const rctx = result.getContext("2d");
-    rctx.drawImage(paperImage, 0, 0, result.width, result.height);
+    rctx.drawImage(paperImage,0,0,result.width,result.height);
     rctx.globalCompositeOperation = "multiply";
-    rctx.drawImage(canvas, 0, 0);
+    rctx.drawImage(canvas,0,0);
     rctx.globalCompositeOperation = "source-over";
 
     const link = document.createElement("a");
     link.download = "handwrite-a4.png";
     link.href = result.toDataURL("image/png");
     link.click();
-  } catch (error) {
-    console.error("Ошибка сохранения:", error);
-    alert("Не удалось сохранить PNG. Проверь изображение тетради.");
-  } finally {
+  }catch(error){
+    console.error("Ошибка сохранения:",error);
+    alert("Не удалось сохранить PNG. Проверь изображения тетрадей.");
+  }finally{
     saveButton.disabled = false;
   }
 });
 
 updateValues();
 paperImage.src = getPaperImage();
-
 document.fonts.ready.then(createText);
 </script>
 </body>
