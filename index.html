@@ -20,17 +20,9 @@
 }
 
 @font-face {
-  font-family: "RinMyHandwriting";
-  src: url("./Rin_MyHandwriting_Prototype.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Victor";
-  src: url("./victor-handwriting.ttf") format("truetype");
-  font-weight: 400;
+  font-family: "Segoe Script Local";
+  src: url("./Segoe_Script.ttf") format("truetype");
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
@@ -182,9 +174,8 @@ button:hover { opacity: .85; }
   <div class="control">
     <label for="style">Стиль почерка</label>
     <select id="style">
-      <option value="Victor">Виктор</option>
-      <option value="RinMyHandwriting">Мой почерк — тестовая версия</option>
-      <option value="Pecita">Pecita — связный курсив</option>
+      <option value="Segoe Script Local" selected>Segoe Script — русский и украинский</option>
+      <option value="Pecita">Pecita — курсив</option>
       <option value="Shantell Sans">Shantell Sans — живой</option>
       <option value="Bad Script">Bad Script — рукописный</option>
       <option value="Caveat">Caveat — обычный</option>
@@ -380,20 +371,11 @@ function prepareFont() {
   const fontSize = Number(size.value);
   ctx.font = `${fontSize}px "${style.value}"`;
 
-  if ("fontKerning" in ctx) {
-    ctx.fontKerning = "normal";
-  }
+  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
 
-  if ("fontVariantCaps" in ctx) {
-    ctx.fontVariantCaps = "normal";
-  }
-
-  if ("fontStretch" in ctx) {
-    ctx.fontStretch = "normal";
-  }
-
-  // Canvas использует возможности выбранного шрифта,
-  // если браузер поддерживает соответствующие функции.
+  // Некоторые браузеры не предоставляют Canvas API для
+  // управления лигатурами. В этом случае применяются
+  // стандартные возможности выбранного шрифта.
 }
 
 function createText() {
@@ -428,7 +410,6 @@ function createText() {
   );
 
   const lineHeight = fontSize * Number(line.value);
-
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = `rgba(${getInkRGB()},${Number(ink.value)/100})`;
 
@@ -500,8 +481,7 @@ function drawLine(words, x, y, spaceWidth, maxWidth) {
       ctx.transform(1, 0, Math.tan(sl * Math.PI / 180), 1, 0, 0);
     }
 
-    // Рисуем целое слово одной операцией, чтобы сохранить
-    // соединения букв и лигатуры самого шрифта.
+    // Целое слово рисуется одной операцией.
     ctx.fillText(words[i], 0, 0);
     ctx.restore();
 
@@ -558,10 +538,7 @@ document.getElementById("save").addEventListener("click", async () => {
 paperImage.addEventListener("load", createText);
 
 paperImage.addEventListener("error", () => {
-  console.error(
-    "Не удалось загрузить фон. Проверь файл " +
-    getPaperImage() + " рядом с index.html."
-  );
+  console.error("Не удалось загрузить фон:", getPaperImage());
 });
 
 updateValues();
