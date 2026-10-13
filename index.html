@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -195,11 +196,7 @@ const controls=[
   topPos,leftPos,xPos,yPos,textWidth
 ];
 
-/*
- * Калибровка фоновых тетрадей.
- * tetrad6: cell 36 — предварительная оценка по скриншоту.
- * Остальные значения ориентировочные; их нужно проверить по оригиналам.
- */
+/* Настройки областей и клеток для каждой тетради. */
 const paperSettings={
   tetrad1:{region:{x:105,y:145,w:1060,h:1530},cell:31},
   tetrad2:{region:{x:55,y:75,w:1120,h:1600},cell:30},
@@ -251,12 +248,11 @@ async function waitForSelectedFont(){
   }
 }
 
-/* Разделяет предложения, сохраняя знаки препинания. */
-function splitSentences(text){
-  return text.match(/[^.!?…]+(?:[.!?…]+["'»”)]*)?|[.!?…]+/gu)
-    ?.map(s=>s.trim()).filter(Boolean)||[];
-}
-
+/*
+ * Обрабатывает переносы строк из текстового поля.
+ * Каждая непустая строка обрабатывается отдельно.
+ * Автоматический перенос длинной строки использует тот же шаг.
+ */
 function createText(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
@@ -287,11 +283,10 @@ function createText(){
   );
 
   /*
-   * Между базовыми линиями соседних строк — одна высота клетки.
-   * Это возвращает обычный шаг, без чрезмерного разрежения.
-   * Ползунок позволяет немного менять расстояние.
+   * Одна строка письма + одна пустая клетка.
+   * cell для tetrad6 предварительно выставлен в 36.
    */
-  const lineHeight=settings.cell*Number(line.value);
+  const lineHeight=settings.cell*2*Number(line.value);
 
   ctx.font=`${fontSize}px "${style.value}"`;
   if("fontKerning" in ctx)ctx.fontKerning="normal";
@@ -303,18 +298,16 @@ function createText(){
   for(let p=0;p<paragraphs.length;p++){
     const paragraph=paragraphs[p].trim();
 
+    /*
+     * Пустая строка, которую пользователь ввёл вручную,
+     * оставляет одну дополнительную строку места.
+     */
     if(!paragraph){
       y+=lineHeight;
       continue;
     }
 
-    const sentences=splitSentences(paragraph);
-
-    /*
-     * Предложения идут непрерывно, как обычный текст.
-     * Перенос выполняется только тогда, когда строка не помещается.
-     */
-    const words=sentences.join(" ").split(/\s+/);
+    const words=paragraph.split(/\s+/);
     let currentWords=[];
     let currentWidth=0;
 
@@ -339,13 +332,10 @@ function createText(){
       drawLine(currentWords,startX,y,spaceWidth,maxWidth);
       y+=lineHeight;
     }
-
-    /* Сохраняем ручные переносы строк из текстового поля. */
-    if(p<paragraphs.length-1)y+=lineHeight;
   }
 }
 
-/* Индивидуальная неровность каждой буквы. */
+/* Рисует каждую букву с небольшой индивидуальной неровностью. */
 function drawLine(words,x,y,spaceWidth,maxWidth){
   const fontSize=Number(size.value);
   const amount=Number(jitter.value);
