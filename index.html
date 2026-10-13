@@ -3,34 +3,41 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HandWrite A4</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&family=Shantell+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✍️ HandWrite A4</title>
 
 <style>
 @font-face {
-  font-family: "Pecita";
+  font-family: "RinMyHandwriting";
+  src: url("./Rin_MyHandwriting_Prototype.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Victor";
+  src: url("./victor-handwriting.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Discipuli";
+  src: url("./Discipuli_Britannica%20(1).ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Domosed";
+  src: url("./Domosed_vc%20(1).ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PecitaLocal";
   src: url("./Pecita.ttf") format("truetype");
   font-display: swap;
 }
 @font-face {
-  font-family: "Segoe Script Local";
+  font-family: "SegoeScriptLocal";
   src: url("./Segoe_Script.ttf") format("truetype");
   font-display: swap;
 }
-@font-face {
-  font-family: "Discipuli Britannica";
-  src: url("./Discipuli_Britannica.ttf") format("truetype");
-  font-display: swap;
-}
-@font-face {
-  font-family: "DOMOSED";
-  src: url("./Domosed_vc.ttf") format("truetype");
-  font-display: swap;
-}
+@import url("https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&family=Shantell+Sans:wght@400;500&display=swap");
 
 * { box-sizing: border-box; }
 
@@ -41,13 +48,11 @@ body {
   font-family: Arial, sans-serif;
   color: #222;
 }
-
 h1 {
   text-align: center;
   margin: 5px 0 18px;
   font-size: 24px;
 }
-
 .panel {
   max-width: 900px;
   margin: auto;
@@ -56,27 +61,22 @@ h1 {
   border-radius: 12px;
   box-shadow: 0 3px 15px #0002;
 }
-
 .row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
-
 .control {
   flex: 1;
   min-width: 170px;
 }
-
 label {
   display: block;
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: bold;
 }
-
 select, input[type=range] { width: 100%; }
-
 select {
   height: 37px;
   border: 1px solid #ccc;
@@ -84,7 +84,6 @@ select {
   padding: 4px 8px;
   background: white;
 }
-
 textarea {
   width: 100%;
   min-height: 140px;
@@ -94,36 +93,32 @@ textarea {
   border-radius: 8px;
   resize: vertical;
   font-size: 16px;
+  font-family: Arial, sans-serif;
+  text-decoration: none;
 }
-
 details {
   margin-top: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 8px 10px;
 }
-
 summary {
   cursor: pointer;
   font-weight: bold;
   padding: 4px;
 }
-
 .slider { margin: 11px 0; }
-
 .slider-title {
   display: flex;
   justify-content: space-between;
   gap: 8px;
   font-size: 14px;
 }
-
 .buttons {
   display: flex;
   gap: 10px;
   margin-top: 15px;
 }
-
 button {
   flex: 1;
   border: 0;
@@ -134,9 +129,7 @@ button {
   background: #222;
   color: white;
 }
-
 button:hover { opacity: .85; }
-
 .paper-wrap {
   position: relative;
   width: min(100%, 620px);
@@ -145,21 +138,25 @@ button:hover { opacity: .85; }
   box-shadow: 0 4px 18px #0003;
   background: white;
 }
-
 #paperImage {
   display: block;
   width: 100%;
   height: auto;
 }
-
 #canvas {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
 }
-
+.note {
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 10px;
+}
 @media(max-width:500px) {
   body { padding: 7px; }
   .panel { padding: 10px; }
@@ -177,17 +174,19 @@ button:hover { opacity: .85; }
   <div class="control">
     <label for="style">Стиль почерка</label>
     <select id="style">
-      <option value="Segoe Script Local">Segoe Script — русский и украинский</option>
-      <option value="DOMOSED" selected>DOMOSED — украинский почерк</option>
-      <option value="Discipuli Britannica">Discipuli Britannica</option>
-      <option value="Pecita">Pecita — курсив</option>
-      <option value="Shantell Sans">Shantell Sans</option>
-      <option value="Bad Script">Bad Script</option>
-      <option value="Caveat">Caveat</option>
-      <option value="Kalam">Kalam</option>
-      <option value="Marck Script">Marck Script</option>
-      <option value="Neucha">Neucha</option>
-      <option value="Pangolin">Pangolin</option>
+      <option value="Victor">Виктор</option>
+      <option value="Discipuli">Discipuli Britannica</option>
+      <option value="Domosed">Domosed</option>
+      <option value="PecitaLocal">Pecita</option>
+      <option value="SegoeScriptLocal">Segoe Script</option>
+      <option value="RinMyHandwriting">Мой почерк — тестовая версия</option>
+      <option value="Shantell Sans">Shantell Sans — живой</option>
+      <option value="Bad Script">Bad Script — рукописный</option>
+      <option value="Caveat">Caveat — обычный</option>
+      <option value="Kalam">Kalam — школьный</option>
+      <option value="Marck Script">Marck Script — плавный</option>
+      <option value="Neucha">Neucha — неровный</option>
+      <option value="Pangolin">Pangolin — округлый</option>
     </select>
   </div>
 
@@ -239,16 +238,12 @@ button:hover { opacity: .85; }
 <details>
   <summary>🖊️ Реалистичность почерка</summary>
   <div class="slider">
-    <div class="slider-title"><span>Кривизна букв</span><span id="curveVal">3</span></div>
-    <input id="curve" type="range" min="0" max="10" step="1" value="3">
-  </div>
-  <div class="slider">
-    <div class="slider-title"><span>Общий наклон</span><span id="slantVal">0</span></div>
+    <div class="slider-title"><span>Наклон</span><span id="slantVal">0</span></div>
     <input id="slant" type="range" min="-8" max="8" value="0">
   </div>
   <div class="slider">
-    <div class="slider-title"><span>Неровность строки</span><span id="jitterVal">2</span></div>
-    <input id="jitter" type="range" min="0" max="6" step="0.5" value="2">
+    <div class="slider-title"><span>Неровность букв</span><span id="jitterVal">3</span></div>
+    <input id="jitter" type="range" min="0" max="8" step="0.5" value="3">
   </div>
   <div class="slider">
     <div class="slider-title"><span>Расстояние между словами</span><span id="wordVal">1</span></div>
@@ -298,7 +293,6 @@ button:hover { opacity: .85; }
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
 const paper = document.getElementById("paper");
 const paperImage = document.getElementById("paperImage");
 const textInput = document.getElementById("text");
@@ -308,7 +302,6 @@ const alignment = document.getElementById("alignment");
 
 const size = document.getElementById("size");
 const line = document.getElementById("line");
-const curve = document.getElementById("curve");
 const slant = document.getElementById("slant");
 const jitter = document.getElementById("jitter");
 const word = document.getElementById("word");
@@ -321,7 +314,7 @@ const yPos = document.getElementById("y");
 const textWidth = document.getElementById("width");
 
 const controls = [
-  size, line, curve, slant, jitter, word, ink,
+  size, line, slant, jitter, word, ink,
   topPos, leftPos, xPos, yPos, textWidth
 ];
 
@@ -339,12 +332,11 @@ function getPaperRegion() {
 
 function updateValues() {
   const ids = {
-    sizeVal:size, lineVal:line, curveVal:curve,
-    slantVal:slant, jitterVal:jitter, wordVal:word,
-    inkVal:ink, topVal:topPos, leftVal:leftPos,
-    xVal:xPos, yVal:yPos, widthVal:textWidth
+    sizeVal:size, lineVal:line, slantVal:slant,
+    jitterVal:jitter, wordVal:word, inkVal:ink,
+    topVal:topPos, leftVal:leftPos, xVal:xPos,
+    yVal:yPos, widthVal:textWidth
   };
-
   for (const [id, el] of Object.entries(ids)) {
     document.getElementById(id).textContent = el.value;
   }
@@ -356,39 +348,25 @@ function getInkRGB() {
   return "25,65,145";
 }
 
-function randomBetween(amount) {
-  return (Math.random() - 0.5) * 2 * amount;
-}
-
-function prepareFont() {
-  ctx.font = `${Number(size.value)}px "${style.value}"`;
-  ctx.textBaseline = "alphabetic";
-  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
-}
-
-async function waitForSelectedFont() {
-  try {
-    await document.fonts.load(`${Number(size.value)}px "${style.value}"`);
-    await document.fonts.ready;
-  } catch (error) {
-    console.warn("Не удалось загрузить шрифт:", style.value, error);
-  }
-}
-
 function getPaperImage() {
   return `./${paper.value}.jpg`;
 }
 
-paper.addEventListener("change", () => {
-  paperImage.src = getPaperImage();
-  createText();
-});
+async function waitForSelectedFont() {
+  const name = style.value;
+  const px = Number(size.value);
+  try {
+    await document.fonts.load(`${px}px "${name}"`);
+  } catch (e) {
+    console.warn("Не удалось загрузить шрифт:", name, e);
+  }
+}
 
 function createText() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (!textInput.value.trim()) return;
 
-  prepareFont();
+  const content = textInput.value;
+  if (!content.trim()) return;
 
   const region = getPaperRegion();
   const fontSize = Number(size.value);
@@ -414,9 +392,13 @@ function createText() {
   );
 
   const lineHeight = fontSize * Number(line.value);
-  const paragraphs = textInput.value.replace(/\r/g, "").split("\n");
-
+  ctx.font = `${fontSize}px "${style.value}"`;
+  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
+  ctx.textBaseline = "alphabetic";
   ctx.fillStyle = `rgba(${getInkRGB()},${Number(ink.value)/100})`;
+
+  const paragraphs = content.split("\n");
+  const spaceWidth = ctx.measureText(" ").width * Number(word.value);
 
   for (const paragraph of paragraphs) {
     if (!paragraph.trim()) {
@@ -425,103 +407,80 @@ function createText() {
     }
 
     const words = paragraph.trim().split(/\s+/);
-    const spaceWidth = ctx.measureText(" ").width * Number(word.value);
-
-    let lineWords = [];
-    let usedWidth = 0;
+    let currentWords = [];
+    let currentWidth = 0;
 
     for (const currentWord of words) {
       const wordWidth = ctx.measureText(currentWord).width;
-      const proposed = lineWords.length
-        ? usedWidth + spaceWidth + wordWidth
-        : wordWidth;
+      const proposedWidth = currentWords.length === 0
+        ? wordWidth
+        : currentWidth + spaceWidth + wordWidth;
 
-      if (lineWords.length && proposed > maxWidth) {
-        drawLine(lineWords, startX, y, spaceWidth, maxWidth);
+      if (currentWords.length > 0 && proposedWidth > maxWidth) {
+        drawLine(currentWords, startX, y, spaceWidth, maxWidth);
         y += lineHeight;
-        lineWords = [currentWord];
-        usedWidth = wordWidth;
+        currentWords = [currentWord];
+        currentWidth = wordWidth;
       } else {
-        lineWords.push(currentWord);
-        usedWidth = proposed;
+        currentWords.push(currentWord);
+        currentWidth = proposedWidth;
       }
     }
 
-    if (lineWords.length) {
-      drawLine(lineWords, startX, y, spaceWidth, maxWidth);
+    if (currentWords.length) {
+      drawLine(currentWords, startX, y, spaceWidth, maxWidth);
       y += lineHeight;
     }
-
-    if (y > canvas.height) break;
   }
 }
 
 function drawLine(words, x, y, spaceWidth, maxWidth) {
-  prepareFont();
+  const amount = Number(jitter.value);
+  const baseSlant = Number(slant.value);
+
+  ctx.font = `${Number(size.value)}px "${style.value}"`;
+  if ("fontKerning" in ctx) ctx.fontKerning = "normal";
 
   const widths = words.map(w => ctx.measureText(w).width);
-  const totalWidth = widths.reduce((a,b) => a+b, 0) +
+  const totalWidth =
+    widths.reduce((a, b) => a + b, 0) +
     spaceWidth * Math.max(0, words.length - 1);
 
   let currentX = x;
 
   if (alignment.value === "center") {
-    currentX += Math.max(0, (maxWidth - totalWidth) / 2);
+    currentX = x + Math.max(0, (maxWidth - totalWidth) / 2);
   } else if (alignment.value === "right") {
-    currentX += Math.max(0, maxWidth - totalWidth);
+    currentX = x + Math.max(0, maxWidth - totalWidth);
   }
 
-  const curveAmount = Number(curve.value);
-  const lineJitter = Number(jitter.value);
-  const generalSlant = Number(slant.value) * Math.PI / 180;
-
   for (let i = 0; i < words.length; i++) {
-    const wordText = words[i];
+    // Небольшие случайные изменения для менее ровного почерка.
+    const randomX = (Math.random() - 0.5) * amount;
+    const randomY = (Math.random() - 0.5) * amount;
+    const randomAngle = (Math.random() - 0.5) * amount * 0.0035;
+    const randomScale = 1 + (Math.random() - 0.5) * amount * 0.006;
+    const randomSlant = baseSlant + (Math.random() - 0.5) * amount * 0.45;
 
-    if (curveAmount === 0) {
-      ctx.save();
-      ctx.translate(
-        currentX + randomBetween(lineJitter * 0.25),
-        y + randomBetween(lineJitter * 0.35)
-      );
+    ctx.save();
+    ctx.translate(currentX + randomX, y + randomY);
+    ctx.rotate(randomAngle);
+    ctx.scale(randomScale, 1);
+    ctx.transform(1, 0, Math.tan(randomSlant * Math.PI / 180), 1, 0, 0);
 
-      if (generalSlant) {
-        ctx.transform(1, 0, Math.tan(generalSlant), 1, 0, 0);
-      }
-
-      ctx.fillText(wordText, 0, 0);
-      ctx.restore();
-    } else {
-      let letterX = currentX;
-      const letters = Array.from(wordText);
-      const strength = curveAmount / 10;
-
-      for (const letter of letters) {
-        const letterWidth = ctx.measureText(letter).width;
-        const dx = randomBetween(strength * 1.1);
-        const dy = randomBetween(strength * 2.4);
-        const rotation = randomBetween(strength * 0.075);
-        const scaleX = 1 + randomBetween(strength * 0.10);
-        const scaleY = 1 + randomBetween(strength * 0.07);
-
-        ctx.save();
-        ctx.translate(
-          letterX + dx,
-          y + dy + randomBetween(lineJitter * 0.2)
-        );
-        ctx.rotate(generalSlant + rotation);
-        ctx.scale(scaleX, scaleY);
-        ctx.fillText(letter, 0, 0);
-        ctx.restore();
-
-        letterX += letterWidth + randomBetween(strength * 0.65);
-      }
-    }
+    // Рисуем целое слово, чтобы сохранить соединения букв шрифта.
+    ctx.fillText(words[i], 0, 0);
+    ctx.restore();
 
     currentX += widths[i];
     if (i < words.length - 1) currentX += spaceWidth;
   }
 }
+
+paper.addEventListener("change", () => {
+  paperImage.src = getPaperImage();
+  createText();
+});
 
 textInput.addEventListener("input", createText);
 
@@ -570,13 +529,16 @@ document.getElementById("save").addEventListener("click", async () => {
 
 paperImage.addEventListener("load", createText);
 paperImage.addEventListener("error", () => {
-  console.error("Не удалось загрузить фон:", getPaperImage());
+  console.error(
+    "Не удалось загрузить фон. Проверь файл " +
+    getPaperImage() + " рядом с index.html."
+  );
 });
 
 updateValues();
 paperImage.src = getPaperImage();
+
 document.fonts.ready.then(createText);
-waitForSelectedFont().then(createText);
 </script>
 </body>
 </html>
