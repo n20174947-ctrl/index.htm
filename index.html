@@ -3,27 +3,22 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✍️ HandWrite A4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HandWrite A4</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&family=Shantell+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&family=Shantell+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 @font-face {
   font-family: "Pecita";
   src: url("./Pecita.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Segoe Script Local";
   src: url("./Segoe_Script.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -89,7 +84,6 @@ textarea {
   border-radius: 8px;
   resize: vertical;
   font-size: 16px;
-  font-family: Arial, sans-serif;
 }
 
 details {
@@ -150,8 +144,7 @@ button:hover { opacity: .85; }
 
 #canvas {
   position: absolute;
-  left: 0;
-  top: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -176,13 +169,13 @@ button:hover { opacity: .85; }
     <select id="style">
       <option value="Segoe Script Local" selected>Segoe Script — русский и украинский</option>
       <option value="Pecita">Pecita — курсив</option>
-      <option value="Shantell Sans">Shantell Sans — живой</option>
-      <option value="Bad Script">Bad Script — рукописный</option>
-      <option value="Caveat">Caveat — обычный</option>
-      <option value="Kalam">Kalam — школьный</option>
-      <option value="Marck Script">Marck Script — плавный</option>
-      <option value="Neucha">Neucha — неровный</option>
-      <option value="Pangolin">Pangolin — округлый</option>
+      <option value="Shantell Sans">Shantell Sans</option>
+      <option value="Bad Script">Bad Script</option>
+      <option value="Caveat">Caveat</option>
+      <option value="Kalam">Kalam</option>
+      <option value="Marck Script">Marck Script</option>
+      <option value="Neucha">Neucha</option>
+      <option value="Pangolin">Pangolin</option>
     </select>
   </div>
 
@@ -234,11 +227,15 @@ button:hover { opacity: .85; }
 <details>
   <summary>🖊️ Реалистичность почерка</summary>
   <div class="slider">
-    <div class="slider-title"><span>Наклон</span><span id="slantVal">0</span></div>
+    <div class="slider-title"><span>Кривизна букв</span><span id="curveVal">3</span></div>
+    <input id="curve" type="range" min="0" max="10" step="1" value="3">
+  </div>
+  <div class="slider">
+    <div class="slider-title"><span>Общий наклон</span><span id="slantVal">0</span></div>
     <input id="slant" type="range" min="-8" max="8" value="0">
   </div>
   <div class="slider">
-    <div class="slider-title"><span>Неровность</span><span id="jitterVal">2</span></div>
+    <div class="slider-title"><span>Неровность строки</span><span id="jitterVal">2</span></div>
     <input id="jitter" type="range" min="0" max="6" step="0.5" value="2">
   </div>
   <div class="slider">
@@ -299,6 +296,7 @@ const alignment = document.getElementById("alignment");
 
 const size = document.getElementById("size");
 const line = document.getElementById("line");
+const curve = document.getElementById("curve");
 const slant = document.getElementById("slant");
 const jitter = document.getElementById("jitter");
 const word = document.getElementById("word");
@@ -311,7 +309,7 @@ const yPos = document.getElementById("y");
 const textWidth = document.getElementById("width");
 
 const controls = [
-  size, line, slant, jitter, word, ink,
+  size, line, curve, slant, jitter, word, ink,
   topPos, leftPos, xPos, yPos, textWidth
 ];
 
@@ -329,10 +327,18 @@ function getPaperRegion() {
 
 function updateValues() {
   const ids = {
-    sizeVal:size, lineVal:line, slantVal:slant,
-    jitterVal:jitter, wordVal:word, inkVal:ink,
-    topVal:topPos, leftVal:leftPos, xVal:xPos,
-    yVal:yPos, widthVal:textWidth
+    sizeVal:size,
+    lineVal:line,
+    curveVal:curve,
+    slantVal:slant,
+    jitterVal:jitter,
+    wordVal:word,
+    inkVal:ink,
+    topVal:topPos,
+    leftVal:leftPos,
+    xVal:xPos,
+    yVal:yPos,
+    widthVal:textWidth
   };
 
   for (const [id, el] of Object.entries(ids)) {
@@ -357,10 +363,8 @@ paper.addEventListener("change", () => {
 
 async function waitForSelectedFont() {
   const name = style.value;
-  const px = Number(size.value);
-
   try {
-    await document.fonts.load(`${px}px "${name}"`);
+    await document.fonts.load(`${Number(size.value)}px "${name}"`);
     await document.fonts.ready;
   } catch (e) {
     console.warn("Не удалось загрузить шрифт:", name, e);
@@ -368,27 +372,23 @@ async function waitForSelectedFont() {
 }
 
 function prepareFont() {
-  const fontSize = Number(size.value);
-  ctx.font = `${fontSize}px "${style.value}"`;
-
+  ctx.font = `${Number(size.value)}px "${style.value}"`;
+  ctx.textBaseline = "alphabetic";
   if ("fontKerning" in ctx) ctx.fontKerning = "normal";
+}
 
-  // Некоторые браузеры не предоставляют Canvas API для
-  // управления лигатурами. В этом случае применяются
-  // стандартные возможности выбранного шрифта.
+function randomBetween(amount) {
+  return (Math.random() - 0.5) * 2 * amount;
 }
 
 function createText() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const content = textInput.value;
-  if (!content.trim()) return;
+  if (!textInput.value.trim()) return;
 
   prepareFont();
 
   const region = getPaperRegion();
   const fontSize = Number(size.value);
-
   const startX = Math.max(
     region.x,
     Math.min(
@@ -410,12 +410,9 @@ function createText() {
   );
 
   const lineHeight = fontSize * Number(line.value);
-  ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = `rgba(${getInkRGB()},${Number(ink.value)/100})`;
+  const paragraphs = textInput.value.replace(/\r/g, "").split("\n");
 
-  const paragraphs = content.split("\n");
-  const spaceWidth =
-    ctx.measureText(" ").width * Number(word.value);
+  ctx.fillStyle = `rgba(${getInkRGB()},${Number(ink.value)/100})`;
 
   for (const paragraph of paragraphs) {
     if (!paragraph.trim()) {
@@ -424,66 +421,106 @@ function createText() {
     }
 
     const words = paragraph.trim().split(/\s+/);
-    let currentWords = [];
-    let currentWidth = 0;
+    const spaceWidth = ctx.measureText(" ").width * Number(word.value);
+    let lineWords = [];
+    let usedWidth = 0;
 
     for (const currentWord of words) {
       const wordWidth = ctx.measureText(currentWord).width;
+      const proposed = lineWords.length
+        ? usedWidth + spaceWidth + wordWidth
+        : wordWidth;
 
-      const proposedWidth = currentWords.length === 0
-        ? wordWidth
-        : currentWidth + spaceWidth + wordWidth;
-
-      if (currentWords.length > 0 && proposedWidth > maxWidth) {
-        drawLine(currentWords, startX, y, spaceWidth, maxWidth);
+      if (lineWords.length && proposed > maxWidth) {
+        drawLine(lineWords, startX, y, spaceWidth, maxWidth);
         y += lineHeight;
-        currentWords = [currentWord];
-        currentWidth = wordWidth;
+        lineWords = [currentWord];
+        usedWidth = wordWidth;
       } else {
-        currentWords.push(currentWord);
-        currentWidth = proposedWidth;
+        lineWords.push(currentWord);
+        usedWidth = proposed;
       }
     }
 
-    if (currentWords.length) {
-      drawLine(currentWords, startX, y, spaceWidth, maxWidth);
+    if (lineWords.length) {
+      drawLine(lineWords, startX, y, spaceWidth, maxWidth);
       y += lineHeight;
     }
+
+    if (y > canvas.height) break;
   }
 }
 
 function drawLine(words, x, y, spaceWidth, maxWidth) {
-  const amount = Number(jitter.value);
-  const sl = Number(slant.value);
-
   prepareFont();
 
   const widths = words.map(w => ctx.measureText(w).width);
-  const totalWidth = widths.reduce((a, b) => a + b, 0) +
+  const totalWidth = widths.reduce((a,b) => a+b, 0) +
     spaceWidth * Math.max(0, words.length - 1);
 
   let currentX = x;
-
   if (alignment.value === "center") {
-    currentX = x + Math.max(0, (maxWidth - totalWidth) / 2);
+    currentX += Math.max(0, (maxWidth-totalWidth)/2);
   } else if (alignment.value === "right") {
-    currentX = x + Math.max(0, maxWidth - totalWidth);
+    currentX += Math.max(0, maxWidth-totalWidth);
   }
 
+  const curveAmount = Number(curve.value);
+  const lineJitter = Number(jitter.value);
+  const generalSlant = Number(slant.value) * Math.PI / 180;
+
   for (let i = 0; i < words.length; i++) {
-    const randomX = (Math.random() - 0.5) * amount;
-    const randomY = (Math.random() - 0.5) * amount;
+    const wordText = words[i];
 
-    ctx.save();
-    ctx.translate(currentX + randomX, y + randomY);
+    /*
+      При нулевой кривизне слово рисуется целиком,
+      сохраняя соединения букв шрифта.
+      При увеличении кривизны буквы слегка меняют
+      наклон, высоту и положение.
+    */
+    if (curveAmount === 0) {
+      ctx.save();
+      ctx.translate(
+        currentX + randomBetween(lineJitter * 0.25),
+        y + randomBetween(lineJitter * 0.35)
+      );
+      if (generalSlant) {
+        ctx.transform(1, 0, Math.tan(generalSlant), 1, 0, 0);
+      }
+      ctx.fillText(wordText, 0, 0);
+      ctx.restore();
+    } else {
+      let letterX = currentX;
 
-    if (sl !== 0) {
-      ctx.transform(1, 0, Math.tan(sl * Math.PI / 180), 1, 0, 0);
+      // Array.from корректно обрабатывает большинство
+      // букв Unicode, включая украинские символы.
+      const letters = Array.from(wordText);
+
+      for (const letter of letters) {
+        const letterWidth = ctx.measureText(letter).width;
+        const strength = curveAmount / 10;
+
+        const dx = randomBetween(strength * 1.1);
+        const dy = randomBetween(strength * 2.4);
+        const rotation = randomBetween(strength * 0.075);
+        const scaleX = 1 + randomBetween(strength * 0.10);
+        const scaleY = 1 + randomBetween(strength * 0.07);
+
+        ctx.save();
+        ctx.translate(
+          letterX + dx,
+          y + dy + randomBetween(lineJitter * 0.2)
+        );
+        ctx.rotate(generalSlant + rotation);
+        ctx.scale(scaleX, scaleY);
+        ctx.fillText(letter, 0, 0);
+        ctx.restore();
+
+        // Небольшой дополнительный шаг между буквами
+        // помогает регулировать естественность письма.
+        letterX += letterWidth + randomBetween(strength * 0.65);
+      }
     }
-
-    // Целое слово рисуется одной операцией.
-    ctx.fillText(words[i], 0, 0);
-    ctx.restore();
 
     currentX += widths[i];
     if (i < words.length - 1) currentX += spaceWidth;
@@ -536,7 +573,6 @@ document.getElementById("save").addEventListener("click", async () => {
 });
 
 paperImage.addEventListener("load", createText);
-
 paperImage.addEventListener("error", () => {
   console.error("Не удалось загрузить фон:", getPaperImage());
 });
