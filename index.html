@@ -60,6 +60,7 @@ button:disabled{opacity:.55}
       <option value="Pangolin">Pangolin</option>
     </select>
   </div>
+
   <div class="control"><label for="paper">Бумага</label>
     <select id="paper">
       <option value="tetrad1">Тетрадь 1</option>
@@ -70,6 +71,7 @@ button:disabled{opacity:.55}
       <option value="tetrad6" selected>Тетрадь 6</option>
     </select>
   </div>
+
   <div class="control"><label for="inkColor">Цвет ручки</label>
     <select id="inkColor">
       <option value="blue">Синий</option>
@@ -77,6 +79,7 @@ button:disabled{opacity:.55}
       <option value="black">Чёрный</option>
     </select>
   </div>
+
   <div class="control"><label for="alignment">Выравнивание</label>
     <select id="alignment">
       <option value="left" selected>Слева</option>
@@ -148,9 +151,7 @@ const textWidth=document.getElementById("width");
 
 const controls=[size,line,slant,jitter,word,ink,topPos,leftPos,xPos,yPos,textWidth];
 
-/* Индивидуальные настройки шести фонов.
-   Шаги для tetrad1–tetrad5 предварительные.
-   tetrad6 настроена по предоставленному фото приблизительно. */
+/* Индивидуальные настройки шести фонов. */
 const paperSettings={
   tetrad1:{region:{x:105,y:145,w:1060,h:1530},cell:31},
   tetrad2:{region:{x:55,y:75,w:1120,h:1600},cell:30},
@@ -165,9 +166,11 @@ function getSettings(){
 }
 
 function updateValues(){
-  const ids={sizeVal:size,lineVal:line,slantVal:slant,jitterVal:jitter,
+  const ids={
+    sizeVal:size,lineVal:line,slantVal:slant,jitterVal:jitter,
     wordVal:word,inkVal:ink,topVal:topPos,leftVal:leftPos,
-    xVal:xPos,yVal:yPos,widthVal:textWidth};
+    xVal:xPos,yVal:yPos,widthVal:textWidth
+  };
   for(const [id,el] of Object.entries(ids)){
     document.getElementById(id).textContent=el.value;
   }
@@ -179,15 +182,19 @@ function getInkRGB(){
   return "24,48,112";
 }
 
-function getPaperImage(){return `./${paper.value}.jpg`;}
-
-async function waitForSelectedFont(){
-  try{await document.fonts.load(`${Number(size.value)}px "${style.value}"`);}
-  catch(error){console.warn("Не удалось загрузить шрифт:",error);}
+function getPaperImage(){
+  return `./${paper.value}.jpg`;
 }
 
-/* Делит текст на предложения. Знаки конца предложения остаются
-   с соответствующим предложением. Учитывает несколько знаков подряд. */
+async function waitForSelectedFont(){
+  try{
+    await document.fonts.load(`${Number(size.value)}px "${style.value}"`);
+  }catch(error){
+    console.warn("Не удалось загрузить шрифт:",error);
+  }
+}
+
+/* Разделяет текст на предложения, сохраняя знаки препинания. */
 function splitSentences(text){
   return text.match(/[^.!?…]+(?:[.!?…]+["'»”)]*)?|[.!?…]+/gu)
     ?.map(s=>s.trim()).filter(Boolean)||[];
@@ -195,21 +202,39 @@ function splitSentences(text){
 
 function createText(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
   const content=textInput.value;
   if(!content.trim())return;
 
   const settings=getSettings();
   const region=settings.region;
   const fontSize=Number(size.value);
-  const startX=Math.max(region.x,Math.min(region.x+region.w-1,
-    region.x+Number(leftPos.value)+Number(xPos.value)));
+
+  const startX=Math.max(region.x,Math.min(
+    region.x+region.w-1,
+    region.x+Number(leftPos.value)+Number(xPos.value)
+  ));
+
   let y=region.y+fontSize+Number(topPos.value)+Number(yPos.value);
 
-  const maxWidth=Math.max(1,Math.min(Number(textWidth.value),
-    region.x+region.w-startX,region.w));
+  const maxWidth=Math.max(1,Math.min(
+    Number(textWidth.value),
+    region.x+region.w-startX,
+    region.w
+  ));
 
-  const lineHeight=settings.cell*Number(line.value);
-  const blankGap=settings.cell*Number(line.value);
+  /*
+   * ГЛАВНОЕ ИЗМЕНЕНИЕ:
+   * шаг между базовыми линиями — две высоты клетки.
+   * Это оставляет одну пустую клетку между строками.
+   */
+  const lineHeight=settings.cell*2*Number(line.value);
+
+  /*
+   * Дополнительный пропуск между предложениями.
+   * Каждое предложение отделяется ещё одной строкой.
+   */
+  const blankGap=lineHeight;
 
   ctx.font=`${fontSize}px "${style.value}"`;
   if("fontKerning" in ctx)ctx.fontKerning="normal";
@@ -220,9 +245,14 @@ function createText(){
 
   for(let p=0;p<paragraphs.length;p++){
     const paragraph=paragraphs[p].trim();
-    if(!paragraph){y+=lineHeight;continue;}
+
+    if(!paragraph){
+      y+=lineHeight;
+      continue;
+    }
 
     const sentences=splitSentences(paragraph);
+
     for(let s=0;s<sentences.length;s++){
       const sentence=sentences[s].trim();
       if(!sentence)continue;
@@ -233,8 +263,9 @@ function createText(){
 
       for(const currentWord of words){
         const wordWidth=ctx.measureText(currentWord).width;
-        const proposed=currentWords.length===0?wordWidth:
-          currentWidth+spaceWidth+wordWidth;
+        const proposed=currentWords.length===0
+          ?wordWidth
+          :currentWidth+spaceWidth+wordWidth;
 
         if(currentWords.length>0&&proposed>maxWidth){
           drawLine(currentWords,startX,y,spaceWidth,maxWidth);
@@ -252,17 +283,16 @@ function createText(){
         y+=lineHeight;
       }
 
-      /* Пустая строка только между предложениями,
-         но не между строками одного предложения. */
+      /* Дополнительный пропуск между предложениями. */
       if(s<sentences.length-1)y+=blankGap;
     }
 
-    /* Сохраняем абзацы, введённые пользователем вручную. */
+    /* Сохраняет пустые абзацы, введённые вручную. */
     if(p<paragraphs.length-1)y+=blankGap;
   }
 }
 
-/* Рисование с небольшой индивидуальной неровностью каждой буквы. */
+/* Рисует текст с индивидуальной неровностью каждой буквы. */
 function drawLine(words,x,y,spaceWidth,maxWidth){
   const fontSize=Number(size.value);
   const amount=Number(jitter.value);
@@ -275,15 +305,23 @@ function drawLine(words,x,y,spaceWidth,maxWidth){
   const prepared=words.map(wordText=>{
     const chars=Array.from(wordText);
     const widths=chars.map(ch=>ctx.measureText(ch).width);
-    return {chars,widths,width:widths.reduce((a,b)=>a+b,0)};
+    return {
+      chars,
+      widths,
+      width:widths.reduce((a,b)=>a+b,0)
+    };
   });
 
-  const totalWidth=prepared.reduce((a,item)=>a+item.width,0)+
-    spaceWidth*Math.max(0,prepared.length-1);
+  const totalWidth=prepared.reduce((a,item)=>a+item.width,0)
+    +spaceWidth*Math.max(0,prepared.length-1);
 
   let cursorX=x;
-  if(alignment.value==="center")cursorX+=Math.max(0,(maxWidth-totalWidth)/2);
-  else if(alignment.value==="right")cursorX+=Math.max(0,maxWidth-totalWidth);
+
+  if(alignment.value==="center"){
+    cursorX+=Math.max(0,(maxWidth-totalWidth)/2);
+  }else if(alignment.value==="right"){
+    cursorX+=Math.max(0,maxWidth-totalWidth);
+  }
 
   const rgb=getInkRGB();
   const baseOpacity=Number(ink.value)/100;
@@ -300,14 +338,22 @@ function drawLine(words,x,y,spaceWidth,maxWidth){
       const scaleX=1+(Math.random()-.5)*amount*.008;
       const scaleY=1+(Math.random()-.5)*amount*.012;
       const individualSlant=baseSlant+(Math.random()-.5)*amount*.8;
-      const opacity=Math.max(.55,Math.min(1,
-        baseOpacity+(Math.random()-.5)*amount*.004));
+
+      const opacity=Math.max(.55,Math.min(
+        1,
+        baseOpacity+(Math.random()-.5)*amount*.004
+      ));
 
       ctx.save();
       ctx.translate(cursorX,y+verticalShift);
       ctx.rotate(angle);
-      ctx.transform(1,0,Math.tan(individualSlant*Math.PI/180),1,0,0);
+      ctx.transform(
+        1,0,
+        Math.tan(individualSlant*Math.PI/180),
+        1,0,0
+      );
       ctx.scale(scaleX,scaleY);
+
       ctx.fillStyle=`rgba(${rgb},${opacity})`;
       ctx.shadowColor=`rgba(${rgb},0.18)`;
       ctx.shadowBlur=.25;
@@ -316,18 +362,31 @@ function drawLine(words,x,y,spaceWidth,maxWidth){
 
       cursorX+=charWidth;
     }
+
     if(w<prepared.length-1)cursorX+=spaceWidth;
   }
 }
 
 paper.addEventListener("change",()=>{
   paperImage.src=getPaperImage();
-  if(paperImage.complete&&paperImage.naturalWidth)createText();
+  if(paperImage.complete&&paperImage.naturalWidth){
+    createText();
+  }
 });
+
 paperImage.addEventListener("load",createText);
-paperImage.addEventListener("error",()=>console.error("Не удалось загрузить фон:",getPaperImage()));
+
+paperImage.addEventListener("error",()=>{
+  console.error("Не удалось загрузить фон:",getPaperImage());
+});
+
 textInput.addEventListener("input",createText);
-style.addEventListener("change",async()=>{await waitForSelectedFont();createText();});
+
+style.addEventListener("change",async()=>{
+  await waitForSelectedFont();
+  createText();
+});
+
 inkColor.addEventListener("change",createText);
 alignment.addEventListener("change",createText);
 
@@ -353,8 +412,10 @@ document.getElementById("save").addEventListener("click",async()=>{
   const result=document.createElement("canvas");
   result.width=canvas.width;
   result.height=canvas.height;
+
   const rctx=result.getContext("2d");
   rctx.drawImage(paperImage,0,0,result.width,result.height);
+
   rctx.globalCompositeOperation="multiply";
   rctx.drawImage(canvas,0,0);
   rctx.globalCompositeOperation="source-over";
