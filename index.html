@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✍️ HandWrite A4</title>
+<title>HandWrite A4 — реалистичный почерк</title>
 
 <style>
 @font-face {
@@ -37,6 +37,7 @@
   src: url("./Segoe_Script.ttf") format("truetype");
   font-display: swap;
 }
+
 @import url("https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&family=Shantell+Sans:wght@400;500&display=swap");
 
 * { box-sizing: border-box; }
@@ -48,11 +49,13 @@ body {
   font-family: Arial, sans-serif;
   color: #222;
 }
+
 h1 {
   text-align: center;
   margin: 5px 0 18px;
   font-size: 24px;
 }
+
 .panel {
   max-width: 900px;
   margin: auto;
@@ -61,22 +64,29 @@ h1 {
   border-radius: 12px;
   box-shadow: 0 3px 15px #0002;
 }
+
 .row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
+
 .control {
   flex: 1;
   min-width: 170px;
 }
+
 label {
   display: block;
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: bold;
 }
-select, input[type=range] { width: 100%; }
+
+select, input[type=range] {
+  width: 100%;
+}
+
 select {
   height: 37px;
   border: 1px solid #ccc;
@@ -84,6 +94,7 @@ select {
   padding: 4px 8px;
   background: white;
 }
+
 textarea {
   width: 100%;
   min-height: 140px;
@@ -96,29 +107,37 @@ textarea {
   font-family: Arial, sans-serif;
   text-decoration: none;
 }
+
 details {
   margin-top: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 8px 10px;
 }
+
 summary {
   cursor: pointer;
   font-weight: bold;
   padding: 4px;
 }
-.slider { margin: 11px 0; }
+
+.slider {
+  margin: 11px 0;
+}
+
 .slider-title {
   display: flex;
   justify-content: space-between;
   gap: 8px;
   font-size: 14px;
 }
+
 .buttons {
   display: flex;
   gap: 10px;
   margin-top: 15px;
 }
+
 button {
   flex: 1;
   border: 0;
@@ -129,7 +148,11 @@ button {
   background: #222;
   color: white;
 }
-button:hover { opacity: .85; }
+
+button:hover {
+  opacity: .85;
+}
+
 .paper-wrap {
   position: relative;
   width: min(100%, 620px);
@@ -137,12 +160,15 @@ button:hover { opacity: .85; }
   line-height: 0;
   box-shadow: 0 4px 18px #0003;
   background: white;
+  overflow: hidden;
 }
+
 #paperImage {
   display: block;
   width: 100%;
   height: auto;
 }
+
 #canvas {
   position: absolute;
   left: 0;
@@ -150,18 +176,17 @@ button:hover { opacity: .85; }
   width: 100%;
   height: 100%;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
-.note {
-  color: #666;
-  font-size: 12px;
-  line-height: 1.4;
-  margin-top: 10px;
-}
+
 @media(max-width:500px) {
   body { padding: 7px; }
   .panel { padding: 10px; }
   .control { min-width: 135px; }
-  .buttons button { font-size: 14px; padding: 11px 5px; }
+  .buttons button {
+    font-size: 14px;
+    padding: 11px 5px;
+  }
 }
 </style>
 </head>
@@ -179,14 +204,14 @@ button:hover { opacity: .85; }
       <option value="Domosed">Domosed</option>
       <option value="PecitaLocal">Pecita</option>
       <option value="SegoeScriptLocal">Segoe Script</option>
-      <option value="RinMyHandwriting">Мой почерк — тестовая версия</option>
-      <option value="Shantell Sans">Shantell Sans — живой</option>
-      <option value="Bad Script">Bad Script — рукописный</option>
-      <option value="Caveat">Caveat — обычный</option>
-      <option value="Kalam">Kalam — школьный</option>
-      <option value="Marck Script">Marck Script — плавный</option>
-      <option value="Neucha">Neucha — неровный</option>
-      <option value="Pangolin">Pangolin — округлый</option>
+      <option value="RinMyHandwriting">Мой почерк</option>
+      <option value="Shantell Sans">Shantell Sans</option>
+      <option value="Bad Script">Bad Script</option>
+      <option value="Caveat">Caveat</option>
+      <option value="Kalam">Kalam</option>
+      <option value="Marck Script">Marck Script</option>
+      <option value="Neucha">Neucha</option>
+      <option value="Pangolin">Pangolin</option>
     </select>
   </div>
 
@@ -205,8 +230,8 @@ button:hover { opacity: .85; }
   <div class="control">
     <label for="inkColor">Цвет ручки</label>
     <select id="inkColor">
-      <option value="blue" selected>Синий</option>
-      <option value="darkblue">Тёмно-синий</option>
+      <option value="blue">Синий</option>
+      <option value="darkblue" selected>Чернильно-синий</option>
       <option value="black">Чёрный</option>
     </select>
   </div>
@@ -242,7 +267,7 @@ button:hover { opacity: .85; }
     <input id="slant" type="range" min="-8" max="8" value="0">
   </div>
   <div class="slider">
-    <div class="slider-title"><span>Неровность букв</span><span id="jitterVal">3</span></div>
+    <div class="slider-title"><span>Неровность</span><span id="jitterVal">3</span></div>
     <input id="jitter" type="range" min="0" max="8" step="0.5" value="3">
   </div>
   <div class="slider">
@@ -250,7 +275,7 @@ button:hover { opacity: .85; }
     <input id="word" type="range" min="0.5" max="2" step="0.1" value="1">
   </div>
   <div class="slider">
-    <div class="slider-title"><span>Прозрачность чернил</span><span id="inkVal">92</span></div>
+    <div class="slider-title"><span>Насыщенность чернил</span><span id="inkVal">92</span></div>
     <input id="ink" type="range" min="60" max="100" value="92">
   </div>
 </details>
@@ -332,20 +357,28 @@ function getPaperRegion() {
 
 function updateValues() {
   const ids = {
-    sizeVal:size, lineVal:line, slantVal:slant,
-    jitterVal:jitter, wordVal:word, inkVal:ink,
-    topVal:topPos, leftVal:leftPos, xVal:xPos,
-    yVal:yPos, widthVal:textWidth
+    sizeVal:size,
+    lineVal:line,
+    slantVal:slant,
+    jitterVal:jitter,
+    wordVal:word,
+    inkVal:ink,
+    topVal:topPos,
+    leftVal:leftPos,
+    xVal:xPos,
+    yVal:yPos,
+    widthVal:textWidth
   };
+
   for (const [id, el] of Object.entries(ids)) {
     document.getElementById(id).textContent = el.value;
   }
 }
 
 function getInkRGB() {
-  if (inkColor.value === "darkblue") return "14,42,105";
-  if (inkColor.value === "black") return "25,25,25";
-  return "25,65,145";
+  if (inkColor.value === "darkblue") return "20,39,91";
+  if (inkColor.value === "black") return "30,29,32";
+  return "24,48,112";
 }
 
 function getPaperImage() {
@@ -353,12 +386,10 @@ function getPaperImage() {
 }
 
 async function waitForSelectedFont() {
-  const name = style.value;
-  const px = Number(size.value);
   try {
-    await document.fonts.load(`${px}px "${name}"`);
-  } catch (e) {
-    console.warn("Не удалось загрузить шрифт:", name, e);
+    await document.fonts.load(`${Number(size.value)}px "${style.value}"`);
+  } catch (error) {
+    console.warn("Не удалось загрузить шрифт:", error);
   }
 }
 
@@ -392,13 +423,13 @@ function createText() {
   );
 
   const lineHeight = fontSize * Number(line.value);
+
   ctx.font = `${fontSize}px "${style.value}"`;
   if ("fontKerning" in ctx) ctx.fontKerning = "normal";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = `rgba(${getInkRGB()},${Number(ink.value)/100})`;
 
   const paragraphs = content.split("\n");
-  const spaceWidth = ctx.measureText(" ").width * Number(word.value);
+  const spaceWidth =
+    ctx.measureText(" ").width * Number(word.value);
 
   for (const paragraph of paragraphs) {
     if (!paragraph.trim()) {
@@ -437,9 +468,11 @@ function createText() {
 function drawLine(words, x, y, spaceWidth, maxWidth) {
   const amount = Number(jitter.value);
   const baseSlant = Number(slant.value);
+  const fontSize = Number(size.value);
 
-  ctx.font = `${Number(size.value)}px "${style.value}"`;
+  ctx.font = `${fontSize}px "${style.value}"`;
   if ("fontKerning" in ctx) ctx.fontKerning = "normal";
+  ctx.textBaseline = "alphabetic";
 
   const widths = words.map(w => ctx.measureText(w).width);
   const totalWidth =
@@ -449,31 +482,59 @@ function drawLine(words, x, y, spaceWidth, maxWidth) {
   let currentX = x;
 
   if (alignment.value === "center") {
-    currentX = x + Math.max(0, (maxWidth - totalWidth) / 2);
+    currentX += Math.max(0, (maxWidth - totalWidth) / 2);
   } else if (alignment.value === "right") {
-    currentX = x + Math.max(0, maxWidth - totalWidth);
+    currentX += Math.max(0, maxWidth - totalWidth);
   }
 
   for (let i = 0; i < words.length; i++) {
-    // Небольшие случайные изменения для менее ровного почерка.
-    const randomX = (Math.random() - 0.5) * amount;
-    const randomY = (Math.random() - 0.5) * amount;
-    const randomAngle = (Math.random() - 0.5) * amount * 0.0035;
-    const randomScale = 1 + (Math.random() - 0.5) * amount * 0.006;
-    const randomSlant = baseSlant + (Math.random() - 0.5) * amount * 0.45;
+    const wordText = words[i];
+
+    const randomX = (Math.random() - 0.5) * amount * 0.65;
+    const randomY = (Math.random() - 0.5) * amount * 0.65;
+    const randomAngle = (Math.random() - 0.5) * amount * 0.002;
+    const randomScale = 1 + (Math.random() - 0.5) * amount * 0.004;
+    const randomSlant =
+      baseSlant + (Math.random() - 0.5) * amount * 0.3;
+
+    const opacity = Math.min(
+      1,
+      Math.max(
+        0.6,
+        Number(ink.value) / 100 +
+        (Math.random() - 0.5) * 0.07
+      )
+    );
 
     ctx.save();
     ctx.translate(currentX + randomX, y + randomY);
     ctx.rotate(randomAngle);
     ctx.scale(randomScale, 1);
-    ctx.transform(1, 0, Math.tan(randomSlant * Math.PI / 180), 1, 0, 0);
+    ctx.transform(
+      1, 0,
+      Math.tan(randomSlant * Math.PI / 180),
+      1, 0, 0
+    );
 
-    // Рисуем целое слово, чтобы сохранить соединения букв шрифта.
-    ctx.fillText(words[i], 0, 0);
+    // Очень лёгкий мягкий слой по краям чернил.
+    ctx.globalAlpha = opacity * 0.18;
+    ctx.fillStyle = `rgb(${getInkRGB()})`;
+    ctx.shadowColor = `rgba(${getInkRGB()},0.35)`;
+    ctx.shadowBlur = 0.45;
+    ctx.fillText(wordText, 0.15, 0.1);
+
+    // Основной слой чернил.
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = opacity * 0.94;
+    ctx.fillStyle = `rgb(${getInkRGB()})`;
+    ctx.fillText(wordText, 0, 0);
+
     ctx.restore();
 
     currentX += widths[i];
-    if (i < words.length - 1) currentX += spaceWidth;
+    if (i < words.length - 1) {
+      currentX += spaceWidth;
+    }
   }
 }
 
@@ -519,7 +580,11 @@ document.getElementById("save").addEventListener("click", async () => {
 
   const rctx = result.getContext("2d");
   rctx.drawImage(paperImage, 0, 0, result.width, result.height);
+
+  // При сохранении тоже смешиваем чернила с фактурой бумаги.
+  rctx.globalCompositeOperation = "multiply";
   rctx.drawImage(canvas, 0, 0);
+  rctx.globalCompositeOperation = "source-over";
 
   const link = document.createElement("a");
   link.download = "handwrite-a4.png";
@@ -528,11 +593,9 @@ document.getElementById("save").addEventListener("click", async () => {
 });
 
 paperImage.addEventListener("load", createText);
+
 paperImage.addEventListener("error", () => {
-  console.error(
-    "Не удалось загрузить фон. Проверь файл " +
-    getPaperImage() + " рядом с index.html."
-  );
+  console.error("Не удалось загрузить фон:", getPaperImage());
 });
 
 updateValues();
