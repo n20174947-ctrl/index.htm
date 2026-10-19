@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HandWrite A4 — реалистичный почерк</title>
+
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Marck+Script&family=Neucha&family=Pangolin&family=Shantell+Sans:wght@400;500&display=swap");
 
@@ -43,6 +44,7 @@ button:disabled{opacity:.55}
 }
 </style>
 </head>
+
 <body>
 <div class="panel">
 <h1>✍️ HandWrite A4</h1>
@@ -196,7 +198,11 @@ const controls=[
   topPos,leftPos,xPos,yPos,textWidth
 ];
 
-/* Настройки областей и клеток для каждой тетради. */
+/*
+ * Предварительная калибровка фонов.
+ * region — область письма на изображении 1240 × 1754.
+ * cell — приблизительный вертикальный шаг клетки.
+ */
 const paperSettings={
   tetrad1:{region:{x:105,y:145,w:1060,h:1530},cell:31},
   tetrad2:{region:{x:55,y:75,w:1120,h:1600},cell:30},
@@ -231,9 +237,9 @@ function updateValues(){
 }
 
 function getInkRGB(){
-  if(inkColor.value==="darkblue")return "20,39,91";
-  if(inkColor.value==="black")return "30,29,32";
-  return "24,48,112";
+  if(inkColor.value==="darkblue")return "35,53,91";
+  if(inkColor.value==="black")return "38,37,40";
+  return "42,66,119";
 }
 
 function getPaperImage(){
@@ -249,9 +255,11 @@ async function waitForSelectedFont(){
 }
 
 /*
- * Обрабатывает переносы строк из текстового поля.
- * Каждая непустая строка обрабатывается отдельно.
- * Автоматический перенос длинной строки использует тот же шаг.
+ * Текст из каждой введённой строки переносится автоматически,
+ * если не помещается по ширине.
+ *
+ * Шаг строки не меняется: используется cell × line × 2.
+ * Первая строка привязывается к ближайшей линии сетки.
  */
 function createText(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -262,6 +270,7 @@ function createText(){
   const settings=getSettings();
   const region=settings.region;
   const fontSize=Number(size.value);
+  const cell=settings.cell;
 
   const startX=Math.max(
     region.x,
@@ -271,7 +280,14 @@ function createText(){
     )
   );
 
-  let y=region.y+fontSize+Number(topPos.value)+Number(yPos.value);
+  const rawY=
+    region.y+
+    fontSize+
+    Number(topPos.value)+
+    Number(yPos.value);
+
+  // Привязка первой базовой линии к ближайшему шагу клетки.
+  let y=region.y+Math.ceil((rawY-region.y)/cell)*cell;
 
   const maxWidth=Math.max(
     1,
@@ -282,26 +298,19 @@ function createText(){
     )
   );
 
-  /*
-   * Одна строка письма + одна пустая клетка.
-   * cell для tetrad6 предварительно выставлен в 36.
-   */
-  const lineHeight=settings.cell*2*Number(line.value);
+  const lineHeight=cell*2*Number(line.value);
 
   ctx.font=`${fontSize}px "${style.value}"`;
   if("fontKerning" in ctx)ctx.fontKerning="normal";
   ctx.textBaseline="alphabetic";
 
+  // Каждая введённая непустая строка сохраняется отдельным абзацем.
   const paragraphs=content.replace(/\r\n/g,"\n").split("\n");
   const spaceWidth=ctx.measureText(" ").width*Number(word.value);
 
   for(let p=0;p<paragraphs.length;p++){
     const paragraph=paragraphs[p].trim();
 
-    /*
-     * Пустая строка, которую пользователь ввёл вручную,
-     * оставляет одну дополнительную строку места.
-     */
     if(!paragraph){
       y+=lineHeight;
       continue;
@@ -313,6 +322,7 @@ function createText(){
 
     for(const currentWord of words){
       const wordWidth=ctx.measureText(currentWord).width;
+
       const proposed=currentWords.length===0
         ?wordWidth
         :currentWidth+spaceWidth+wordWidth;
@@ -320,6 +330,7 @@ function createText(){
       if(currentWords.length>0&&proposed>maxWidth){
         drawLine(currentWords,startX,y,spaceWidth,maxWidth);
         y+=lineHeight;
+
         currentWords=[currentWord];
         currentWidth=wordWidth;
       }else{
@@ -335,7 +346,10 @@ function createText(){
   }
 }
 
-/* Рисует каждую букву с небольшой индивидуальной неровностью. */
+/*
+ * Рисует текст с небольшой индивидуальной неровностью букв,
+ * чернильным оттенком и очень мягкой тенью штриха.
+ */
 function drawLine(words,x,y,spaceWidth,maxWidth){
   const fontSize=Number(size.value);
   const amount=Number(jitter.value);
@@ -389,6 +403,7 @@ function drawLine(words,x,y,spaceWidth,maxWidth){
       );
 
       ctx.save();
+
       ctx.translate(cursorX,y+verticalShift);
       ctx.rotate(angle);
       ctx.transform(
@@ -398,21 +413,36 @@ function drawLine(words,x,y,spaceWidth,maxWidth){
       );
       ctx.scale(scaleX,scaleY);
 
+      // Основной штрих с едва заметной мягкой тенью.
       ctx.fillStyle=`rgba(${rgb},${opacity})`;
-      ctx.shadowColor=`rgba(${rgb},0.18)`;
-      ctx.shadowBlur=.25;
+      ctx.shadowColor="rgba(24,35,55,0.12)";
+      ctx.shadowBlur=.45;
+      ctx.shadowOffsetX=.25;
+      ctx.shadowOffsetY=.35;
       ctx.fillText(ch,0,0);
+
+      // Лёгкий внутренний оттенок без сильного объёмного эффекта.
+      ctx.shadowColor="rgba(15,25,45,0.08)";
+      ctx.shadowBlur=.2;
+      ctx.shadowOffsetX=0;
+      ctx.shadowOffsetY=0;
+      ctx.fillStyle=`rgba(${rgb},${opacity*.12})`;
+      ctx.fillText(ch,0,0);
+
       ctx.restore();
 
       cursorX+=charWidth;
     }
 
-    if(w<prepared.length-1)cursorX+=spaceWidth;
+    if(w<prepared.length-1){
+      cursorX+=spaceWidth;
+    }
   }
 }
 
 paper.addEventListener("change",()=>{
   paperImage.src=getPaperImage();
+
   if(paperImage.complete&&paperImage.naturalWidth){
     createText();
   }
@@ -434,10 +464,12 @@ style.addEventListener("change",async()=>{
 inkColor.addEventListener("change",createText);
 alignment.addEventListener("change",createText);
 
-controls.forEach(el=>el.addEventListener("input",()=>{
-  updateValues();
-  createText();
-}));
+controls.forEach(el=>{
+  el.addEventListener("input",()=>{
+    updateValues();
+    createText();
+  });
+});
 
 document.getElementById("create").addEventListener("click",async()=>{
   await waitForSelectedFont();
